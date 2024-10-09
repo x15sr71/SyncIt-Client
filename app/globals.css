@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    /* Mixture of moderate shades of Spotify and Instagram colors */
+    --bg-gradient: linear-gradient(135deg, #1DB954, #F58529, #D62976, #962FBF, #4C6EF5);
+}
+
+body {
+    /* Apply the gradient as the background */
+    background: var(--bg-gradient);
+    background-size: cover; /* Ensures the gradient covers the entire area */
+    background-attachment: fixed; /* Keeps the background fixed while scrolling */
+    min-height: 100vh; /* Ensures the body takes at least the full height of the viewport */
+    position: relative; /* Required for the overlay */
+}
+
+/* Overlay to dim the background */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.25); /* Adjusted opacity for a middle-ground brightness */
+}
