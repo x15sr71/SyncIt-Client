@@ -26,9 +26,9 @@ const Navbar = () => {
 
                 {/* Right: Buttons (hidden on mobile) */}
                 <div className="hidden md:flex space-x-4 items-center">
-                    <a href="#" className="hover:text-neutral-200">Login</a>
+                    {/* <a href="#" className="hover:text-neutral-200">Login</a> */}
                     <a href="#" className="border border-neutral-700 text-white py-2 px-4 rounded-lg hover:bg-neutral-700 transition">Get a Demo</a>
-                    <a href="#" className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-500 transition">Start Free Trial</a>
+                    {/* <a href="#" className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-500 transition">Start Free Trial</a> */}
                 </div>
 
                 {/* Hamburger Icon for Mobile */}

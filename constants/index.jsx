@@ -25,7 +25,7 @@ import {
 } from "@remixicon/react";
 
 export const HERO_CONTENT = {
-  //badgeText: "🚀 New Feature: Migrate Youtube Music playlist to Spotify Now Live Now Live!",
+  badgeText: "🚀 New Feature: Migrate Youtube Music playlist to Spotify Now Live Now Live!",
   mainHeading: "Join, Sync, Groove! \n Effortlessly",
   subHeading:
     "Join SyncIt and effortlessly maintain your playlists in sync across platforms, ensuring your music is always at your fingertips!",
