@@ -97,9 +97,8 @@ const HeroSection = () => {
                     <Image
                     src={heroImage}
                     alt="Welcome to SyncIt"
-                    layout="responsive" // Ensures the image takes full width and auto height
-                    width={700} // Example width (adjust based on your design)
-                    height={475} // Example height (maintains aspect ratio)
+                    width={900}
+                    height={475}
                     className="rounded-3xl border border-neutral-800 mb-20"/>
                     </motion.div>
             </div>
