@@ -14,7 +14,7 @@ const Navbar = () => {
 
     return (
         <nav className="fixed top-4 left-0 right-0 z-50 m-2">
-            <div className="text-neutral-500 bg-black/60 backdrop-blur-md max-w-7xl mx-auto px-4 py-3 flex justify-between items-center rounded-xl border border-neutral-800">
+            <div className="text-neutral-500 bg-black/60 backdrop-blur-md max-w-7xl mx-auto px-4 py-1 flex justify-between items-center rounded-xl border border-neutral-800">
                 <Image src={logo} alt="logo" width={120} height={24} />
                 
                 {/* Navigation Links (Desktop) */}
