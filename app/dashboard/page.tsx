@@ -19,7 +19,7 @@ import { RenamePlaylistDialog } from "@/components/rename-playlist-dialog"
 import { DeletePlaylistDialog } from "@/components/delete-playlist-dialog"
 import { EmptyPlaylistDialog } from "@/components/empty-playlist-dialog"
 
-// Sample data
+// Sample data (unchanged)
 const samplePlaylists = {
   spotify: [
     {
@@ -310,24 +310,26 @@ export default function DashboardPage() {
   }>
 
   return (
-    <div className="min-h-screen gradient-background-subdued">
+    <div className="min-h-screen w-full gradient-background-subdued overflow-x-hidden">
       {/* Header */}
       <header className="border-b border-white/20 backdrop-blur-lg" role="banner" style={{ background: "transparent" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 min-w-0">
+          <div className="flex items-center justify-between min-w-0">
+            <div className="flex items-center space-x-4 min-w-0">
               <div
                 className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-2xl animate-pulse-glow shadow-xl"
                 aria-hidden="true"
               >
                 <Music className="w-6 h-6 text-white" />
               </div>
-              <h1 className="text-xl sm:text-2xl font-bold text-primary-dark">SyncIt Dashboard</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-primary-dark truncate">
+                SyncIt Dashboard
+              </h1>
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-4">
-              <div className="flex items-center space-x-2 glass-effect px-4 py-2">
+            <div className="hidden lg:flex items-center space-x-4 min-w-0">
+              <div className="flex items-center space-x-2 glass-effect px-4 py-2 min-w-0">
                 <Sun className="w-4 h-4 text-secondary-dark" aria-hidden="true" />
                 <Switch
                   checked={darkMode}
@@ -378,12 +380,12 @@ export default function DashboardPage() {
           {isMobileMenuOpen && (
             <nav
               id="mobile-dashboard-menu"
-              className="lg:hidden mt-4 pb-4 border-t border-white/20 pt-4 glass-effect"
+              className="lg:hidden mt-4 pb-4 border-t border-white/20 pt-4 glass-effect min-w-0"
               role="navigation"
               aria-label="Dashboard mobile navigation"
             >
-              <div className="flex flex-col space-y-4 p-4">
-                <div className="flex items-center justify-between">
+              <div className="flex flex-col space-y-4 p-4 min-w-0">
+                <div className="flex items-center justify-between min-w-0">
                   <span className="text-primary-dark font-medium">Theme</span>
                   <div className="flex items-center space-x-2">
                     <Sun className="w-4 h-4 text-secondary-dark" aria-hidden="true" />
@@ -419,13 +421,13 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid lg:grid-cols-4 gap-6 lg:gap-8">
+      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-w-0">
+        <div className="grid lg:grid-cols-4 gap-6 lg:gap-8 w-full min-w-0">
           {/* Main Migration Panel */}
-          <div className="lg:col-span-3 space-y-6">
+          <div className="lg:col-span-3 space-y-6 w-full min-w-0">
             {/* Connected Accounts */}
             <Card
-              className="glass-card border-white/40 hover-lift"
+              className="glass-card border-white/40 hover-lift min-w-0"
               role="region"
               aria-labelledby="connected-accounts-heading"
             >
@@ -435,15 +437,15 @@ export default function DashboardPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <div className="flex items-center space-x-2 bg-green-500/20 px-4 py-3 rounded-2xl flex-1 border border-green-500/30">
+                <div className="flex flex-col sm:flex-row gap-4 min-w-0">
+                  <div className="flex items-center space-x-2 bg-green-500/20 px-4 py-3 rounded-2xl flex-1 border border-green-500/30 min-w-0">
                     <div className="w-3 h-3 bg-green-500 rounded-full" aria-hidden="true"></div>
                     <span className="text-primary-dark font-medium">Spotify</span>
                     <Badge variant="secondary" className="bg-green-500/20 text-green-700 ml-auto rounded-xl">
                       Connected
                     </Badge>
                   </div>
-                  <div className="flex items-center space-x-2 bg-red-500/20 px-4 py-3 rounded-2xl flex-1 border border-red-500/30">
+                  <div className="flex items-center space-x-2 bg-red-500/20 px-4 py-3 rounded-2xl flex-1 border border-red-500/30 min-w-0">
                     <div className="w-3 h-3 bg-red-500 rounded-full" aria-hidden="true"></div>
                     <span className="text-primary-dark font-medium">YouTube Music</span>
                     <Badge variant="secondary" className="bg-red-500/20 text-red-700 ml-auto rounded-xl">
@@ -456,7 +458,7 @@ export default function DashboardPage() {
 
             {/* Platform Selection */}
             <Card
-              className="glass-card border-white/40 hover-lift"
+              className="glass-card border-white/40 hover-lift min-w-0"
               role="region"
               aria-labelledby="platform-selection-heading"
             >
@@ -466,7 +468,7 @@ export default function DashboardPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-8">
+                <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-8 min-w-0">
                   <PlatformDropdown
                     label="From"
                     selectedPlatform={selectedSource}
@@ -483,14 +485,14 @@ export default function DashboardPage() {
 
                 {/* YouTube Music API Limitation Notice */}
                 {selectedTarget === "youtube" && (
-                  <div className="mt-6 p-5 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-2 border-yellow-500/40 rounded-2xl shadow-lg">
-                    <div className="flex items-start gap-4">
+                  <div className="mt-6 p-5 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-2 border-yellow-500/40 rounded-2xl shadow-lg min-w-0">
+                    <div className="flex items-start gap-4 min-w-0">
                       <div className="w-12 h-12 bg-yellow-500/30 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
                         <AlertTriangle className="w-6 h-6 text-yellow-700" />
                       </div>
-                      <div>
-                        <h4 className="text-yellow-800 font-bold text-lg mb-2">YouTube Music API Limitation</h4>
-                        <p className="text-yellow-900 text-sm leading-relaxed">
+                      <div className="min-w-0">
+                        <h4 className="text-yellow-800 font-bold text-lg mb-2 break-words">YouTube Music API Limitation</h4>
+                        <p className="text-yellow-900 text-sm leading-relaxed break-words">
                           YouTube Music allows only <span className="font-semibold">100 tracks per day</span> via API.
                           Large playlists will be migrated over multiple days to comply with these restrictions.
                         </p>
@@ -502,20 +504,20 @@ export default function DashboardPage() {
             </Card>
 
             {/* Playlists Display */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-6 w-full min-w-0">
               {/* Source Playlists */}
               <Card
-                className="glass-card border-white/40 hover-lift"
+                className="glass-card border-white/40 hover-lift min-w-0"
                 role="region"
                 aria-labelledby="source-playlists-heading"
               >
                 <CardHeader>
-                  <CardTitle id="source-playlists-heading" className="text-primary-dark capitalize">
+                  <CardTitle id="source-playlists-heading" className="text-primary-dark capitalize truncate">
                     {selectedSource} Playlists
                   </CardTitle>
                   <p className="text-sm text-secondary-dark">Select playlists to migrate</p>
                 </CardHeader>
-                <CardContent className="space-y-4 max-h-96 overflow-y-auto">
+                <CardContent className="space-y-4 max-h-96 overflow-y-auto min-w-0 break-words">
                   {sourcePlaylists.map((playlist) => (
                     <PlaylistPreview
                       key={playlist.id}
@@ -533,17 +535,17 @@ export default function DashboardPage() {
 
               {/* Target Playlists */}
               <Card
-                className="glass-card border-white/40 hover-lift"
+                className="glass-card border-white/40 hover-lift min-w-0"
                 role="region"
                 aria-labelledby="target-playlists-heading"
               >
                 <CardHeader>
-                  <CardTitle id="target-playlists-heading" className="text-primary-dark capitalize">
+                  <CardTitle id="target-playlists-heading" className="text-primary-dark capitalize truncate">
                     {selectedTarget} Playlists
                   </CardTitle>
                   <p className="text-sm text-secondary-dark">Your existing playlists</p>
                 </CardHeader>
-                <CardContent className="space-y-4 max-h-96 overflow-y-auto">
+                <CardContent className="space-y-4 max-h-96 overflow-y-auto min-w-0 break-words">
                   {targetPlaylists.map((playlist) => (
                     <PlaylistPreview
                       key={playlist.id}
@@ -561,7 +563,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Migration Action */}
-            <div className="flex justify-center">
+            <div className="flex justify-center min-w-0">
               <Button
                 size="lg"
                 onClick={handleStartMigration}
@@ -575,19 +577,19 @@ export default function DashboardPage() {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-6 w-full min-w-0">
             {/* Recent Syncs */}
             <Card
-              className="glass-card border-white/40 hover-lift"
+              className="glass-card border-white/40 hover-lift min-w-0"
               role="region"
               aria-labelledby="recent-syncs-heading"
             >
               <CardHeader>
-                <CardTitle id="recent-syncs-heading" className="text-primary-dark">
+                <CardTitle id="recent-syncs-heading" className="text-primary-dark truncate">
                   Recent Syncs
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-3 min-w-0 break-words">
                 <SyncStatus playlistName="My Favorites" status="success" timestamp="2 hours ago" tracksCount={127} />
                 <SyncStatus playlistName="Workout Mix" status="in-progress" timestamp="Just now" tracksCount={45} />
                 <SyncStatus playlistName="Chill Vibes" status="failed" timestamp="1 day ago" tracksCount={89} />
@@ -595,13 +597,11 @@ export default function DashboardPage() {
             </Card>
 
             {/* Quick Stats */}
-            <Card className="glass-card border-white/40 hover-lift" role="region" aria-labelledby="quick-stats-heading">
+            <Card className="glass-card border-white/40 hover-lift min-w-0" role="region" aria-labelledby="quick-stats-heading">
               <CardHeader>
-                <CardTitle id="quick-stats-heading" className="text-primary-dark">
-                  Quick Stats
-                </CardTitle>
+                <CardTitle id="quick-stats-heading" className="text-primary-dark">Quick Stats</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 min-w-0 break-words">
                 <div className="flex justify-between">
                   <span className="text-secondary-dark">Total Syncs</span>
                   <span className="text-primary-dark font-semibold">24</span>
