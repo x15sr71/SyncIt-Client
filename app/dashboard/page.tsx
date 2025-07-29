@@ -2,24 +2,11 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import {
-  Music,
-  Settings,
-  User,
-  Moon,
-  Sun,
-  Menu,
-  X,
-  ArrowRight,
-  AlertTriangle,
+import { Music, Settings, User, Moon, Sun, Menu, X,
 } from "lucide-react";
 import Link from "next/link";
 import { SyncStatus } from "@/components/sync-status";
-import { PlatformDropdown } from "@/components/platform-dropdown";
-import { PlaylistPreview } from "@/components/playlist-preview";
 import { MigrationConfirmationDialog } from "@/components/migration-confirmation-dialog";
 import { MigrationLoadingCard } from "@/components/migration-loading-card";
 import { MigrationResultCard } from "@/components/migration-result-card";
@@ -28,8 +15,12 @@ import { ConfirmationDialog } from "@/components/confirmation-dialog";
 import { RenamePlaylistDialog } from "@/components/rename-playlist-dialog";
 import { DeletePlaylistDialog } from "@/components/delete-playlist-dialog";
 import { EmptyPlaylistDialog } from "@/components/empty-playlist-dialog";
-import { ArrowLeftRight } from "lucide-react";
-import { SiSpotify, SiYoutubemusic } from "react-icons/si";
+import ConnectedAccounts from "@/components/connectedAccounts";
+import PlaylistSelection from "@/components/playlistSelection";
+import PlaylistsDisplay from "@/components/playListsDisplay";
+import QuickStats from "@/components/quickStats";
+import RecentSyncs from "@/components/recentSyncs";
+import MigrationAction from "@/components/migrationAction";
 
 // Sample data (unchanged)
 const samplePlaylists = {
@@ -566,325 +557,47 @@ export default function DashboardPage() {
           {/* Main Migration Panel */}
           <div className="lg:col-span-3 space-y-6 w-full min-w-0">
             {/* Connected Accounts */}
-            <Card
-              className="glass-card border-white/40 hover-lift min-w-0"
-              role="region"
-              aria-labelledby="connected-accounts-heading"
-            >
-              <CardHeader>
-                <CardTitle
-                  id="connected-accounts-heading"
-                  className="text-primary-dark"
-                >
-                  Connected Accounts
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col sm:flex-row gap-4 min-w-0">
-                  <div className="flex items-center space-x-2 bg-green-500/20 px-4 py-3 rounded-2xl flex-1 border border-green-500/30 min-w-0">
-                    <div
-                      className="w-3 h-3 bg-green-500 rounded-full"
-                      aria-hidden="true"
-                    ></div>
-                    <span className="text-primary-dark font-medium">
-                      Spotify
-                    </span>
-                    <Badge
-                      variant="secondary"
-                      className="bg-green-500/20 text-green-700 ml-auto rounded-xl"
-                    >
-                      Connected
-                    </Badge>
-                  </div>
-                  <div className="flex items-center space-x-2 bg-red-500/20 px-4 py-3 rounded-2xl flex-1 border border-red-500/30 min-w-0">
-                    <div
-                      className="w-3 h-3 bg-red-500 rounded-full"
-                      aria-hidden="true"
-                    ></div>
-                    <span className="text-primary-dark font-medium">
-                      YouTube Music
-                    </span>
-                    <Badge
-                      variant="secondary"
-                      className="bg-red-500/20 text-red-700 ml-auto rounded-xl"
-                    >
-                      Connected
-                    </Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <ConnectedAccounts />
 
             {/* Platform Selection */}
 
-            <Card
-              className="glass-card border-white/40 hover-lift min-w-0"
-              role="region"
-              aria-labelledby="platform-selection-heading"
-            >
-              <CardHeader>
-                <CardTitle
-                  id="platform-selection-heading"
-                  className="text-primary-dark"
-                >
-                  Select Migration Platforms
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex justify-center">
-                  <div className="flex flex-col sm:grid sm:grid-cols-[1fr_auto_1fr] sm:place-items-center items-center justify-center gap-4 sm:gap-6">
-                    {/* From Platform */}
-                    <div className="w-[160px] flex flex-col items-center text-center">
-                      <p className="text-muted-foreground text-sm mb-1">From</p>
-                      <div
-                        className={`inline-flex items-center gap-2 px-3 py-1 rounded-full font-medium text-sm capitalize
-            ${
-              selectedSource === "spotify"
-                ? "bg-green-100 text-green-800"
-                : "bg-red-100 text-red-800"
-            }`}
-                      >
-                        {selectedSource === "spotify" ? (
-                          <>
-                            <SiSpotify className="w-4 h-4" /> Spotify
-                          </>
-                        ) : (
-                          <>
-                            <SiYoutubemusic className="w-4 h-4" /> YouTube Music
-                          </>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Swap Button */}
-                    <div className="flex-shrink-0 pt-4 sm:pt-0">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="group h-9 w-9 rounded-lg backdrop-blur-sm bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/30 shadow-md hover:shadow-xl transition-all"
-                        aria-label="Swap platforms"
-                        onClick={() => {
-                          const temp = selectedSource;
-                          setSelectedSource(selectedTarget);
-                          setSelectedTarget(temp);
-                        }}
-                      >
-                        <ArrowLeftRight className="h-4 w-4 sm:rotate-0 rotate-90 text-white/90 drop-shadow-sm group-hover:text-white transition-colors" />
-                      </Button>
-                    </div>
-
-                    {/* To Platform */}
-                    <div className="w-[160px] flex flex-col items-center text-center">
-                      <p className="text-muted-foreground text-sm mb-1">To</p>
-                      <div
-                        className={`inline-flex items-center gap-2 px-3 py-1 rounded-full font-medium text-sm capitalize
-            ${
-              selectedTarget === "spotify"
-                ? "bg-green-100 text-green-800"
-                : "bg-red-100 text-red-800"
-            }`}
-                      >
-                        {selectedTarget === "spotify" ? (
-                          <>
-                            <SiSpotify className="w-4 h-4" /> Spotify
-                          </>
-                        ) : (
-                          <>
-                            <SiYoutubemusic className="w-4 h-4" /> YouTube Music
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* YouTube Music API Limitation Notice */}
-                {(selectedSource === "youtube" ||
-                  selectedTarget === "youtube") && (
-                  <div className="mt-6 p-5 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-2 border-yellow-500/40 rounded-2xl shadow-lg min-w-0">
-                    <div className="flex items-start gap-4 min-w-0">
-                      <div className="w-12 h-12 bg-yellow-500/30 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                        <AlertTriangle className="w-6 h-6 text-yellow-700" />
-                      </div>
-                      <div className="min-w-0">
-                        <h4 className="text-yellow-800 font-bold text-lg mb-2 break-words">
-                          YouTube Music API Limitation
-                        </h4>
-                        <p className="text-yellow-900 text-sm leading-relaxed break-words">
-                          YouTube Music allows only{" "}
-                          <span className="font-semibold">
-                            100 tracks per day
-                          </span>{" "}
-                          via API. Large playlists will be migrated over
-                          multiple days to comply with these restrictions.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            <PlaylistSelection
+              selectedSource={selectedSource}
+              setSelectedSource={setSelectedSource}
+              selectedTarget={selectedTarget}
+              setSelectedTarget={setSelectedTarget}
+            />
 
             {/* Playlists Display */}
-            <div className="grid md:grid-cols-2 gap-6 w-full min-w-0">
-              {/* Source Playlists */}
-              <Card
-                className="glass-card border-white/40 hover-lift min-w-0"
-                role="region"
-                aria-labelledby="source-playlists-heading"
-              >
-                <CardHeader>
-                  <CardTitle
-                    id="source-playlists-heading"
-                    className="text-primary-dark capitalize truncate"
-                  >
-                    {selectedSource} Playlists
-                  </CardTitle>
-                  <p className="text-sm text-secondary-dark">
-                    Select playlists to migrate
-                  </p>
-                </CardHeader>
-                <CardContent className="space-y-4 max-h-96 overflow-y-auto min-w-0 break-words">
-                  {sourcePlaylists.map((playlist) => (
-                    <PlaylistPreview
-                      key={playlist.id}
-                      playlist={playlist}
-                      isSelected={selectedPlaylists[playlist.id] || false}
-                      onToggle={togglePlaylist}
-                      showCheckbox={true}
-                      onRename={handleRenamePlaylist}
-                      onEmpty={handleEmptyPlaylist}
-                      onDelete={handleDeletePlaylist}
-                    />
-                  ))}
-                </CardContent>
-              </Card>
 
-              {/* Target Playlists */}
-              <Card
-                className="glass-card border-white/40 hover-lift min-w-0"
-                role="region"
-                aria-labelledby="target-playlists-heading"
-              >
-                <CardHeader>
-                  <CardTitle
-                    id="target-playlists-heading"
-                    className="text-primary-dark capitalize truncate"
-                  >
-                    {selectedTarget} Playlists
-                  </CardTitle>
-                  <p className="text-sm text-secondary-dark">
-                    Your existing playlists
-                  </p>
-                </CardHeader>
-                <CardContent className="space-y-4 max-h-96 overflow-y-auto min-w-0 break-words">
-                  {targetPlaylists.map((playlist) => (
-                    <PlaylistPreview
-                      key={playlist.id}
-                      playlist={playlist}
-                      isSelected={false}
-                      onToggle={() => {}}
-                      showCheckbox={false}
-                      onRename={handleRenamePlaylist}
-                      onEmpty={handleEmptyPlaylist}
-                      onDelete={handleDeletePlaylist}
-                    />
-                  ))}
-                </CardContent>
-              </Card>
-            </div>
+            <PlaylistsDisplay
+              selectedSource={selectedSource}
+              selectedTarget={selectedTarget}
+              sourcePlaylists={sourcePlaylists}
+              targetPlaylists={targetPlaylists}
+              selectedPlaylists={selectedPlaylists}
+              togglePlaylist={togglePlaylist}
+              handleRenamePlaylist={handleRenamePlaylist}
+              handleEmptyPlaylist={handleEmptyPlaylist}
+              handleDeletePlaylist={handleDeletePlaylist}
+            />
 
             {/* Migration Action */}
             <div className="flex justify-center min-w-0">
-              <Button
-                size="lg"
-                onClick={handleStartMigration}
-                disabled={
-                  Object.keys(selectedPlaylists).filter(
-                    (id) => selectedPlaylists[id]
-                  ).length === 0
-                }
-                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-2xl px-8 py-4 focus-visible:outline-2 focus-visible:outline-purple-400 focus-visible:outline-offset-2 transition-all hover:scale-105 shadow-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-              >
-                <ArrowRight className="w-5 h-5 mr-2" />
-                Start Migration (
-                {
-                  Object.keys(selectedPlaylists).filter(
-                    (id) => selectedPlaylists[id]
-                  ).length
-                }{" "}
-                selected)
-              </Button>
+              <MigrationAction
+                handleStartMigration={handleStartMigration}
+                selectedPlaylists={selectedPlaylists}
+              />
             </div>
           </div>
 
           {/* Sidebar */}
           <div className="space-y-6 w-full min-w-0">
             {/* Recent Syncs */}
-            <Card
-              className="glass-card border-white/40 hover-lift min-w-0"
-              role="region"
-              aria-labelledby="recent-syncs-heading"
-            >
-              <CardHeader>
-                <CardTitle
-                  id="recent-syncs-heading"
-                  className="text-primary-dark truncate"
-                >
-                  Recent Syncs
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 min-w-0 break-words">
-                <SyncStatus
-                  playlistName="My Favorites"
-                  status="success"
-                  timestamp="2 hours ago"
-                  tracksCount={127}
-                />
-                <SyncStatus
-                  playlistName="Workout Mix"
-                  status="in-progress"
-                  timestamp="Just now"
-                  tracksCount={45}
-                />
-                <SyncStatus
-                  playlistName="Chill Vibes"
-                  status="failed"
-                  timestamp="1 day ago"
-                  tracksCount={89}
-                />
-              </CardContent>
-            </Card>
+            <RecentSyncs />
 
             {/* Quick Stats */}
-            <Card
-              className="glass-card border-white/40 hover-lift min-w-0"
-              role="region"
-              aria-labelledby="quick-stats-heading"
-            >
-              <CardHeader>
-                <CardTitle
-                  id="quick-stats-heading"
-                  className="text-primary-dark"
-                >
-                  Quick Stats
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 min-w-0 break-words">
-                <div className="flex justify-between">
-                  <span className="text-secondary-dark">Total Syncs</span>
-                  <span className="text-primary-dark font-semibold">24</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-secondary-dark">Success Rate</span>
-                  <span className="text-green-600 font-semibold">95%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-secondary-dark">Tracks Synced</span>
-                  <span className="text-primary-dark font-semibold">2,847</span>
-                </div>
-              </CardContent>
-            </Card>
+            <QuickStats />
           </div>
         </div>
       </main>
