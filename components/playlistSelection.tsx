@@ -37,7 +37,7 @@ export default function PlaylistSelection({
         </CardHeader>
         <CardContent>
           <div className="flex justify-center">
-            <div className="flex flex-col sm:grid sm:grid-cols-[1fr_auto_1fr] sm:place-items-center items-center justify-center gap-4 sm:gap-6">
+            <div className="flex flex-col sm:grid sm:grid-cols-[1fr_auto_1fr] sm:place-items-center items-center justify-center gap-y-2 sm:gap-x-6 sm:gap-y-10">
               {/* From Platform */}
               <div className="w-[160px] flex flex-col items-center text-center">
                 <p className="text-muted-foreground text-sm mb-1">From</p>
@@ -62,7 +62,7 @@ export default function PlaylistSelection({
               </div>
 
               {/* Swap Button */}
-              <div className="flex-shrink-0 pt-4 sm:pt-0">
+              <div className="flex-shrink-0 self-center sm:-mt-2 lg:mt-4">
                 <Button
                   variant="ghost"
                   size="icon"
