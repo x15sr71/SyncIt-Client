@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MigrationConfirmationDialog } from "@/components/migration-confirmation-dialog";
 import { MigrationLoadingCard } from "@/components/migration-loading-card";
 import { MigrationResultCard } from "@/components/migration-result-card";
@@ -16,6 +16,8 @@ import QuickStats from "@/components/quickStats";
 import RecentSyncs from "@/components/recentSyncs";
 import MigrationAction from "@/components/migrationAction";
 import DashboardHeader from "@/components/dasboardHeader";
+import useGetSpotifyPlaylists from "@/hooks/getSpotifyPlaylists";
+
 
 // Sample data (unchanged)
 const samplePlaylists = {
@@ -52,74 +54,6 @@ const samplePlaylists = {
           title: "Stay",
           artist: "The Kid LAROI & Justin Bieber",
           duration: "2:21",
-        },
-      ],
-    },
-    {
-      id: "spotify-2",
-      name: "Workout Mix",
-      songCount: 28,
-      imageUrl: "/placeholder.svg?height=50&width=50",
-      description: "High energy tracks for workouts",
-      isPublic: false,
-      songs: [
-        {
-          id: "6",
-          title: "Thunder",
-          artist: "Imagine Dragons",
-          duration: "3:07",
-        },
-        { id: "7", title: "Stronger", artist: "Kanye West", duration: "5:11" },
-        {
-          id: "8",
-          title: "Till I Collapse",
-          artist: "Eminem",
-          duration: "4:57",
-        },
-      ],
-    },
-    {
-      id: "spotify-3",
-      name: "Chill Vibes",
-      songCount: 35,
-      imageUrl: "/placeholder.svg?height=50&width=50",
-      description: "Relaxing tunes for unwinding",
-      isPublic: true,
-      songs: [
-        {
-          id: "9",
-          title: "Sunflower",
-          artist: "Post Malone & Swae Lee",
-          duration: "2:38",
-        },
-        { id: "10", title: "Perfect", artist: "Ed Sheeran", duration: "4:23" },
-        {
-          id: "11",
-          title: "Someone You Loved",
-          artist: "Lewis Capaldi",
-          duration: "3:02",
-        },
-      ],
-    },
-    {
-      id: "spotify-4",
-      name: "Ultimate Hits Collection",
-      songCount: 150,
-      imageUrl: "/placeholder.svg?height=50&width=50",
-      description: "The biggest hits of all time",
-      isPublic: true,
-      songs: [
-        {
-          id: "12",
-          title: "Hotel California",
-          artist: "Eagles",
-          duration: "6:30",
-        },
-        {
-          id: "13",
-          title: "Stairway to Heaven",
-          artist: "Led Zeppelin",
-          duration: "8:02",
         },
       ],
     },
@@ -254,6 +188,27 @@ export default function DashboardPage() {
     songCount: 0,
   });
 
+  // Initialize the Spotify hook
+  const { fetchPlaylists, spotifyPlaylists } = useGetSpotifyPlaylists();
+
+  // Fetch Spotify playlists when selectedSource changes to spotify
+  useEffect(() => {
+    if (selectedSource === "spotify") {
+      fetchPlaylists();
+    }
+  }, [selectedSource]);
+
+  // Transform Spotify playlists to match the Playlist interface
+  const transformedSpotifyPlaylists: Playlist[] = spotifyPlaylists.map((playlist) => ({
+    id: playlist.id,
+    name: playlist.name,
+    songCount: playlist.tracks.total,
+    imageUrl: playlist.images[0]?.url || "/placeholder.svg?height=50&width=50",
+    description: playlist.description || "",
+    isPublic: playlist.public,
+    songs: [], // We'll populate this when needed for individual playlist details
+  }));
+
   const togglePlaylist = (id: string) => {
     setSelectedPlaylists((prev) => ({
       ...prev,
@@ -374,8 +329,13 @@ export default function DashboardPage() {
     // For demo purposes, we'll just log it
   };
 
-  const sourcePlaylists = samplePlaylists[selectedSource] || [];
+  // Use real Spotify data when selectedSource is spotify, otherwise use sample data
+  const sourcePlaylists = selectedSource === "spotify" 
+    ? transformedSpotifyPlaylists 
+    : samplePlaylists[selectedSource] || [];
+  
   const targetPlaylists = samplePlaylists[selectedTarget] || [];
+  
   const selectedPlaylistData = sourcePlaylists.find(
     (p) => p.id === selectedPlaylistForMigration
   );

@@ -13,11 +13,14 @@ export default function AuthPage() {
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
-    // Simulate OAuth flow
-    setTimeout(() => {
+    
+    try {
+      // Redirect to your backend Google OAuth endpoint
+      window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3002'}/google/login`
+    } catch (error) {
+      console.error('Error initiating Google sign-in:', error)
       setIsLoading(false)
-      router.push("/connect")
-    }, 2000)
+    }
   }
 
   return (
