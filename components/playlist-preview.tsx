@@ -24,7 +24,7 @@ interface Song {
   image_url?: string;
 }
 
-interface Playlist {
+export interface Playlist {
   id: string;
   name: string;
   songCount: number;
@@ -98,9 +98,9 @@ const error = playlist.platform === "youtube" ? errorYoutube : errorSpotify;
 
           const transformed: Song[] = youtubeTracks.map((track, index) => ({
             id: `${track.videoId}-${index}`,
+            duration: track.duration,
             title: track.title,
             artist: track.channelTitle,
-            duration: formatDuration("YT"),
             image_url: track.thumbnail,
           }));
 

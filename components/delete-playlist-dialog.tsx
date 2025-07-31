@@ -1,19 +1,21 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { X, Trash2, Loader2, CheckCircle, AlertTriangle } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { X, Trash2, Loader2, CheckCircle, AlertTriangle } from "lucide-react";
 
 interface DeletePlaylistDialogProps {
-  isOpen: boolean
-  onClose: () => void
-  playlistId: string
-  playlistName: string
-  onDelete: (playlistId: string) => void
+  isOpen: boolean;
+  onClose: () => void;
+  playlistId: string;
+  playlistName: string;
+  onDelete: (playlistId: string) => void;
+  loading?: boolean;
+  error?: string | null;
 }
 
-type DeleteState = "confirm" | "loading" | "success"
+type DeleteState = "confirm" | "loading" | "success";
 
 export function DeletePlaylistDialog({
   isOpen,
@@ -22,37 +24,37 @@ export function DeletePlaylistDialog({
   playlistName,
   onDelete,
 }: DeletePlaylistDialogProps) {
-  const [state, setState] = useState<DeleteState>("confirm")
+  const [state, setState] = useState<DeleteState>("confirm");
 
   // Reset state when dialog opens
   useEffect(() => {
     if (isOpen) {
-      setState("confirm")
+      setState("confirm");
     }
-  }, [isOpen])
+  }, [isOpen]);
 
   // Auto-close after success
   useEffect(() => {
     if (state === "success") {
       const timer = setTimeout(() => {
-        onClose()
-      }, 2000) // Close after 2 seconds to show success message
+        onClose();
+      }, 2000); // Close after 2 seconds to show success message
 
-      return () => clearTimeout(timer)
+      return () => clearTimeout(timer);
     }
-  }, [state, onClose])
+  }, [state, onClose]);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   const handleDelete = async () => {
-    setState("loading")
+    setState("loading");
 
     // Simulate API call with 3-second delay
     setTimeout(() => {
-      onDelete(playlistId)
-      setState("success")
-    }, 3000)
-  }
+      onDelete(playlistId);
+      setState("success");
+    }, 3000);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -74,15 +76,15 @@ export function DeletePlaylistDialog({
                   {state === "loading"
                     ? "Deleting Playlist"
                     : state === "success"
-                      ? "Deletion Successful"
-                      : "Delete Playlist"}
+                    ? "Deletion Successful"
+                    : "Delete Playlist"}
                 </CardTitle>
                 <p className="text-secondary-dark text-sm">
                   {state === "loading"
                     ? "Please wait while we delete your playlist..."
                     : state === "success"
-                      ? "Your playlist has been deleted successfully!"
-                      : "This action cannot be undone"}
+                    ? "Your playlist has been deleted successfully!"
+                    : "This action cannot be undone"}
                 </p>
               </div>
             </div>
@@ -108,10 +110,13 @@ export function DeletePlaylistDialog({
                 <div className="flex items-start gap-3">
                   <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-red-700 font-medium text-sm mb-1">Do you really want to delete this playlist?</p>
+                    <p className="text-red-700 font-medium text-sm mb-1">
+                      Do you really want to delete this playlist?
+                    </p>
                     <p className="text-red-600 text-sm">
-                      This will permanently delete "<strong>{playlistName}</strong>" and all its songs. This action
-                      cannot be undone.
+                      This will permanently delete "
+                      <strong>{playlistName}</strong>" and all its songs. This
+                      action cannot be undone.
                     </p>
                   </div>
                 </div>
@@ -141,7 +146,9 @@ export function DeletePlaylistDialog({
               <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse-glow shadow-xl">
                 <Loader2 className="w-8 h-8 text-white animate-spin" />
               </div>
-              <h3 className="text-primary-dark font-bold text-lg mb-2">Deleting playlist...</h3>
+              <h3 className="text-primary-dark font-bold text-lg mb-2">
+                Deleting playlist...
+              </h3>
               <p className="text-secondary-dark">This may take a few moments</p>
 
               {/* Loading animation */}
@@ -164,16 +171,22 @@ export function DeletePlaylistDialog({
               <div className="w-20 h-20 bg-green-500/20 border-2 border-green-500/40 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse-glow shadow-xl">
                 <CheckCircle className="w-12 h-12 text-green-600" />
               </div>
-              <h3 className="text-primary-dark font-bold text-xl mb-3">Deletion Completed Successfully!</h3>
-              <p className="text-secondary-dark mb-2">The playlist has been permanently removed:</p>
+              <h3 className="text-primary-dark font-bold text-xl mb-3">
+                Deletion Completed Successfully!
+              </h3>
+              <p className="text-secondary-dark mb-2">
+                The playlist has been permanently removed:
+              </p>
               <p className="text-primary-dark font-semibold text-lg bg-green-500/10 px-4 py-2 rounded-xl border border-green-500/20">
                 "{playlistName}"
               </p>
-              <p className="text-secondary-dark text-sm mt-4 opacity-70">This dialog will close automatically...</p>
+              <p className="text-secondary-dark text-sm mt-4 opacity-70">
+                This dialog will close automatically...
+              </p>
             </div>
           )}
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

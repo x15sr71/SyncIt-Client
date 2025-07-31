@@ -3,6 +3,7 @@ import apiClient from "../utils/api";
 
 interface YouTubeTrack {
   videoId: string;
+  duration: string;
   title: string;
   channelTitle: string;
   publishedAt: string;
