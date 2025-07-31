@@ -104,14 +104,14 @@ export default function PlaylistSelection({
           </div>
 
           {/* YouTube Music API Limitation Notice */}
-          {selectedTarget === "youtube" && (
-            <div className="mt-4 p-3.5 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/20 rounded-xl shadow min-w-0">
-              <div className="flex items-start gap-2.5 min-w-0">
-                <div className="w-7 h-7 bg-yellow-500/30 rounded-lg flex items-center justify-center flex-shrink-0 shadow">
-                  <AlertTriangle className="w-[18px] h-[18px] text-yellow-700" />
+          {(selectedTarget === "youtube") && (
+            <div className="mt-4 p-3 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/20 rounded-xl shadow min-w-0">
+              <div className="flex items-start gap-2 min-w-0">
+                <div className="w-6 h-6 bg-yellow-500/30 rounded-md flex items-center justify-center flex-shrink-0 shadow">
+                  <AlertTriangle className="w-4 h-4 text-yellow-700" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-yellow-800 font-semibold text-sm mb-1 break-words">
+                  <h4 className="text-yellow-800 font-medium text-sm mb-1 break-words">
                     YouTube Music API Limitation
                   </h4>
                   <p className="text-yellow-900 text-xs leading-snug break-words">

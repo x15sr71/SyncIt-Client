@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { PlaylistActionMenu } from "./playlist-action-menu";
 import useGetSpotifyPlaylistContent from "../hooks/getSpotifyContent";
+import useGetYoutubePlaylistContent from "../hooks/getYoutubeContent"; // ✅ import the YouTube hook
 
 interface Song {
   id: string;
@@ -31,6 +32,8 @@ interface Playlist {
   songs: Song[];
   description?: string;
   isPublic?: boolean;
+  source?: "spotify" | "youtube"; // ✅ Added optional source
+  platform: "spotify" | "youtube";  
 }
 
 interface PlaylistPreviewProps {
@@ -41,12 +44,16 @@ interface PlaylistPreviewProps {
   onRename?: (id: string) => void;
   onEmpty?: (id: string) => void;
   onDelete?: (id: string) => void;
+  platform?: "spotify" | "youtube"; // ✅ Added platform prop
 }
 
-// Helper function to format duration from milliseconds to "3:45" format
-const formatDuration = (ms: number): string => {
-  const minutes = Math.floor(ms / 60000);
-  const seconds = Math.floor((ms % 60000) / 1000);
+const formatDuration = (msOrIso: number | string): string => {
+  if (typeof msOrIso === "string") {
+    // ISO or YouTube doesn't give duration, so show placeholder
+    return "–:––";
+  }
+  const minutes = Math.floor(msOrIso / 60000);
+  const seconds = Math.floor((msOrIso % 60000) / 1000);
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
 
@@ -63,29 +70,59 @@ export function PlaylistPreview({
   const [loadedSongs, setLoadedSongs] = useState<Song[]>([]);
   const [hasLoadedContent, setHasLoadedContent] = useState(false);
 
-  const { fetchPlaylistContent, loading, error } =
-    useGetSpotifyPlaylistContent();
+  const {
+    fetchPlaylistContent: fetchSpotifyContent,
+    loading: loadingSpotify,
+    error: errorSpotify,
+  } = useGetSpotifyPlaylistContent();
+
+  const {
+    fetchPlaylistContent: fetchYoutubeContent,
+    loading: loadingYoutube,
+    error: errorYoutube,
+  } = useGetYoutubePlaylistContent();
+
+const loading = playlist.platform === "youtube" ? loadingYoutube : loadingSpotify;
+const error = playlist.platform === "youtube" ? errorYoutube : errorSpotify;
+
 
   const handleExpand = async () => {
     if (!isExpanded && !hasLoadedContent) {
       try {
-        const response = await fetchPlaylistContent([playlist.id]);
+        if (playlist.platform === "youtube") {
+          const response = await fetchYoutubeContent([playlist.id]);
 
-        if (!response.success) {
-          throw new Error(response.error || "Failed to load playlist");
+          if (!response.success) throw new Error(response.error);
+
+          const youtubeTracks = response.data?.[playlist.id] || [];
+
+          const transformed: Song[] = youtubeTracks.map((track, index) => ({
+            id: `${track.videoId}-${index}`,
+            title: track.title,
+            artist: track.channelTitle,
+            duration: formatDuration("YT"),
+            image_url: track.thumbnail,
+          }));
+
+          setLoadedSongs(transformed);
+        } else {
+          const response = await fetchSpotifyContent([playlist.id]);
+
+          if (!response.success) throw new Error(response.error);
+
+          const spotifyTracks = response.data?.[playlist.id] || [];
+
+          const transformed: Song[] = spotifyTracks.map((track) => ({
+            id: track.id,
+            title: track.name,
+            artist: track.artists.join(", "),
+            duration: formatDuration(track.duration_ms),
+            image_url: track.image_url,
+          }));
+
+          setLoadedSongs(transformed);
         }
 
-        const spotifyTracks = response.data?.[playlist.id] || [];
-
-        const transformedSongs: Song[] = spotifyTracks.map((track) => ({
-          id: track.id,
-          title: track.name,
-          artist: track.artists.join(", "),
-          duration: formatDuration(track.duration_ms),
-          image_url: track.image_url || undefined, // ← pull in the URL!
-        }));
-
-        setLoadedSongs(transformedSongs);
         setHasLoadedContent(true);
       } catch (err: any) {
         console.error("Failed to load playlist content:", err);
@@ -96,7 +133,6 @@ export function PlaylistPreview({
     setIsExpanded(!isExpanded);
   };
 
-  // Use loaded songs if available, otherwise fall back to playlist.songs
   const songsToDisplay = hasLoadedContent ? loadedSongs : playlist.songs;
 
   return (
@@ -129,8 +165,7 @@ export function PlaylistPreview({
               <div className="flex items-center gap-2 text-sm text-secondary-dark">
                 <Music className="w-3 h-3" />
                 <span>
-                  {hasLoadedContent ? loadedSongs.length : playlist.songCount}{" "}
-                  songs
+                  {hasLoadedContent ? loadedSongs.length : playlist.songCount} songs
                 </span>
                 {playlist.isPublic !== undefined && (
                   <>
@@ -160,9 +195,7 @@ export function PlaylistPreview({
               disabled={loading}
               className="text-secondary-dark hover:text-primary-dark hover:bg-white/20 rounded-xl"
               aria-expanded={isExpanded}
-              aria-label={`${isExpanded ? "Collapse" : "Expand"} ${
-                playlist.name
-              } playlist details`}
+              aria-label={`${isExpanded ? "Collapse" : "Expand"} ${playlist.name}`}
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -174,7 +207,6 @@ export function PlaylistPreview({
             </Button>
           </div>
         </div>
-        {/* {playlist.description && <p className="text-sm text-muted-dark mt-2">{playlist.description}</p>} */}
       </CardHeader>
 
       {isExpanded && (
@@ -198,7 +230,6 @@ export function PlaylistPreview({
                     key={song.id}
                     className="flex items-center justify-between p-2 rounded-lg hover:bg-white/10 transition-colors group"
                   >
-                    {/* Left group: image + text */}
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       {song.image_url ? (
                         <img
@@ -206,20 +237,17 @@ export function PlaylistPreview({
                           alt={song.title}
                           className="w-10 h-10 rounded-md object-cover"
                           onError={(e) => {
-                            // if load fails, replace with placeholder
                             e.currentTarget.onerror = null;
                             e.currentTarget.src = "/placeholder-song.svg";
                           }}
                         />
                       ) : (
-                        // if there's no URL at all, show the placeholder directly
                         <img
                           src="/placeholder-song.svg"
                           alt="no album art"
                           className="w-10 h-10 rounded-md object-cover opacity-50"
                         />
                       )}
-
                       <div className="min-w-0">
                         <p className="text-sm font-medium text-primary-dark truncate">
                           {song.title}
@@ -230,20 +258,15 @@ export function PlaylistPreview({
                       </div>
                     </div>
 
-                    {/* Right group: duration + delete */}
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-muted-dark">
-                        {song.duration}
-                      </span>
+                      <span className="text-xs text-muted-dark">{song.duration}</span>
                       {onDelete && (
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={(e) => {
                             e.stopPropagation();
-                            console.log(
-                              `Remove song ${song.id} from playlist ${playlist.id}`
-                            );
+                            console.log(`Remove song ${song.id} from playlist ${playlist.id}`);
                           }}
                           className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-600 hover:bg-red-500/10 rounded-lg p-1 transition-all"
                           aria-label={`Remove ${song.title} from playlist`}
