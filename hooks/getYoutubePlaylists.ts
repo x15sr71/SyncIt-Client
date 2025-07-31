@@ -1,5 +1,6 @@
 import { useState } from "react";
 import apiClient from "../utils/api";
+import { useCallback } from "react";
 
 interface YoutubeThumbnail {
   url: string;
@@ -62,8 +63,7 @@ interface GetYoutubePlaylistsResponse {
 export default function useGetYoutubePlaylists() {
   const [youtubePlaylists, setYoutubePlaylists] = useState<YoutubePlaylist[]>([]);
 
-
-  const fetchYoutubePlaylists = async () => {
+  const fetchYoutubePlaylists = useCallback(async () => {
     try {
       const response = await apiClient.get<GetYoutubePlaylistsResponse>("/getyoutubeplaylists");
       if (response.data.success) {
@@ -77,7 +77,7 @@ export default function useGetYoutubePlaylists() {
       setYoutubePlaylists([]);
       throw error;
     }
-  };
+  }, []);
 
   return { fetchYoutubePlaylists, youtubePlaylists };
 }
