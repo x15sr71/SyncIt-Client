@@ -1,44 +1,53 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChevronDown, ChevronRight, Music, Clock, User, Trash2, Loader2 } from "lucide-react"
-import { PlaylistActionMenu } from "./playlist-action-menu"
-import useGetSpotifyPlaylistContent from "../hooks/getSpotifyContent"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  ChevronDown,
+  ChevronRight,
+  Music,
+  Clock,
+  User,
+  Trash2,
+  Loader2,
+} from "lucide-react";
+import { PlaylistActionMenu } from "./playlist-action-menu";
+import useGetSpotifyPlaylistContent from "../hooks/getSpotifyContent";
 
 interface Song {
-  id: string
-  title: string
-  artist: string
-  duration: string
+  id: string;
+  title: string;
+  artist: string;
+  duration: string;
+  image_url?: string;
 }
 
 interface Playlist {
-  id: string
-  name: string
-  songCount: number
-  imageUrl: string
-  songs: Song[]
-  description?: string
-  isPublic?: boolean
+  id: string;
+  name: string;
+  songCount: number;
+  imageUrl: string;
+  songs: Song[];
+  description?: string;
+  isPublic?: boolean;
 }
 
 interface PlaylistPreviewProps {
-  playlist: Playlist
-  isSelected: boolean
-  onToggle: (id: string) => void
-  showCheckbox?: boolean
-  onRename?: (id: string) => void
-  onEmpty?: (id: string) => void
-  onDelete?: (id: string) => void
+  playlist: Playlist;
+  isSelected: boolean;
+  onToggle: (id: string) => void;
+  showCheckbox?: boolean;
+  onRename?: (id: string) => void;
+  onEmpty?: (id: string) => void;
+  onDelete?: (id: string) => void;
 }
 
 // Helper function to format duration from milliseconds to "3:45" format
 const formatDuration = (ms: number): string => {
   const minutes = Math.floor(ms / 60000);
   const seconds = Math.floor((ms % 60000) / 1000);
-  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
 
 export function PlaylistPreview({
@@ -50,42 +59,51 @@ export function PlaylistPreview({
   onEmpty,
   onDelete,
 }: PlaylistPreviewProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [loadedSongs, setLoadedSongs] = useState<Song[]>([])
-  const [hasLoadedContent, setHasLoadedContent] = useState(false)
-  
-  const { fetchPlaylistContent, loading, error } = useGetSpotifyPlaylistContent()
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [loadedSongs, setLoadedSongs] = useState<Song[]>([]);
+  const [hasLoadedContent, setHasLoadedContent] = useState(false);
+
+  const { fetchPlaylistContent, loading, error } =
+    useGetSpotifyPlaylistContent();
 
   const handleExpand = async () => {
     if (!isExpanded && !hasLoadedContent) {
       try {
-        const spotifyTracks = await fetchPlaylistContent()
-        
-        // Transform Spotify tracks to Song format
-        const transformedSongs: Song[] = spotifyTracks.map(track => ({
+        const response = await fetchPlaylistContent([playlist.id]);
+
+        if (!response.success) {
+          throw new Error(response.error || "Failed to load playlist");
+        }
+
+        const spotifyTracks = response.data?.[playlist.id] || [];
+
+        const transformedSongs: Song[] = spotifyTracks.map((track) => ({
           id: track.id,
           title: track.name,
-          artist: track.artists.join(', '),
-          duration: formatDuration(track.duration_ms)
-        }))
-        
-        setLoadedSongs(transformedSongs)
-        setHasLoadedContent(true)
-      } catch (error) {
-        console.error('Failed to load playlist content:', error)
-        // Keep the existing songs from playlist.songs as fallback
-        setLoadedSongs(playlist.songs)
+          artist: track.artists.join(", "),
+          duration: formatDuration(track.duration_ms),
+          image_url: track.image_url || undefined, // ← pull in the URL!
+        }));
+
+        setLoadedSongs(transformedSongs);
+        setHasLoadedContent(true);
+      } catch (err: any) {
+        console.error("Failed to load playlist content:", err);
+        setLoadedSongs(playlist.songs); // fallback
       }
     }
-    setIsExpanded(!isExpanded)
-  }
+
+    setIsExpanded(!isExpanded);
+  };
 
   // Use loaded songs if available, otherwise fall back to playlist.songs
-  const songsToDisplay = hasLoadedContent ? loadedSongs : playlist.songs
+  const songsToDisplay = hasLoadedContent ? loadedSongs : playlist.songs;
 
   return (
     <Card
-      className={`glass-card border-white/40 hover-lift transition-all duration-300 ${isSelected ? "ring-2 ring-purple-500/50" : ""}`}
+      className={`glass-card border-white/40 hover-lift transition-all duration-300 ${
+        isSelected ? "ring-2 ring-purple-500/50" : ""
+      }`}
     >
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
@@ -105,10 +123,15 @@ export function PlaylistPreview({
               className="w-12 h-12 rounded-xl object-cover shadow-md"
             />
             <div className="flex-1 min-w-0">
-              <CardTitle className="text-primary-dark text-base font-semibold">{playlist.name}</CardTitle>
+              <CardTitle className="text-primary-dark text-base font-semibold">
+                {playlist.name}
+              </CardTitle>
               <div className="flex items-center gap-2 text-sm text-secondary-dark">
                 <Music className="w-3 h-3" />
-                <span>{hasLoadedContent ? loadedSongs.length : playlist.songCount} songs</span>
+                <span>
+                  {hasLoadedContent ? loadedSongs.length : playlist.songCount}{" "}
+                  songs
+                </span>
                 {playlist.isPublic !== undefined && (
                   <>
                     <span>•</span>
@@ -137,7 +160,9 @@ export function PlaylistPreview({
               disabled={loading}
               className="text-secondary-dark hover:text-primary-dark hover:bg-white/20 rounded-xl"
               aria-expanded={isExpanded}
-              aria-label={`${isExpanded ? "Collapse" : "Expand"} ${playlist.name} playlist details`}
+              aria-label={`${isExpanded ? "Collapse" : "Expand"} ${
+                playlist.name
+              } playlist details`}
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -159,40 +184,66 @@ export function PlaylistPreview({
               <Music className="w-4 h-4" />
               Songs in this playlist
             </h4>
-            
+
             {error && (
               <div className="text-red-500 text-sm mb-3 p-2 bg-red-500/10 rounded-lg">
                 Failed to load playlist content. Showing cached songs.
               </div>
             )}
-            
+
             <div className="space-y-2 max-h-48 overflow-y-auto">
               {songsToDisplay.length > 0 ? (
-                songsToDisplay.map((song, index) => (
+                songsToDisplay.map((song) => (
                   <div
                     key={song.id}
                     className="flex items-center justify-between p-2 rounded-lg hover:bg-white/10 transition-colors group"
                   >
-                    <div className="flex items-center space-x-3 flex-1">
-                      <span className="text-xs text-muted-dark w-6 text-center">{index + 1}</span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-primary-dark truncate">{song.title}</p>
-                        <p className="text-xs text-secondary-dark truncate">{song.artist}</p>
+                    {/* Left group: image + text */}
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      {song.image_url ? (
+                        <img
+                          src={song.image_url}
+                          alt={song.title}
+                          className="w-10 h-10 rounded-md object-cover"
+                          onError={(e) => {
+                            // if load fails, replace with placeholder
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = "/placeholder-song.svg";
+                          }}
+                        />
+                      ) : (
+                        // if there's no URL at all, show the placeholder directly
+                        <img
+                          src="/placeholder-song.svg"
+                          alt="no album art"
+                          className="w-10 h-10 rounded-md object-cover opacity-50"
+                        />
+                      )}
+
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-primary-dark truncate">
+                          {song.title}
+                        </p>
+                        <p className="text-xs text-secondary-dark truncate">
+                          {song.artist}
+                        </p>
                       </div>
                     </div>
+
+                    {/* Right group: duration + delete */}
                     <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1 text-xs text-muted-dark">
-                        <Clock className="w-3 h-3" />
-                        <span>{song.duration}</span>
-                      </div>
+                      <span className="text-xs text-muted-dark">
+                        {song.duration}
+                      </span>
                       {onDelete && (
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={(e) => {
-                            e.stopPropagation()
-                            // This would trigger a confirmation dialog for song removal
-                            console.log(`Remove song ${song.id} from playlist ${playlist.id}`)
+                            e.stopPropagation();
+                            console.log(
+                              `Remove song ${song.id} from playlist ${playlist.id}`
+                            );
                           }}
                           className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-600 hover:bg-red-500/10 rounded-lg p-1 transition-all"
                           aria-label={`Remove ${song.title} from playlist`}
@@ -214,5 +265,5 @@ export function PlaylistPreview({
         </CardContent>
       )}
     </Card>
-  )
+  );
 }
