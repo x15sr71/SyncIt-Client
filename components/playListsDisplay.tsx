@@ -25,6 +25,7 @@ interface Playlist {
   description: string;
   isPublic: boolean;
   songs: Song[];
+  platform: "spotify" | "youtube"; // Added platform info
 }
 
 interface PlaylistsDisplayProps {
@@ -121,6 +122,7 @@ export default function PlaylistsDisplay({
             <PlaylistPreview
               key={playlist.id}
               playlist={playlist}
+              platform={selectedSource}
               isSelected={isSource ? selectedPlaylists[playlist.id] || false : false}
               onToggle={isSource ? togglePlaylist : () => {}}
               showCheckbox={isSource}
@@ -167,7 +169,7 @@ export default function PlaylistsDisplay({
       >
         <CardHeader className="relative rounded-t-xl pt-4 pb-2 overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none rounded-t-xl bg-gradient-to-b from-white/0 via-white/10 to-transparent backdrop-blur-sm" />
-          <div className="relative z-10">
+          <div className="relative z-10 pb-2">
             <CardTitle
               id="target-playlists-heading"
               className="text-primary-dark capitalize truncate"

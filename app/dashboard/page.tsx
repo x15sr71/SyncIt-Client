@@ -17,7 +17,8 @@ import RecentSyncs from "@/components/recentSyncs";
 import MigrationAction from "@/components/migrationAction";
 import DashboardHeader from "@/components/dasboardHeader";
 import useGetSpotifyPlaylists from "@/hooks/getSpotifyPlaylists";
-
+import useGetYoutubePlaylists from "@/hooks/getYoutubePlaylists";
+import { platform } from "os";
 
 
 // Sample data (unchanged)
@@ -191,13 +192,14 @@ export default function DashboardPage() {
 
   // Initialize the Spotify hook
   const { fetchPlaylists, spotifyPlaylists } = useGetSpotifyPlaylists();
+  const { fetchYoutubePlaylists, youtubePlaylists } = useGetYoutubePlaylists();
 
   // Fetch Spotify playlists when selectedSource changes to spotify
-  useEffect(() => {
-    if (selectedSource === "spotify") {
-      fetchPlaylists();
-    }
-  }, [selectedSource]);
+useEffect(() => {
+  fetchPlaylists(); // Spotify
+  fetchYoutubePlaylists(); // YouTube
+}, []);
+
 
   // Transform Spotify playlists to match the Playlist interface
   const transformedSpotifyPlaylists: Playlist[] = spotifyPlaylists.map((playlist) => ({
@@ -208,7 +210,24 @@ export default function DashboardPage() {
     description: playlist.description || "",
     isPublic: playlist.public,
     songs: [], // We'll populate this when needed for individual playlist details
+    platform: "spotify", // Add platform info
   }));
+
+const transformedYoutubePlaylists: Playlist[] = youtubePlaylists.map((playlist) => ({
+  id: playlist.id,
+  name: playlist.snippet.title,
+  description: playlist.snippet.description || "",
+  songCount: playlist.contentDetails?.itemCount || 0,
+  imageUrl:
+    playlist.snippet.thumbnails?.high?.url ||
+    playlist.snippet.thumbnails?.medium?.url ||
+    playlist.snippet.thumbnails?.default?.url ||
+    "/placeholder.svg?height=50&width=50",
+  isPublic: playlist.status?.privacyStatus === "public",
+  songs: [],
+  platform: "youtube", // Add platform info
+}));
+
 
   const togglePlaylist = (id: string) => {
     setSelectedPlaylists((prev) => ({
@@ -331,11 +350,16 @@ export default function DashboardPage() {
   };
 
   // Use real Spotify data when selectedSource is spotify, otherwise use sample data
-  const sourcePlaylists = selectedSource === "spotify" 
-    ? transformedSpotifyPlaylists 
-    : samplePlaylists[selectedSource] || [];
-  
-  const targetPlaylists = samplePlaylists[selectedTarget] || [];
+const sourcePlaylists =
+  selectedSource === "spotify"
+    ? transformedSpotifyPlaylists
+    : transformedYoutubePlaylists;
+
+const targetPlaylists =
+  selectedTarget === "spotify"
+    ? transformedSpotifyPlaylists
+    : transformedYoutubePlaylists;
+
   
   const selectedPlaylistData = sourcePlaylists.find(
     (p) => p.id === selectedPlaylistForMigration
