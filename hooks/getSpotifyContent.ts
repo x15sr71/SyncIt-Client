@@ -7,48 +7,67 @@ interface SpotifyTrack {
   artists: string[];
   album: string;
   duration_ms: number;
+  image_url?: string; // If image URL is available
 }
 
 interface GetPlaylistContentResponse {
   success: boolean;
-  data: SpotifyTrack[];
+  data?: Record<string, SpotifyTrack[]>;
+  message?: string;
+  error?: string;
 }
 
 export default function useGetSpotifyPlaylistContent() {
-  const [playlistContent, setPlaylistContent] = useState<SpotifyTrack[]>([]);
+  const [playlistContent, setPlaylistContent] = useState<Record<string, SpotifyTrack[]>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchPlaylistContent = async () => {
+  const fetchPlaylistContent = async (playlistIds: string[]) => {
     setLoading(true);
     setError(null);
-    
+
     try {
-      const response = await apiClient.get<GetPlaylistContentResponse>("/spotifyplaylistcontent");
-      console.log(response.data);
-      setPlaylistContent(response.data.data);
-      return response.data.data;
-    } catch (error) {
-      console.error("Error fetching Spotify playlist content:", error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to fetch playlist content";
+      const response = await apiClient.post<GetPlaylistContentResponse>(
+        "/spotifyplaylistcontent",
+        { playlistIds }
+      );
+
+      const { success, data, message, error: apiError } = response.data;
+
+      if (!success || !data) {
+        const msg = message || apiError || "Unknown error from server.";
+        setError(msg);
+        throw new Error(msg);
+      }
+
+      setPlaylistContent(data);
+      return { success: true, data }; // ✅ return structured result
+    } catch (err: any) {
+      console.error("Error fetching Spotify playlist content:", err);
+      const errorMessage =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.message ||
+        "Failed to fetch playlist content";
+
       setError(errorMessage);
-      setPlaylistContent([]);
-      throw error; // Re-throw the error so the component can handle it
+      setPlaylistContent({});
+      return { success: false, error: errorMessage };
     } finally {
       setLoading(false);
     }
   };
 
   const clearPlaylistContent = () => {
-    setPlaylistContent([]);
+    setPlaylistContent({});
     setError(null);
   };
 
-  return { 
-    fetchPlaylistContent, 
-    playlistContent, 
-    loading, 
+  return {
+    fetchPlaylistContent,
+    playlistContent,
+    loading,
     error,
-    clearPlaylistContent 
+    clearPlaylistContent,
   };
 }
