@@ -101,6 +101,19 @@ const [confirmationDialog, setConfirmationDialog] = useState<{
     platform: "" as "spotify" | "youtube" | "",
   });
 
+  // Store the animation function and helpers to call after confirmation
+  const [pendingSongDeletion, setPendingSongDeletion] = useState<{
+    playlistId: string;
+    songId: string;
+    songTitle: string;
+    platform: "spotify" | "youtube";
+    animateRemoval: (songId: string) => Promise<void>;
+    animateOnly?: (songId: string) => Promise<void>;
+    removeFromState?: (songId: string) => void;
+    cancelAnimation?: (songId: string) => void;
+    setAPILoading?: (loading: boolean) => void;
+  } | null>(null);
+
   const { fetchPlaylists, spotifyPlaylists } = useGetSpotifyPlaylists();
   const [localSpotifyPlaylists, setLocalSpotifyPlaylists] = useState<SpotifyPlaylist[]>([]);
 
@@ -355,18 +368,104 @@ const [confirmationDialog, setConfirmationDialog] = useState<{
     }
   };
 
+  // Updated handler that receives the animation function and helpers
+  const handleDeleteSongFromPlaylistWithAnimation = (
+    playlistId: string, 
+    songId: string, 
+    songTitle: string, 
+    platform: "spotify" | "youtube",
+    animateRemoval: (songId: string) => Promise<void>,
+    helpers?: {
+      animateOnly?: (songId: string) => Promise<void>;
+      removeFromState?: (songId: string) => void;
+      cancelAnimation?: (songId: string) => void;
+      setAPILoading?: (loading: boolean) => void;
+    }
+  ) => {
+    const playlist = [...sourcePlaylists, ...targetPlaylists].find((p) => p.id === playlistId);
+    if (playlist) {
+      // Store the animation function and helpers for later use
+      setPendingSongDeletion({
+        playlistId,
+        songId,
+        songTitle,
+        platform,
+        animateRemoval,
+        ...helpers
+      });
+      
+      // Open the confirmation dialog
+      setDeleteSongDialog({
+        isOpen: true,
+        playlistId,
+        playlistName: playlist.name,
+        songId,
+        songTitle,
+        platform,
+      });
+    }
+  };
+
+  // ✅ UPDATED: API-first song deletion with proper response checking
   const handleDeleteSongConfirm = async (playlistId: string, songId: string, platform: "spotify" | "youtube") => {
+    if (!pendingSongDeletion || pendingSongDeletion.songId !== songId) {
+      console.error("No pending deletion found");
+      return;
+    }
+
     try {
-      if (platform === "spotify") {
-        await deleteSpotifySong(playlistId, songId);
-      } else if (platform === "youtube") {
-        await deleteYouTubeSong(playlistId, songId);
+      // ✅ 1. Show API loading state
+      if (pendingSongDeletion.setAPILoading) {
+        pendingSongDeletion.setAPILoading(true);
       }
-      setDeleteSongDialog((prev) => ({ ...prev, isOpen: false }));
+
+      // ✅ 2. Call the backend API first
+      let apiResponse: any;
+      if (platform === "spotify") {
+        apiResponse = await deleteSpotifySong(playlistId, songId);
+      } else if (platform === "youtube") {
+        apiResponse = await deleteYouTubeSong(playlistId, songId);
+      }
+
+      // ✅ 3. Check API response - handle both successful and error responses
+      if (apiResponse && typeof apiResponse === 'object') {
+        // If the response has a success field and it's false, throw error
+        if ('success' in apiResponse && !apiResponse.success) {
+          throw new Error(apiResponse.message || "Failed to delete song from backend");
+        }
+        // If no success field but has error indication, throw error
+        if ('error' in apiResponse && apiResponse.error) {
+          throw new Error(apiResponse.message || apiResponse.error || "Failed to delete song from backend");
+        }
+      } else if (!apiResponse) {
+        // If response is null/undefined, consider it an error
+        throw new Error("No response from server");
+      }
+
+      // ✅ 4. If we reach here, API call was successful - hide loading and start removal animation
+      if (pendingSongDeletion.setAPILoading) {
+        pendingSongDeletion.setAPILoading(false);
+      }
+      
+      // Use the animation function that also updates state
+      await pendingSongDeletion.animateRemoval(songId);
+      
       console.log(`Song deleted from ${platform} playlist successfully`);
-    } catch (err) {
+      showToastMessage("Song removed successfully", "success");
+      
+    } catch (err: any) {
       console.error(`Failed to delete song from ${platform} playlist:`, err);
-      // Error handling is done by the respective hooks with toast messages
+      
+      // ✅ 5. If API fails, cancel any loading states and show error
+      if (pendingSongDeletion.cancelAnimation) {
+        pendingSongDeletion.cancelAnimation(songId);
+      }
+      
+      const errorMessage = err.response?.data?.message || err.message || "Failed to remove song";
+      showToastMessage(errorMessage, "error");
+    } finally {
+      setPendingSongDeletion(null);
+      setDeleteSongDialog((prev) => ({ ...prev, isOpen: false }));
     }
   };
 
@@ -429,7 +528,7 @@ const [confirmationDialog, setConfirmationDialog] = useState<{
               handleRenamePlaylist={handleRenamePlaylist}
               handleEmptyPlaylist={handleEmptyPlaylist}
               handleDeletePlaylist={handleDeletePlaylist}
-              handleDeleteSongFromPlaylist={handleDeleteSongFromPlaylist}
+              handleDeleteSongFromPlaylist={handleDeleteSongFromPlaylistWithAnimation}
             />
             <div className="flex justify-center min-w-0">
               <MigrationAction handleStartMigration={handleStartMigration} selectedPlaylists={selectedPlaylists} />
