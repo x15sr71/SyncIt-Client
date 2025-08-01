@@ -1,6 +1,10 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useState } from "react";
+import { useDashboardState } from "@/hooks/useDashboardState";
+import { useTransformedPlaylists } from "@/hooks/useTransformedPlaylists";
+import { useDashboardHandlers } from "@/hooks/useDashboardHandlers";
+
 import { MigrationConfirmationDialog } from "@/components/migration-confirmation-dialog";
 import { MigrationLoadingCard } from "@/components/migration-loading-card";
 import { MigrationResultCard } from "@/components/migration-result-card";
@@ -16,171 +20,69 @@ import QuickStats from "@/components/quickStats";
 import RecentSyncs from "@/components/recentSyncs";
 import MigrationAction from "@/components/migrationAction";
 import DashboardHeader from "@/components/dasboardHeader";
-import useGetSpotifyPlaylists from "@/hooks/getSpotifyPlaylists";
+
+import useGetSpotifyPlaylists, { SpotifyPlaylist } from "@/hooks/getSpotifyPlaylists";
 import useGetYoutubePlaylists from "@/hooks/getYoutubePlaylists";
 import useSpotifyActions from "@/hooks/useSpotifyActions";
 import useYouTubeActions from "@/hooks/useYouTubeActions";
-import { SpotifyPlaylist } from "@/hooks/getSpotifyPlaylists";
-
-interface Playlist {
-  id: string;
-  name: string;
-  songCount: number;
-  imageUrl: string;
-  description: string;
-  isPublic: boolean;
-  songs: any[];
-  platform: "spotify" | "youtube";
-}
+// import { Playlist } from "@/hooks/useTransformedPlaylists"; // If you want to use Playlist type further.
 
 export default function DashboardPage() {
-  const [darkMode, setDarkMode] = useState(true);
-  const [selectedSource, setSelectedSource] = useState<"spotify" | "youtube">("spotify");
-  const [selectedTarget, setSelectedTarget] = useState<"spotify" | "youtube">("youtube");
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [selectedPlaylists, setSelectedPlaylists] = useState<{ [key: string]: boolean }>({});
-  const [showMigrationDialog, setShowMigrationDialog] = useState(false);
-  const [selectedPlaylistForMigration, setSelectedPlaylistForMigration] = useState<string>("");
-  const [isMigrating, setIsMigrating] = useState(false);
-  const [showMigrationResult, setShowMigrationResult] = useState(false);
-  const [showSyncPreferences, setShowSyncPreferences] = useState(false);
-  const [migrationResults, setMigrationResults] = useState<{
-    successCount: number;
-    failedTracks: any[];
-    playlistName: string;
-  }>({ successCount: 0, failedTracks: [], playlistName: "" });
+  const dashboard = useDashboardState();
 
-  const [showToast, setShowToast] = useState<{
-    message: string;
-    type: 'success' | 'error';
-    isVisible: boolean;
-  } | null>(null);
-
-const [confirmationDialog, setConfirmationDialog] = useState<{
-  isOpen: boolean;
-  title: string;
-  message: string;
-  onConfirm: () => void;
-  confirmText?: string;
-  confirmVariant?: "default" | "destructive";
-}>({
-  isOpen: false,
-  title: "",
-  message: "",
-  onConfirm: () => {},
-});
-
-  const [renameDialog, setRenameDialog] = useState({
-    isOpen: false,
-    playlistId: "",
-    currentName: "",
-    platform: "" as "spotify" | "youtube" | "",
-  });
-
-  const [deleteDialog, setDeleteDialog] = useState({
-    isOpen: false,
-    playlistId: "",
-    playlistName: "",
-    platform: "" as "spotify" | "youtube" | "",
-  });
-
-  const [emptyDialog, setEmptyDialog] = useState({
-    isOpen: false,
-    playlistId: "",
-    playlistName: "",
-    songCount: 0,
-    platform: "" as "spotify" | "youtube" | "",
-  });
-
-  const [deleteSongDialog, setDeleteSongDialog] = useState({
-    isOpen: false,
-    playlistId: "",
-    playlistName: "",
-    songId: "",
-    songTitle: "",
-    platform: "" as "spotify" | "youtube" | "",
-  });
-
-  // Store the animation function and helpers to call after confirmation
-  const [pendingSongDeletion, setPendingSongDeletion] = useState<{
-    playlistId: string;
-    songId: string;
-    songTitle: string;
-    platform: "spotify" | "youtube";
-    animateRemoval: (songId: string) => Promise<void>;
-    animateOnly?: (songId: string) => Promise<void>;
-    removeFromState?: (songId: string) => void;
-    cancelAnimation?: (songId: string) => void;
-    setAPILoading?: (loading: boolean) => void;
-  } | null>(null);
-
+  // Playlist fetches
   const { fetchPlaylists, spotifyPlaylists } = useGetSpotifyPlaylists();
   const [localSpotifyPlaylists, setLocalSpotifyPlaylists] = useState<SpotifyPlaylist[]>([]);
-
   useEffect(() => {
     setLocalSpotifyPlaylists(spotifyPlaylists);
   }, [spotifyPlaylists]);
 
   const { fetchYoutubePlaylists, youtubePlaylists } = useGetYoutubePlaylists();
   const [localYoutubePlaylists, setLocalYoutubePlaylists] = useState(youtubePlaylists);
-
   useEffect(() => {
     setLocalYoutubePlaylists(youtubePlaylists);
   }, [youtubePlaylists]);
 
-  const showToastMessage = (message: string, type: 'success' | 'error') => {
-    setShowToast({ message, type, isVisible: true });
-    // Auto-hide toast after 5 seconds
-    setTimeout(() => {
-      setShowToast(null);
-    }, 5000);
-  };
+  // showToast wrapper (do NOT pass setShowToast directly!)
+  function showToast(message: string, type: "success" | "error") {
+    dashboard.setShowToast({ message, type, isVisible: true });
+    setTimeout(() => dashboard.setShowToast(null), 5000);
+  }
 
+  // ACTION HOOKS with wrapper
   const { renamePlaylist: renameSpotifyPlaylist, deletePlaylist: deleteSpotifyPlaylist, deleteSongFromPlaylist: deleteSpotifySong } = useSpotifyActions({
     onPlaylistRenamed: (playlistId, newName) => {
-      // Optimistically update the local state immediately
-      setLocalSpotifyPlaylists((prev) =>
-        prev.map((p) => (p.id === playlistId ? { ...p, name: newName } : p))
-      );
-      console.log(`UI updated: Spotify Playlist ${playlistId} renamed to "${newName}"`);
-    },
-    onPlaylistDeleted: (playlistId) => {
-      // Remove playlist from local state immediately
-      setLocalSpotifyPlaylists((prev) => prev.filter((p) => p.id !== playlistId));
-      console.log(`UI updated: Spotify Playlist ${playlistId} removed`);
-      // Clear any selections for the deleted playlist
-      setSelectedPlaylists((prev) => {
-        const updated = { ...prev };
-        delete updated[playlistId];
-        return updated;
+      setLocalSpotifyPlaylists((prev) => prev.map((p: SpotifyPlaylist) => (p.id === playlistId ? { ...p, name: newName } : p)));
+      dashboard.setSelectedPlaylists((prev) => {
+        const updated = { ...prev }; delete updated[playlistId]; return updated;
       });
     },
-    showToast: showToastMessage,
+    onPlaylistDeleted: (playlistId) => {
+      setLocalSpotifyPlaylists((prev) => prev.filter((p: SpotifyPlaylist) => p.id !== playlistId));
+      dashboard.setSelectedPlaylists((prev) => {
+        const updated = { ...prev }; delete updated[playlistId]; return updated;
+      });
+    },
+    showToast,
   });
 
   const { renamePlaylist: renameYouTubePlaylist, deletePlaylist: deleteYouTubePlaylist, deleteSongFromPlaylist: deleteYouTubeSong } = useYouTubeActions({
     onPlaylistRenamed: (playlistId, newName) => {
-      // Optimistically update the local state immediately
       setLocalYoutubePlaylists((prev) =>
-        prev.map((p) => (p.id === playlistId ? { ...p, snippet: { ...p.snippet, title: newName } } : p))
+        prev.map((p: any) => (p.id === playlistId ? { ...p, snippet: { ...p.snippet, title: newName } } : p))
       );
-      console.log(`UI updated: YouTube Playlist ${playlistId} renamed to "${newName}"`);
-    },
-    onPlaylistDeleted: (playlistId) => {
-      // Remove playlist from local state immediately
-      setLocalYoutubePlaylists((prev) => prev.filter((p) => p.id !== playlistId));
-      console.log(`UI updated: YouTube Playlist ${playlistId} removed`);
-      // Clear any selections for the deleted playlist
-      setSelectedPlaylists((prev) => {
-        const updated = { ...prev };
-        delete updated[playlistId];
-        return updated;
+      dashboard.setSelectedPlaylists((prev) => {
+        const updated = { ...prev }; delete updated[playlistId]; return updated;
       });
     },
-    refreshPlaylists: async () => {
-      await fetchYoutubePlaylists();
+    onPlaylistDeleted: (playlistId) => {
+      setLocalYoutubePlaylists((prev) => prev.filter((p: any) => p.id !== playlistId));
+      dashboard.setSelectedPlaylists((prev) => {
+        const updated = { ...prev }; delete updated[playlistId]; return updated;
+      });
     },
-    showToast: showToastMessage,
+    refreshPlaylists: async () => { await fetchYoutubePlaylists(); },
+    showToast,
   });
 
   useEffect(() => {
@@ -188,294 +90,37 @@ const [confirmationDialog, setConfirmationDialog] = useState<{
     fetchYoutubePlaylists();
   }, []);
 
-  const transformedSpotifyPlaylists = useMemo(() => {
-    return localSpotifyPlaylists.map((playlist) => ({
-      id: playlist.id,
-      name: playlist.name,
-      songCount: playlist.tracks.total,
-      imageUrl: playlist.images[0]?.url || "/placeholder.svg?height=50&width=50",
-      description: playlist.description || "",
-      isPublic: playlist.public,
-      songs: [],
-      platform: "spotify" as const,
-    }));
-  }, [localSpotifyPlaylists]);
+  // Transform playlists (TIped)
+  const { transformedSpotifyPlaylists, transformedYoutubePlaylists } =
+    useTransformedPlaylists(localSpotifyPlaylists, localYoutubePlaylists);
 
-  const transformedYoutubePlaylists: Playlist[] = useMemo(() => {
-    return localYoutubePlaylists.map((playlist) => ({
-      id: playlist.id,
-      name: playlist.snippet.title,
-      description: playlist.snippet.description || "",
-      songCount: playlist.contentDetails?.itemCount || 0,
-      imageUrl:
-        playlist.snippet.thumbnails?.high?.url ||
-        playlist.snippet.thumbnails?.medium?.url ||
-        playlist.snippet.thumbnails?.default?.url ||
-        "/placeholder.svg?height=50&width=50",
-      isPublic: playlist.status?.privacyStatus === "public",
-      songs: [],
-      platform: "youtube",
-    }));
-  }, [localYoutubePlaylists]);
+  const sourcePlaylists = dashboard.selectedSource === "spotify"
+    ? transformedSpotifyPlaylists
+    : transformedYoutubePlaylists;
+  const targetPlaylists = dashboard.selectedTarget === "spotify"
+    ? transformedSpotifyPlaylists
+    : transformedYoutubePlaylists;
 
-  const togglePlaylist = (id: string) => {
-    setSelectedPlaylists((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
+  const selectedPlaylistData = sourcePlaylists.find((p) => p.id === dashboard.selectedPlaylistForMigration);
 
-  const handleStartMigration = () => {
-    const selectedPlaylistIds = Object.keys(selectedPlaylists).filter((id) => selectedPlaylists[id]);
-    if (selectedPlaylistIds.length > 0) {
-      setSelectedPlaylistForMigration(selectedPlaylistIds[0]);
-      setShowMigrationDialog(true);
-    }
-  };
+  // Handlers with all dependencies injected
+  const handlers = useDashboardHandlers({
+    ...dashboard,
+    sourcePlaylists,
+    targetPlaylists,
+    renameSpotifyPlaylist,
+    renameYouTubePlaylist,
+    deleteSpotifyPlaylist,
+    deleteYouTubePlaylist,
+    deleteSpotifySong,
+    deleteYouTubeSong,
+    fetchPlaylists,
+    fetchYoutubePlaylists,
+    showToast,
+  });
 
-  const handleMigrationConfirm = (
-    playlistNames: { [playlistId: string]: string },
-    useOriginalNames: boolean
-  ) => {
-    console.log("Starting migration:", {
-      playlistNames,
-      useOriginalNames,
-      from: selectedSource,
-      to: selectedTarget,
-    });
-    setShowMigrationDialog(false);
-    setIsMigrating(true);
-  };
-
-  const handleMigrationComplete = (results: Array<{ playlistId: string; playlistName: string; successCount: number; failedTracks: any[] }>) => {
-    const result = results[0];
-    if (result) {
-      setIsMigrating(false);
-      setMigrationResults({
-        successCount: result.successCount,
-        failedTracks: result.failedTracks,
-        playlistName: result.playlistName,
-      });
-      setShowMigrationResult(true);
-    }
-  };
-
-  const handleKeepInSync = () => {
-    setShowMigrationResult(false);
-    setShowSyncPreferences(true);
-  };
-
-  const handleSyncPreferencesConfirm = (frequency: string) => {
-    console.log("Sync preferences set:", frequency);
-    setSelectedPlaylists({});
-  };
-
-  const handleRenamePlaylist = (playlistId: string) => {
-    const playlist = [...sourcePlaylists, ...targetPlaylists].find((p) => p.id === playlistId);
-    if (playlist) {
-      setRenameDialog({
-        isOpen: true,
-        playlistId,
-        currentName: playlist.name,
-        platform: playlist.platform,
-      });
-    }
-  };
-
-  const handleRenameConfirm = async (playlistId: string, newName: string) => {
-    try {
-      if (renameDialog.platform === "spotify") {
-        await renameSpotifyPlaylist(playlistId, newName);
-      } else if (renameDialog.platform === "youtube") {
-        await renameYouTubePlaylist(playlistId, newName);
-      }
-      setRenameDialog((prev) => ({ ...prev, isOpen: false }));
-      console.log(`${renameDialog.platform} playlist rename completed successfully`);
-    } catch (err) {
-      console.error(`Failed to rename ${renameDialog.platform} playlist:`, err);
-      // The error will be handled by the respective hook, and optimistic update won't happen if API fails
-    }
-  };
-
-  const handleEmptyPlaylist = (playlistId: string) => {
-    const playlist = [...sourcePlaylists, ...targetPlaylists].find((p) => p.id === playlistId);
-    if (playlist) {
-      setEmptyDialog({
-        isOpen: true,
-        playlistId,
-        playlistName: playlist.name,
-        songCount: playlist.songCount,
-        platform: playlist.platform,
-      });
-    }
-  };
-
-  const handleEmptyConfirm = async (playlistId: string) => {
-    try {
-      // Note: This would require getting all songs from the playlist first, then deleting each one
-      // This is a more complex operation that might need a separate API endpoint
-      // For now, just logging the intent
-      console.log(`Emptying ${emptyDialog.platform} playlist ${playlistId}`);
-      
-      // You might want to implement a bulk delete or empty playlist API endpoint
-      // Or iterate through all songs and delete them one by one
-      showToastMessage("Empty playlist functionality not yet implemented", "error");
-      
-      setEmptyDialog((prev) => ({ ...prev, isOpen: false }));
-    } catch (err) {
-      console.error(`Failed to empty ${emptyDialog.platform} playlist:`, err);
-    }
-  };
-
-  const handleDeletePlaylist = (playlistId: string) => {
-    const playlist = [...sourcePlaylists, ...targetPlaylists].find((p) => p.id === playlistId);
-    if (playlist) {
-      setDeleteDialog({
-        isOpen: true,
-        playlistId,
-        playlistName: playlist.name,
-        platform: playlist.platform,
-      });
-    }
-  };
-
-  const handleDeleteConfirm = async (playlistId: string) => {
-    try {
-      if (deleteDialog.platform === "spotify") {
-        await deleteSpotifyPlaylist(playlistId);
-      } else if (deleteDialog.platform === "youtube") {
-        await deleteYouTubePlaylist(playlistId);
-      }
-      setDeleteDialog((prev) => ({ ...prev, isOpen: false }));
-      console.log(`${deleteDialog.platform} playlist deleted successfully`);
-    } catch (err) {
-      console.error(`Failed to delete ${deleteDialog.platform} playlist:`, err);
-      // Error handling is done by the respective hooks with toast messages
-    }
-  };
-
-  const handleDeleteSongFromPlaylist = (playlistId: string, songId: string, songTitle: string, platform: "spotify" | "youtube") => {
-    const playlist = [...sourcePlaylists, ...targetPlaylists].find((p) => p.id === playlistId);
-    if (playlist) {
-      setDeleteSongDialog({
-        isOpen: true,
-        playlistId,
-        playlistName: playlist.name,
-        songId,
-        songTitle,
-        platform,
-      });
-    }
-  };
-
-  // Updated handler that receives the animation function and helpers
-  const handleDeleteSongFromPlaylistWithAnimation = (
-    playlistId: string, 
-    songId: string, 
-    songTitle: string, 
-    platform: "spotify" | "youtube",
-    animateRemoval: (songId: string) => Promise<void>,
-    helpers?: {
-      animateOnly?: (songId: string) => Promise<void>;
-      removeFromState?: (songId: string) => void;
-      cancelAnimation?: (songId: string) => void;
-      setAPILoading?: (loading: boolean) => void;
-    }
-  ) => {
-    const playlist = [...sourcePlaylists, ...targetPlaylists].find((p) => p.id === playlistId);
-    if (playlist) {
-      // Store the animation function and helpers for later use
-      setPendingSongDeletion({
-        playlistId,
-        songId,
-        songTitle,
-        platform,
-        animateRemoval,
-        ...helpers
-      });
-      
-      // Open the confirmation dialog
-      setDeleteSongDialog({
-        isOpen: true,
-        playlistId,
-        playlistName: playlist.name,
-        songId,
-        songTitle,
-        platform,
-      });
-    }
-  };
-
-  // ✅ UPDATED: API-first song deletion with proper response checking
-  const handleDeleteSongConfirm = async (playlistId: string, songId: string, platform: "spotify" | "youtube") => {
-    if (!pendingSongDeletion || pendingSongDeletion.songId !== songId) {
-      console.error("No pending deletion found");
-      return;
-    }
-
-    try {
-      // ✅ 1. Show API loading state
-      if (pendingSongDeletion.setAPILoading) {
-        pendingSongDeletion.setAPILoading(true);
-      }
-
-      // ✅ 2. Call the backend API first
-      let apiResponse: any;
-      if (platform === "spotify") {
-        apiResponse = await deleteSpotifySong(playlistId, songId);
-      } else if (platform === "youtube") {
-        apiResponse = await deleteYouTubeSong(playlistId, songId);
-      }
-
-      // ✅ 3. Check API response - handle both successful and error responses
-      if (apiResponse && typeof apiResponse === 'object') {
-        // If the response has a success field and it's false, throw error
-        if ('success' in apiResponse && !apiResponse.success) {
-          throw new Error(apiResponse.message || "Failed to delete song from backend");
-        }
-        // If no success field but has error indication, throw error
-        if ('error' in apiResponse && apiResponse.error) {
-          throw new Error(apiResponse.message || apiResponse.error || "Failed to delete song from backend");
-        }
-      } else if (!apiResponse) {
-        // If response is null/undefined, consider it an error
-        throw new Error("No response from server");
-      }
-
-      // ✅ 4. If we reach here, API call was successful - hide loading and start removal animation
-      if (pendingSongDeletion.setAPILoading) {
-        pendingSongDeletion.setAPILoading(false);
-      }
-      
-      // Use the animation function that also updates state
-      await pendingSongDeletion.animateRemoval(songId);
-      
-      console.log(`Song deleted from ${platform} playlist successfully`);
-      showToastMessage("Song removed successfully", "success");
-      
-    } catch (err: any) {
-      console.error(`Failed to delete song from ${platform} playlist:`, err);
-      
-      // ✅ 5. If API fails, cancel any loading states and show error
-      if (pendingSongDeletion.cancelAnimation) {
-        pendingSongDeletion.cancelAnimation(songId);
-      }
-      
-      const errorMessage = err.response?.data?.message || err.message || "Failed to remove song";
-      showToastMessage(errorMessage, "error");
-    } finally {
-      setPendingSongDeletion(null);
-      setDeleteSongDialog((prev) => ({ ...prev, isOpen: false }));
-    }
-  };
-
-  const sourcePlaylists = selectedSource === "spotify" ? transformedSpotifyPlaylists : transformedYoutubePlaylists;
-  const targetPlaylists = selectedTarget === "spotify" ? transformedSpotifyPlaylists : transformedYoutubePlaylists;
-
-  const selectedPlaylistData = sourcePlaylists.find((p) => p.id === selectedPlaylistForMigration);
-
-  const migrationPlaylists = Object.keys(selectedPlaylists)
-    .filter((id) => selectedPlaylists[id])
+  const migrationPlaylists = Object.keys(dashboard.selectedPlaylists)
+    .filter((id) => dashboard.selectedPlaylists[id])
     .map((id) => {
       const playlist = sourcePlaylists.find((p) => p.id === id);
       return playlist
@@ -490,48 +135,39 @@ const [confirmationDialog, setConfirmationDialog] = useState<{
           }
         : null;
     })
-    .filter(Boolean) as Array<{
-    id: string;
-    name: string;
-    totalTracks: number;
-    status: "pending" | "in-progress" | "completed" | "failed";
-    progress: number;
-    currentStep: string;
-    processedTracks: number;
-  }>;
+    .filter((p): p is NonNullable<typeof p> => !!p);
 
   return (
     <div className="min-h-screen w-full gradient-background-subdued overflow-x-hidden">
       <DashboardHeader
-        darkMode={darkMode}
-        setDarkMode={setDarkMode}
-        isMobileMenuOpen={isMobileMenuOpen}
-        setIsMobileMenuOpen={setIsMobileMenuOpen}
+        darkMode={dashboard.darkMode} setDarkMode={dashboard.setDarkMode}
+        isMobileMenuOpen={dashboard.isMobileMenuOpen}
+        setIsMobileMenuOpen={dashboard.setIsMobileMenuOpen}
       />
       <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-w-0">
         <div className="grid lg:grid-cols-4 gap-6 lg:gap-8 w-full min-w-0">
           <div className="lg:col-span-3 space-y-6 w-full min-w-0">
             <ConnectedAccounts />
             <PlaylistSelection
-              selectedSource={selectedSource}
-              setSelectedSource={setSelectedSource}
-              selectedTarget={selectedTarget}
-              setSelectedTarget={setSelectedTarget}
+              selectedSource={dashboard.selectedSource}
+              setSelectedSource={dashboard.setSelectedSource}
+              selectedTarget={dashboard.selectedTarget}
+              setSelectedTarget={dashboard.setSelectedTarget}
             />
             <PlaylistsDisplay
-              selectedSource={selectedSource}
-              selectedTarget={selectedTarget}
+              selectedSource={dashboard.selectedSource}
+              selectedTarget={dashboard.selectedTarget}
               sourcePlaylists={sourcePlaylists}
               targetPlaylists={targetPlaylists}
-              selectedPlaylists={selectedPlaylists}
-              togglePlaylist={togglePlaylist}
-              handleRenamePlaylist={handleRenamePlaylist}
-              handleEmptyPlaylist={handleEmptyPlaylist}
-              handleDeletePlaylist={handleDeletePlaylist}
-              handleDeleteSongFromPlaylist={handleDeleteSongFromPlaylistWithAnimation}
+              selectedPlaylists={dashboard.selectedPlaylists}
+              togglePlaylist={handlers.togglePlaylist}
+              handleRenamePlaylist={handlers.handleRenamePlaylist}
+              handleEmptyPlaylist={handlers.handleEmptyPlaylist}
+              handleDeletePlaylist={handlers.handleDeletePlaylist}
+              handleDeleteSongFromPlaylist={handlers.handleDeleteSongFromPlaylistWithAnimation}
             />
             <div className="flex justify-center min-w-0">
-              <MigrationAction handleStartMigration={handleStartMigration} selectedPlaylists={selectedPlaylists} />
+              <MigrationAction handleStartMigration={handlers.handleStartMigration} selectedPlaylists={dashboard.selectedPlaylists} />
             </div>
           </div>
           <div className="space-y-6 w-full min-w-0">
@@ -541,119 +177,111 @@ const [confirmationDialog, setConfirmationDialog] = useState<{
         </div>
       </main>
       <MigrationConfirmationDialog
-        isOpen={showMigrationDialog}
-        onClose={() => setShowMigrationDialog(false)}
-        onConfirm={handleMigrationConfirm}
+        isOpen={dashboard.showMigrationDialog}
+        onClose={() => dashboard.setShowMigrationDialog(false)}
+        onConfirm={handlers.handleMigrationConfirm}
         originalPlaylistName={selectedPlaylistData?.name || ""}
-        sourcePlatform={selectedSource}
-        destinationPlatform={selectedTarget}
+        sourcePlatform={dashboard.selectedSource}
+        destinationPlatform={dashboard.selectedTarget}
         trackCount={selectedPlaylistData?.songCount || 0}
-        selectedPlaylists={Object.keys(selectedPlaylists)
-          .filter((id) => selectedPlaylists[id])
+        selectedPlaylists={Object.keys(dashboard.selectedPlaylists)
+          .filter((id) => dashboard.selectedPlaylists[id])
           .map((id) => sourcePlaylists.find((p) => p.id === id))
-          .filter(Boolean)
-          .map((p) => ({ id: p!.id, name: p!.name, songCount: p!.songCount }))}
-        selectedPlaylistCount={Object.keys(selectedPlaylists).filter((id) => selectedPlaylists[id]).length}
+          .filter((p): p is NonNullable<typeof p> => !!p)
+          .map((p) => ({ id: p.id, name: p.name, songCount: p.songCount }))}
+        selectedPlaylistCount={Object.keys(dashboard.selectedPlaylists).filter((id) => dashboard.selectedPlaylists[id]).length}
       />
       <MigrationLoadingCard
-        isVisible={isMigrating}
-        sourcePlatform={selectedSource}
-        targetPlatform={selectedTarget}
+        isVisible={dashboard.isMigrating}
+        sourcePlatform={dashboard.selectedSource}
+        targetPlatform={dashboard.selectedTarget}
         playlists={migrationPlaylists}
-        onComplete={handleMigrationComplete}
+        onComplete={handlers.handleMigrationComplete}
       />
       <MigrationResultCard
-        isVisible={showMigrationResult}
+        isVisible={dashboard.showMigrationResult}
         onClose={() => {
-          setShowMigrationResult(false);
-          setSelectedPlaylists({});
+          dashboard.setShowMigrationResult(false);
+          dashboard.setSelectedPlaylists({});
         }}
-        successCount={migrationResults.successCount}
-        failedTracks={migrationResults.failedTracks}
-        playlistName={migrationResults.playlistName}
+        successCount={dashboard.migrationResults.successCount}
+        failedTracks={dashboard.migrationResults.failedTracks}
+        playlistName={dashboard.migrationResults.playlistName}
         onRetryFailed={() => {
-          console.log("Retrying failed tracks");
-          setShowMigrationResult(false);
-          setIsMigrating(true);
+          dashboard.setShowMigrationResult(false);
+          dashboard.setIsMigrating(true);
         }}
-        onManualMigrate={(trackId) => {
-          console.log("Manual migrate track:", trackId);
-        }}
+        onManualMigrate={(trackId) => {}}
         onRevertMigration={() => {
-          console.log("Reverting migration");
-          setShowMigrationResult(false);
-          setSelectedPlaylists({});
+          dashboard.setShowMigrationResult(false);
+          dashboard.setSelectedPlaylists({});
         }}
-        onKeepInSync={handleKeepInSync}
+        onKeepInSync={handlers.handleKeepInSync}
       />
       <SyncPreferencesDialog
-        isOpen={showSyncPreferences}
-        onClose={() => setShowSyncPreferences(false)}
-        onConfirm={handleSyncPreferencesConfirm}
-        playlistName={migrationResults.playlistName}
+        isOpen={dashboard.showSyncPreferences}
+        onClose={() => dashboard.setShowSyncPreferences(false)}
+        onConfirm={handlers.handleSyncPreferencesConfirm}
+        playlistName={dashboard.migrationResults.playlistName}
       />
       <ConfirmationDialog
-        isOpen={confirmationDialog.isOpen}
-        onClose={() => setConfirmationDialog((prev) => ({ ...prev, isOpen: false }))}
-        onConfirm={confirmationDialog.onConfirm}
-        title={confirmationDialog.title}
-        message={confirmationDialog.message}
-        confirmText={confirmationDialog.confirmText}
-        confirmVariant={confirmationDialog.confirmVariant}
+        isOpen={dashboard.confirmationDialog.isOpen}
+        onClose={() => dashboard.setConfirmationDialog((prev) => ({ ...prev, isOpen: false }))}
+        onConfirm={dashboard.confirmationDialog.onConfirm}
+        title={dashboard.confirmationDialog.title}
+        message={dashboard.confirmationDialog.message}
+        confirmText={dashboard.confirmationDialog.confirmText}
+        confirmVariant={dashboard.confirmationDialog.confirmVariant}
       />
       <RenamePlaylistDialog
-        isOpen={renameDialog.isOpen}
-        onClose={() => setRenameDialog((prev) => ({ ...prev, isOpen: false }))}
-        playlistId={renameDialog.playlistId}
-        currentName={renameDialog.currentName}
-        onRename={handleRenameConfirm}
+        isOpen={dashboard.renameDialog.isOpen}
+        onClose={() => dashboard.setRenameDialog((prev) => ({ ...prev, isOpen: false }))}
+        playlistId={dashboard.renameDialog.playlistId}
+        currentName={dashboard.renameDialog.currentName}
+        onRename={handlers.handleRenameConfirm}
       />
       <DeletePlaylistDialog
-        isOpen={deleteDialog.isOpen}
-        onClose={() => setDeleteDialog((prev) => ({ ...prev, isOpen: false }))}
-        playlistId={deleteDialog.playlistId}
-        playlistName={deleteDialog.playlistName}
-        onDelete={handleDeleteConfirm}
+        isOpen={dashboard.deleteDialog.isOpen}
+        onClose={() => dashboard.setDeleteDialog((prev) => ({ ...prev, isOpen: false }))}
+        playlistId={dashboard.deleteDialog.playlistId}
+        playlistName={dashboard.deleteDialog.playlistName}
+        onDelete={handlers.handleDeleteConfirm}
       />
       <EmptyPlaylistDialog
-        isOpen={emptyDialog.isOpen}
-        onClose={() => setEmptyDialog((prev) => ({ ...prev, isOpen: false }))}
-        playlistId={emptyDialog.playlistId}
-        playlistName={emptyDialog.playlistName}
-        songCount={emptyDialog.songCount}
-        onEmpty={handleEmptyConfirm}
+        isOpen={dashboard.emptyDialog.isOpen}
+        onClose={() => dashboard.setEmptyDialog((prev) => ({ ...prev, isOpen: false }))}
+        playlistId={dashboard.emptyDialog.playlistId}
+        playlistName={dashboard.emptyDialog.playlistName}
+        songCount={dashboard.emptyDialog.songCount}
+        onEmpty={handlers.handleEmptyConfirm}
       />
-
-      {/* Delete Song Confirmation Dialog */}
       <ConfirmationDialog
-        isOpen={deleteSongDialog.isOpen}
-        onClose={() => setDeleteSongDialog((prev) => ({ ...prev, isOpen: false }))}
+        isOpen={dashboard.deleteSongDialog.isOpen}
+        onClose={() => dashboard.setDeleteSongDialog((prev) => ({ ...prev, isOpen: false }))}
         onConfirm={() => {
-          if (deleteSongDialog.platform === "spotify" || deleteSongDialog.platform === "youtube") {
-            handleDeleteSongConfirm(deleteSongDialog.playlistId, deleteSongDialog.songId, deleteSongDialog.platform);
+          if (dashboard.deleteSongDialog.platform === "spotify" || dashboard.deleteSongDialog.platform === "youtube") {
+            handlers.handleDeleteSongConfirm(dashboard.deleteSongDialog.playlistId, dashboard.deleteSongDialog.songId, dashboard.deleteSongDialog.platform);
           }
         }}
         title="Remove Song"
-        message={`Are you sure you want to remove "${deleteSongDialog.songTitle}" from "${deleteSongDialog.playlistName}"? This action cannot be undone.`}
+        message={`Are you sure you want to remove "${dashboard.deleteSongDialog.songTitle}" from "${dashboard.deleteSongDialog.playlistName}"? This action cannot be undone.`}
         confirmText="Remove Song"
         confirmVariant="destructive"
       />
-      
-      {/* Toast Notification */}
-      {showToast && (
-        <div 
+      {dashboard.showToast && (
+        <div
           className={`fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transition-all duration-300 transform ${
-            showToast.isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
+            dashboard.showToast.isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
           } ${
-            showToast.type === 'success' 
-              ? 'bg-green-600 text-white border border-green-500' 
+            dashboard.showToast.type === 'success'
+              ? 'bg-green-600 text-white border border-green-500'
               : 'bg-red-600 text-white border border-red-500'
           }`}
         >
           <div className="flex items-center space-x-2">
-            <span className="text-sm font-medium">{showToast.message}</span>
+            <span className="text-sm font-medium">{dashboard.showToast.message}</span>
             <button
-              onClick={() => setShowToast(null)}
+              onClick={() => dashboard.setShowToast(null)}
               className="ml-2 text-white/80 hover:text-white"
             >
               ×
