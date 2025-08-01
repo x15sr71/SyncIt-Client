@@ -90,13 +90,18 @@ export default function useSpotifyActions(props?: UseSpotifyActionsProps) {
     setLoading(true);
     setError(null);
     try {
+      // Ensure we're sending the correct URI format
+      const formattedTrackUri = trackUri.startsWith("spotify:track:") ? trackUri : `spotify:track:${trackUri}`;
+
       const res = await apiClient.post("/spotify/delete-song", {
         playlistId,
-        trackUri,
+        trackUri: formattedTrackUri,
       });
+
       return res.data;
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || err.message || "Failed to delete song from playlist.";
+      const errorMessage =
+        err.response?.data?.message || err.message || "Failed to delete song from playlist.";
       setError(errorMessage);
       throw err;
     } finally {
