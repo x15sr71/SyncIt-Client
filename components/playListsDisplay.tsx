@@ -38,7 +38,8 @@ interface PlaylistsDisplayProps {
   handleRenamePlaylist: (id: string) => void;
   handleEmptyPlaylist: (id: string) => void;
   handleDeletePlaylist: (id: string) => void;
-  handleDeleteSongFromPlaylist?: (playlistId: string, songId: string, songTitle: string, platform: "spotify" | "youtube") => void;
+  // Updated to accept the new function signature with animation
+  handleDeleteSongFromPlaylist?: (playlistId: string, songId: string, songTitle: string, platform: "spotify" | "youtube", animateRemoval: (songId: string) => Promise<void>) => void;
   isLoadingSource?: boolean;
   sourceError?: string | null;
 }
@@ -131,7 +132,8 @@ export default function PlaylistsDisplay({
               onRename={handleRenamePlaylist}
               onEmpty={handleEmptyPlaylist}
               onDelete={handleDeletePlaylist}
-              onDeleteSong={handleDeleteSongFromPlaylist}
+              // Updated to use the new prop name that accepts the animation function
+              onDeleteSongWithAnimation={handleDeleteSongFromPlaylist}
             />
           ))
         )}
