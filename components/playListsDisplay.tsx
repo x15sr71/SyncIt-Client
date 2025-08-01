@@ -38,6 +38,7 @@ interface PlaylistsDisplayProps {
   handleRenamePlaylist: (id: string) => void;
   handleEmptyPlaylist: (id: string) => void;
   handleDeletePlaylist: (id: string) => void;
+  handleDeleteSongFromPlaylist?: (playlistId: string, songId: string, songTitle: string, platform: "spotify" | "youtube") => void;
   isLoadingSource?: boolean;
   sourceError?: string | null;
 }
@@ -52,6 +53,7 @@ export default function PlaylistsDisplay({
   handleRenamePlaylist,
   handleEmptyPlaylist,
   handleDeletePlaylist,
+  handleDeleteSongFromPlaylist,
   isLoadingSource = false,
   sourceError = null,
 }: PlaylistsDisplayProps) {
@@ -129,6 +131,7 @@ export default function PlaylistsDisplay({
               onRename={handleRenamePlaylist}
               onEmpty={handleEmptyPlaylist}
               onDelete={handleDeletePlaylist}
+              onDeleteSong={handleDeleteSongFromPlaylist}
             />
           ))
         )}

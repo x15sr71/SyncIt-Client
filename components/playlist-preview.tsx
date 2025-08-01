@@ -45,6 +45,7 @@ interface PlaylistPreviewProps {
   onEmpty?: (id: string) => void;
   onDelete?: (id: string) => void;
   platform?: "spotify" | "youtube"; // ✅ Added platform prop
+  onDeleteSong?: (playlistId: string, songId: string, songTitle: string, platform: "spotify" | "youtube") => void; // ADD THIS LINE
 }
 
 const formatDuration = (msOrIso: number | string): string => {
@@ -65,6 +66,7 @@ export function PlaylistPreview({
   onRename,
   onEmpty,
   onDelete,
+  onDeleteSong 
 }: PlaylistPreviewProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [loadedSongs, setLoadedSongs] = useState<Song[]>([]);
@@ -85,7 +87,6 @@ export function PlaylistPreview({
 const loading = playlist.platform === "youtube" ? loadingYoutube : loadingSpotify;
 const error = playlist.platform === "youtube" ? errorYoutube : errorSpotify;
 
-
   const handleExpand = async () => {
     if (!isExpanded && !hasLoadedContent) {
       try {
@@ -97,7 +98,7 @@ const error = playlist.platform === "youtube" ? errorYoutube : errorSpotify;
           const youtubeTracks = response.data?.[playlist.id] || [];
 
           const transformed: Song[] = youtubeTracks.map((track, index) => ({
-            id: `${track.videoId}-${index}`,
+            id: track.videoId,
             duration: track.duration,
             title: track.title,
             artist: track.channelTitle,
@@ -131,6 +132,14 @@ const error = playlist.platform === "youtube" ? errorYoutube : errorSpotify;
     }
 
     setIsExpanded(!isExpanded);
+  };
+
+  const handleRemoveSong = (songId: string, songTitle: string) => {
+    if (onDeleteSong) {
+      onDeleteSong(playlist.id, songId, songTitle, playlist.platform);
+    } else {
+      console.log(`Remove song ${songId} from playlist ${playlist.id}`);
+    }
   };
 
   const songsToDisplay = hasLoadedContent ? loadedSongs : playlist.songs;
@@ -260,13 +269,13 @@ const error = playlist.platform === "youtube" ? errorYoutube : errorSpotify;
 
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-muted-dark">{song.duration}</span>
-                      {onDelete && (
+                      {onDeleteSong && (
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={(e) => {
                             e.stopPropagation();
-                            console.log(`Remove song ${song.id} from playlist ${playlist.id}`);
+                            handleRemoveSong(song.id, song.title);
                           }}
                           className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-600 hover:bg-red-500/10 rounded-lg p-1 transition-all"
                           aria-label={`Remove ${song.title} from playlist`}
