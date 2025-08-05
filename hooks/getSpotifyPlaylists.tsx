@@ -1,18 +1,7 @@
 import { useState, useCallback } from "react";
 import apiClient from "../utils/api"; 
 
-interface SpotifyImage {
-  url: string;
-  height: number | null;
-  width: number | null;
-}
-
-interface SpotifyOwner {
-  display_name: string;
-  external_urls: { spotify: string };
-  id: string;
-}
-
+// SpotifyPlaylist interface (Spotify object compliance)
 export interface SpotifyPlaylist {
   id: string;
   name: string;
@@ -29,11 +18,22 @@ export interface SpotifyPlaylist {
   };
 }
 
-
-interface GetPlaylistsResponse {
-  success: boolean;
+// Success response structure
+export interface GetPlaylistsSuccess {
+  success: true;
   data: SpotifyPlaylist[];
-}   
+}
+
+// Error response structure
+export interface GetPlaylistsError {
+  success: false;
+  error: string; // e.g., "UNAUTHORIZED", "AUTH_REFRESH_FAILED", etc.
+  message: string; // Friendly message to display
+}
+
+// Final union type
+export type GetPlaylistsResponse = GetPlaylistsSuccess | GetPlaylistsError;
+
 
 export default function useGetSpotifyPlaylists() {
     const [spotifyPlaylists, setSpotifyPlaylists] = useState<SpotifyPlaylist[]>([]);
