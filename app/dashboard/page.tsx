@@ -21,7 +21,9 @@ import RecentSyncs from "@/components/recentSyncs";
 import MigrationAction from "@/components/migrationAction";
 import DashboardHeader from "@/components/dasboardHeader";
 
-import useGetSpotifyPlaylists, { SpotifyPlaylist } from "@/hooks/getSpotifyPlaylists";
+import useGetSpotifyPlaylists, {
+  SpotifyPlaylist,
+} from "@/hooks/getSpotifyPlaylists";
 import useGetYoutubePlaylists from "@/hooks/getYoutubePlaylists";
 import useSpotifyActions from "@/hooks/useSpotifyActions";
 import useYouTubeActions from "@/hooks/useYouTubeActions";
@@ -32,13 +34,16 @@ export default function DashboardPage() {
 
   // Playlist fetches
   const { fetchPlaylists, spotifyPlaylists } = useGetSpotifyPlaylists();
-  const [localSpotifyPlaylists, setLocalSpotifyPlaylists] = useState<SpotifyPlaylist[]>([]);
+  const [localSpotifyPlaylists, setLocalSpotifyPlaylists] = useState<
+    SpotifyPlaylist[]
+  >([]);
   useEffect(() => {
     setLocalSpotifyPlaylists(spotifyPlaylists);
   }, [spotifyPlaylists]);
 
   const { fetchYoutubePlaylists, youtubePlaylists } = useGetYoutubePlaylists();
-  const [localYoutubePlaylists, setLocalYoutubePlaylists] = useState(youtubePlaylists);
+  const [localYoutubePlaylists, setLocalYoutubePlaylists] =
+    useState(youtubePlaylists);
   useEffect(() => {
     setLocalYoutubePlaylists(youtubePlaylists);
   }, [youtubePlaylists]);
@@ -50,38 +55,68 @@ export default function DashboardPage() {
   }
 
   // ACTION HOOKS with wrapper
-  const { renamePlaylist: renameSpotifyPlaylist, deletePlaylist: deleteSpotifyPlaylist, deleteSongFromPlaylist: deleteSpotifySong } = useSpotifyActions({
+  const {
+    renamePlaylist: renameSpotifyPlaylist,
+    deletePlaylist: deleteSpotifyPlaylist,
+    deleteSongFromPlaylist: deleteSpotifySong,
+  } = useSpotifyActions({
     onPlaylistRenamed: (playlistId, newName) => {
-      setLocalSpotifyPlaylists((prev) => prev.map((p: SpotifyPlaylist) => (p.id === playlistId ? { ...p, name: newName } : p)));
+      setLocalSpotifyPlaylists((prev) =>
+        prev.map((p: SpotifyPlaylist) =>
+          p.id === playlistId ? { ...p, name: newName } : p
+        )
+      );
       dashboard.setSelectedPlaylists((prev) => {
-        const updated = { ...prev }; delete updated[playlistId]; return updated;
+        const updated = { ...prev };
+        delete updated[playlistId];
+        return updated;
       });
     },
     onPlaylistDeleted: (playlistId) => {
-      setLocalSpotifyPlaylists((prev) => prev.filter((p: SpotifyPlaylist) => p.id !== playlistId));
+      setLocalSpotifyPlaylists((prev) =>
+        prev.filter((p: SpotifyPlaylist) => p.id !== playlistId)
+      );
       dashboard.setSelectedPlaylists((prev) => {
-        const updated = { ...prev }; delete updated[playlistId]; return updated;
+        const updated = { ...prev };
+        delete updated[playlistId];
+        return updated;
       });
     },
     showToast,
   });
 
-  const { renamePlaylist: renameYouTubePlaylist, deletePlaylist: deleteYouTubePlaylist, deleteSongFromPlaylist: deleteYouTubeSong } = useYouTubeActions({
+  const {
+    renamePlaylist: renameYouTubePlaylist,
+    deletePlaylist: deleteYouTubePlaylist,
+    deleteSongFromPlaylist: deleteYouTubeSong,
+  } = useYouTubeActions({
     onPlaylistRenamed: (playlistId, newName) => {
       setLocalYoutubePlaylists((prev) =>
-        prev.map((p: any) => (p.id === playlistId ? { ...p, snippet: { ...p.snippet, title: newName } } : p))
+        prev.map((p: any) =>
+          p.id === playlistId
+            ? { ...p, snippet: { ...p.snippet, title: newName } }
+            : p
+        )
       );
       dashboard.setSelectedPlaylists((prev) => {
-        const updated = { ...prev }; delete updated[playlistId]; return updated;
+        const updated = { ...prev };
+        delete updated[playlistId];
+        return updated;
       });
     },
     onPlaylistDeleted: (playlistId) => {
-      setLocalYoutubePlaylists((prev) => prev.filter((p: any) => p.id !== playlistId));
+      setLocalYoutubePlaylists((prev) =>
+        prev.filter((p: any) => p.id !== playlistId)
+      );
       dashboard.setSelectedPlaylists((prev) => {
-        const updated = { ...prev }; delete updated[playlistId]; return updated;
+        const updated = { ...prev };
+        delete updated[playlistId];
+        return updated;
       });
     },
-    refreshPlaylists: async () => { await fetchYoutubePlaylists(); },
+    refreshPlaylists: async () => {
+      await fetchYoutubePlaylists();
+    },
     showToast,
   });
 
@@ -94,14 +129,18 @@ export default function DashboardPage() {
   const { transformedSpotifyPlaylists, transformedYoutubePlaylists } =
     useTransformedPlaylists(localSpotifyPlaylists, localYoutubePlaylists);
 
-  const sourcePlaylists = dashboard.selectedSource === "spotify"
-    ? transformedSpotifyPlaylists
-    : transformedYoutubePlaylists;
-  const targetPlaylists = dashboard.selectedTarget === "spotify"
-    ? transformedSpotifyPlaylists
-    : transformedYoutubePlaylists;
+  const sourcePlaylists =
+    dashboard.selectedSource === "spotify"
+      ? transformedSpotifyPlaylists
+      : transformedYoutubePlaylists;
+  const targetPlaylists =
+    dashboard.selectedTarget === "spotify"
+      ? transformedSpotifyPlaylists
+      : transformedYoutubePlaylists;
 
-  const selectedPlaylistData = sourcePlaylists.find((p) => p.id === dashboard.selectedPlaylistForMigration);
+  const selectedPlaylistData = sourcePlaylists.find(
+    (p) => p.id === dashboard.selectedPlaylistForMigration
+  );
 
   // Handlers with all dependencies injected
   const handlers = useDashboardHandlers({
@@ -140,7 +179,8 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen w-full gradient-background-subdued overflow-x-hidden">
       <DashboardHeader
-        darkMode={dashboard.darkMode} setDarkMode={dashboard.setDarkMode}
+        darkMode={dashboard.darkMode}
+        setDarkMode={dashboard.setDarkMode}
         isMobileMenuOpen={dashboard.isMobileMenuOpen}
         setIsMobileMenuOpen={dashboard.setIsMobileMenuOpen}
       />
@@ -164,10 +204,15 @@ export default function DashboardPage() {
               handleRenamePlaylist={handlers.handleRenamePlaylist}
               handleEmptyPlaylist={handlers.handleEmptyPlaylist}
               handleDeletePlaylist={handlers.handleDeletePlaylist}
-              handleDeleteSongFromPlaylist={handlers.handleDeleteSongFromPlaylistWithAnimation}
+              handleDeleteSongFromPlaylist={
+                handlers.handleDeleteSongFromPlaylistWithAnimation
+              }
             />
             <div className="flex justify-center min-w-0">
-              <MigrationAction handleStartMigration={handlers.handleStartMigration} selectedPlaylists={dashboard.selectedPlaylists} />
+              <MigrationAction
+                handleStartMigration={handlers.handleStartMigration}
+                selectedPlaylists={dashboard.selectedPlaylists}
+              />
             </div>
           </div>
           <div className="space-y-6 w-full min-w-0">
@@ -189,7 +234,11 @@ export default function DashboardPage() {
           .map((id) => sourcePlaylists.find((p) => p.id === id))
           .filter((p): p is NonNullable<typeof p> => !!p)
           .map((p) => ({ id: p.id, name: p.name, songCount: p.songCount }))}
-        selectedPlaylistCount={Object.keys(dashboard.selectedPlaylists).filter((id) => dashboard.selectedPlaylists[id]).length}
+        selectedPlaylistCount={
+          Object.keys(dashboard.selectedPlaylists).filter(
+            (id) => dashboard.selectedPlaylists[id]
+          ).length
+        }
       />
       <MigrationLoadingCard
         isVisible={dashboard.isMigrating}
@@ -226,7 +275,12 @@ export default function DashboardPage() {
       />
       <ConfirmationDialog
         isOpen={dashboard.confirmationDialog.isOpen}
-        onClose={() => dashboard.setConfirmationDialog((prev) => ({ ...prev, isOpen: false }))}
+        onClose={() =>
+          dashboard.setConfirmationDialog((prev) => ({
+            ...prev,
+            isOpen: false,
+          }))
+        }
         onConfirm={dashboard.confirmationDialog.onConfirm}
         title={dashboard.confirmationDialog.title}
         message={dashboard.confirmationDialog.message}
@@ -235,21 +289,27 @@ export default function DashboardPage() {
       />
       <RenamePlaylistDialog
         isOpen={dashboard.renameDialog.isOpen}
-        onClose={() => dashboard.setRenameDialog((prev) => ({ ...prev, isOpen: false }))}
+        onClose={() =>
+          dashboard.setRenameDialog((prev) => ({ ...prev, isOpen: false }))
+        }
         playlistId={dashboard.renameDialog.playlistId}
         currentName={dashboard.renameDialog.currentName}
         onRename={handlers.handleRenameConfirm}
       />
       <DeletePlaylistDialog
         isOpen={dashboard.deleteDialog.isOpen}
-        onClose={() => dashboard.setDeleteDialog((prev) => ({ ...prev, isOpen: false }))}
+        onClose={() =>
+          dashboard.setDeleteDialog((prev) => ({ ...prev, isOpen: false }))
+        }
         playlistId={dashboard.deleteDialog.playlistId}
         playlistName={dashboard.deleteDialog.playlistName}
         onDelete={handlers.handleDeleteConfirm}
       />
       <EmptyPlaylistDialog
         isOpen={dashboard.emptyDialog.isOpen}
-        onClose={() => dashboard.setEmptyDialog((prev) => ({ ...prev, isOpen: false }))}
+        onClose={() =>
+          dashboard.setEmptyDialog((prev) => ({ ...prev, isOpen: false }))
+        }
         playlistId={dashboard.emptyDialog.playlistId}
         playlistName={dashboard.emptyDialog.playlistName}
         songCount={dashboard.emptyDialog.songCount}
@@ -257,10 +317,19 @@ export default function DashboardPage() {
       />
       <ConfirmationDialog
         isOpen={dashboard.deleteSongDialog.isOpen}
-        onClose={() => dashboard.setDeleteSongDialog((prev) => ({ ...prev, isOpen: false }))}
+        onClose={() =>
+          dashboard.setDeleteSongDialog((prev) => ({ ...prev, isOpen: false }))
+        }
         onConfirm={() => {
-          if (dashboard.deleteSongDialog.platform === "spotify" || dashboard.deleteSongDialog.platform === "youtube") {
-            handlers.handleDeleteSongConfirm(dashboard.deleteSongDialog.playlistId, dashboard.deleteSongDialog.songId, dashboard.deleteSongDialog.platform);
+          if (
+            dashboard.deleteSongDialog.platform === "spotify" ||
+            dashboard.deleteSongDialog.platform === "youtube"
+          ) {
+            handlers.handleDeleteSongConfirm(
+              dashboard.deleteSongDialog.playlistId,
+              dashboard.deleteSongDialog.songId,
+              dashboard.deleteSongDialog.platform
+            );
           }
         }}
         title="Remove Song"
@@ -271,15 +340,19 @@ export default function DashboardPage() {
       {dashboard.showToast && (
         <div
           className={`fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transition-all duration-300 transform ${
-            dashboard.showToast.isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
+            dashboard.showToast.isVisible
+              ? "translate-x-0 opacity-100"
+              : "translate-x-full opacity-0"
           } ${
-            dashboard.showToast.type === 'success'
-              ? 'bg-green-600 text-white border border-green-500'
-              : 'bg-red-600 text-white border border-red-500'
+            dashboard.showToast.type === "success"
+              ? "bg-green-600 text-white border border-green-500"
+              : "bg-red-600 text-white border border-red-500"
           }`}
         >
           <div className="flex items-center space-x-2">
-            <span className="text-sm font-medium">{dashboard.showToast.message}</span>
+            <span className="text-sm font-medium">
+              {dashboard.showToast.message}
+            </span>
             <button
               onClick={() => dashboard.setShowToast(null)}
               className="ml-2 text-white/80 hover:text-white"
