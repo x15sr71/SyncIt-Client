@@ -158,6 +158,43 @@ export default function DashboardPage() {
     showToast,
   });
 
+  // Migration callback handlers
+  const handleMigrationStart = () => {
+    console.log("Dashboard: Migration started");
+    dashboard.setIsMigrating(true);
+    showToast("Migration started...", "success");
+  };
+
+  const handleMigrationComplete = (results: any) => {
+    console.log("Dashboard: Migration completed", results);
+    
+    // Update migration results in dashboard state
+    dashboard.setMigrationResults({
+      successCount: results.successCount || 0,
+      failedTracks: results.failedTracks || [],
+      playlistName: results.playlistName || "Unknown Playlist",
+    });
+    
+    // Stop migration loading state
+    dashboard.setIsMigrating(false);
+    
+    // Show success toast
+    showToast("Migration completed successfully!", "success");
+    
+    // Show migration results dialog
+    dashboard.setShowMigrationResult(true);
+  };
+
+  const handleMigrationError = (error: string) => {
+    console.log("Dashboard: Migration failed", error);
+    
+    // Stop migration loading state
+    dashboard.setIsMigrating(false);
+    
+    // Show error toast
+    showToast(`Migration failed: ${error}`, "error");
+  };
+
   const migrationPlaylists = Object.keys(dashboard.selectedPlaylists)
     .filter((id) => dashboard.selectedPlaylists[id])
     .map((id) => {
@@ -209,9 +246,12 @@ export default function DashboardPage() {
               }
             />
             <div className="flex justify-center min-w-0">
-              <MigrationAction
-                handleStartMigration={handlers.handleStartMigration}
+              <MigrationAction 
                 selectedPlaylists={dashboard.selectedPlaylists}
+                sourcePlaylists={sourcePlaylists}
+                onMigrationStart={handleMigrationStart}
+                onMigrationComplete={handleMigrationComplete}
+                onMigrationError={handleMigrationError}
               />
             </div>
           </div>
