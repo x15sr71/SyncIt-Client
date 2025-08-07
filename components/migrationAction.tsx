@@ -5,11 +5,15 @@ import { ArrowRight } from "lucide-react";
 import { useMigration } from "../hooks/useMigration";
 import { Playlist } from "@/hooks/useTransformedPlaylists";
 
+type Platform = "spotify" | "youtube";
+
 interface MigrationActionProps {
   selectedPlaylists: {
     [key: string]: boolean;
   };
   sourcePlaylists: Playlist[];
+  sourcePlatform?: Platform;
+  targetPlatform?: Platform;
   onMigrationStart?: () => void;
   onMigrationComplete?: (results: any) => void;
   onMigrationError?: (error: string) => void;
@@ -18,6 +22,8 @@ interface MigrationActionProps {
 export default function MigrationAction({
   selectedPlaylists,
   sourcePlaylists,
+  sourcePlatform = "youtube", // Default for backward compatibility
+  targetPlatform = "spotify", // Default for backward compatibility
   onMigrationStart,
   onMigrationComplete,
   onMigrationError,
@@ -30,6 +36,7 @@ export default function MigrationAction({
 
   console.log("DEBUG selectedPlaylistIds:", selectedPlaylistIds);
   console.log("DEBUG sourcePlaylists:", sourcePlaylists.map((p) => p.id));
+  console.log("DEBUG Migration direction:", sourcePlatform, "to", targetPlatform);
 
   const handleStartMigration = async () => {
     if (selectedPlaylistIds.length === 0) return;
@@ -52,15 +59,46 @@ export default function MigrationAction({
       console.log("Migrating playlist", {
         playlistId: playlist.id,
         name: playlist.name,
+        from: sourcePlatform,
+        to: targetPlatform,
       });
 
-      const result = await startMigration(playlist.id, playlist.name);
+      // For Spotify to YouTube, we might need a target playlist
+      // For now, we'll let the backend handle playlist creation
+      let targetPlaylistId: string | undefined;
+      
+      // You can extend this logic to allow user selection of target playlist
+      // or create new playlists as needed
+      if (sourcePlatform === "spotify" && targetPlatform === "youtube") {
+        // Backend will handle YouTube playlist creation or use a default one
+        // You could add UI here to let users select existing YouTube playlists
+        targetPlaylistId = undefined; // Let backend create new playlist
+      }
+
+      const result = await startMigration({
+        playlistId: playlist.id,
+        playlistName: playlist.name,
+        sourcePlatform,
+        targetPlatform,
+        targetPlaylistId,
+      });
+
       onMigrationComplete?.(result);
     } catch (err: any) {
       const message =
         err?.message || (typeof err === "string" ? err : "Migration failed");
       onMigrationError?.(message);
     }
+  };
+
+  const getPlatformName = (platform: Platform) => {
+    return platform === "spotify" ? "Spotify" : "YouTube Music";
+  };
+
+  const getMigrationText = () => {
+    const source = getPlatformName(sourcePlatform);
+    const target = getPlatformName(targetPlatform);
+    return `Migrate ${source} → ${target}`;
   };
 
   return (
@@ -74,7 +112,7 @@ export default function MigrationAction({
         <ArrowRight className="w-5 h-5 mr-2" />
         {isLoading
           ? "Migrating..."
-          : `Start Migration (${selectedPlaylistIds.length} selected)`}
+          : `${getMigrationText()} (${selectedPlaylistIds.length} selected)`}
       </Button>
       {error && <p className="text-red-500 text-sm mt-2">Error: {error}</p>}
     </>
