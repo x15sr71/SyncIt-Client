@@ -167,30 +167,30 @@ export default function DashboardPage() {
 
   const handleMigrationComplete = (results: any) => {
     console.log("Dashboard: Migration completed", results);
-    
+
     // Update migration results in dashboard state
     dashboard.setMigrationResults({
       successCount: results.successCount || 0,
       failedTracks: results.failedTracks || [],
       playlistName: results.playlistName || "Unknown Playlist",
     });
-    
+
     // Stop migration loading state
     dashboard.setIsMigrating(false);
-    
+
     // Show success toast
     showToast("Migration completed successfully!", "success");
-    
+
     // Show migration results dialog
     dashboard.setShowMigrationResult(true);
   };
 
   const handleMigrationError = (error: string) => {
     console.log("Dashboard: Migration failed", error);
-    
+
     // Stop migration loading state
     dashboard.setIsMigrating(false);
-    
+
     // Show error toast
     showToast(`Migration failed: ${error}`, "error");
   };
@@ -246,9 +246,11 @@ export default function DashboardPage() {
               }
             />
             <div className="flex justify-center min-w-0">
-              <MigrationAction 
+              <MigrationAction
                 selectedPlaylists={dashboard.selectedPlaylists}
                 sourcePlaylists={sourcePlaylists}
+                sourcePlatform={dashboard.selectedSource} // Pass the source platform
+                targetPlatform={dashboard.selectedTarget} // Pass the target platform
                 onMigrationStart={handleMigrationStart}
                 onMigrationComplete={handleMigrationComplete}
                 onMigrationError={handleMigrationError}

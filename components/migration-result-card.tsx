@@ -148,9 +148,9 @@ export function MigrationResultCard({
               </div>
 
               <div className="max-h-64 overflow-y-auto space-y-3 pr-2">
-                {failedTracks.map((track) => (
+                {failedTracks.map((track, index) => (
                   <Card
-                    key={track.id}
+                    key={`failed-track-${track.id || index}`}
                     className="glass-effect border-white/30 hover:bg-white/20 transition-all hover-lift"
                   >
                     <CardContent className="p-5">
