@@ -242,11 +242,14 @@ export function PlaylistPreview({
 
             <div className="space-y-2 max-h-48 overflow-y-auto">
               {songsToDisplay.length > 0 ? (
-                songsToDisplay.map((song) => {
+                songsToDisplay.map((song, index) => {
                   const isRemoving = removingSongs.has(song.id);
+                  // 🆕 Create unique key by combining ID with index to handle duplicates
+                  const uniqueKey = `${song.id}-${index}`;
+                  
                   return (
                     <div
-                      key={song.id}
+                      key={uniqueKey} // 🆕 Use unique key instead of just song.id
                       className={`flex items-center justify-between p-2 rounded-lg hover:bg-white/10 transition-all duration-300 group ${
                         isRemoving 
                           ? 'animate-pulse bg-red-500/20 border border-red-500/50 transform' 
