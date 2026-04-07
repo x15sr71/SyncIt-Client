@@ -55,20 +55,45 @@ SyncIt Client leverages the latest technologies to ensure performance, scalabili
 - State Management: React Context API (for managing global state efficiently)
 - API Communication: Fetching and managing data from the SyncIt backend via REST APIs.
 ## 📂 Project Structure
-```
+
+The frontend follows a modular, component-driven architecture using Next.js App Router, with clear separation between UI components, state management (hooks), and API interaction layers.
+## 📂 Project Structure
+
+```text
 SyncIt-Client/
-├── public/          # Static assets
-├── app/             # Next.js App Router components
-├── assets/          # Images, icons, and static files
-├── components/      # Reusable UI components (buttons, modals, etc.)
-├── pages/           # Application pages
-├── constants/       # App-wide constants
-├── styles/          # Global styles
-├── utils/           # Utility functions
-├── next.config.mjs  # Next.js configuration
-├── tailwind.config.ts  # Tailwind CSS configuration
-├── package.json     # Dependencies and scripts
-└── README.md        # Project documentation
+├── app/                        # Next.js App Router (pages & layouts)
+│   ├── auth/                   # Authentication flow
+│   ├── connect/                # Platform connection page
+│   ├── dashboard/              # Main dashboard UI
+│   ├── missing-tracks/         # Tracks that couldn't be matched
+│   ├── profile/                # User profile
+│   ├── settings/               # User settings
+│   ├── sync/                   # Sync workflow pages
+│   ├── layout.tsx              # Root layout
+│   ├── page.tsx                # Landing page
+│   └── globals.css             # Global styles
+├── assets/
+│   └── screenshots/            # Images used in README/demo
+├── components/
+│   ├── ui/                     # Reusable UI primitives (ShadCN)
+│   ├── sync/                   # Sync-specific components
+│   ├── hero-section.tsx
+│   ├── how-it-works-section.tsx
+│   ├── why-choose-section.tsx
+│   └── ...                     # Dialogs, cards, dashboards, etc.
+├── hooks/                      # Custom React hooks (data + state logic)
+├── lib/
+│   └── utils.ts                # Shared utility helpers
+├── utils/
+│   └── api.ts                  # API interaction layer
+├── public/                     # Static public assets
+├── components.json             # ShadCN UI config
+├── next.config.mjs             # Next.js configuration
+├── tailwind.config.ts          # Tailwind CSS configuration
+├── postcss.config.mjs
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
 
 
