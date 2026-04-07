@@ -4,6 +4,40 @@ SyncIt Client is the Next.js-based frontend for the SyncIt application, designed
 
 SyncIt waitlist is live! 🚀🎵 Join now: [https://syncit.org.in/](https://syncit.org.in/) 🔥
 
+## 📸 Screenshots
+
+> A glimpse into the SyncIt experience — clean, fast, and built for power users.
+
+<p align="center">
+  <img src="assets/screenshots/hero.png" width="800"/>
+</p>
+
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="assets/screenshots/why-syncit.png" width="400"/><br/>
+    </td>
+    <td align="center">
+      <img src="assets/screenshots/how-it-works.png" width="400"/><br/>
+    </td>
+  </tr>
+</table>
+
+<details>
+<summary>▶️ View more screens</summary>
+
+<br>
+<img src="assets/screenshots/login.png" width="800"/>
+<img src="assets/screenshots/dashboard.png" width="800"/>
+<img src="assets/screenshots/confirmation.png" width="800"/>
+<img src="assets/screenshots/completed.png" width="800"/>
+<img src="assets/screenshots/preferences.png" width="800"/>
+<img src="assets/screenshots/settings.png" width="800"/>
+
+
+
+</details>
+
 ## 🚀 Features (Planned & In Development) ✨
 - Modern UI/UX: Built with Next.js, Tailwind CSS, and ShadCN, ensuring a clean, responsive, and accessible interface.
 - Smooth Animations: Powered by Framer Motion for interactive and dynamic UI elements.
