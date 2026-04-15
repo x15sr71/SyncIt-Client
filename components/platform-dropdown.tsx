@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { ChevronDown, Music2, Youtube } from "lucide-react"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { ChevronDown, Music2, Youtube } from "lucide-react";
 
 interface PlatformDropdownProps {
-  label: string
-  selectedPlatform: "spotify" | "youtube"
-  onPlatformChange: (platform: "spotify" | "youtube") => void
-  disabled?: boolean
+  label: string;
+  selectedPlatform: "spotify" | "youtube";
+  onPlatformChange: (platform: "spotify" | "youtube") => void;
+  disabled?: boolean;
 }
 
 const platforms = [
@@ -29,7 +29,7 @@ const platforms = [
     bgColor: "bg-red-500/20",
     borderColor: "border-red-500/30",
   },
-]
+];
 
 export function PlatformDropdown({
   label,
@@ -37,12 +37,14 @@ export function PlatformDropdown({
   onPlatformChange,
   disabled = false,
 }: PlatformDropdownProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const selectedPlatformData = platforms.find((p) => p.id === selectedPlatform)
+  const [isOpen, setIsOpen] = useState(false);
+  const selectedPlatformData = platforms.find((p) => p.id === selectedPlatform);
 
   return (
     <div className="relative">
-      <p className="text-secondary-dark mb-2 font-medium text-center">{label}</p>
+      <p className="text-secondary-dark mb-2 font-medium text-center">
+        {label}
+      </p>
       <div className="relative">
         <Button
           variant="outline"
@@ -56,25 +58,34 @@ export function PlatformDropdown({
           <div className="flex items-center gap-2">
             {selectedPlatformData && (
               <>
-                <selectedPlatformData.icon className={`w-4 h-4 ${selectedPlatformData.color}`} />
-                <span className="text-primary-dark font-medium">{selectedPlatformData.name}</span>
+                <selectedPlatformData.icon
+                  className={`w-4 h-4 ${selectedPlatformData.color}`}
+                />
+                <span className="text-primary-dark font-medium">
+                  {selectedPlatformData.name}
+                </span>
               </>
             )}
           </div>
-          <ChevronDown className={`w-4 h-4 text-secondary-dark transition-transform ${isOpen ? "rotate-180" : ""}`} />
+          <ChevronDown
+            className={`w-4 h-4 text-secondary-dark transition-transform ${isOpen ? "rotate-180" : ""}`}
+          />
         </Button>
 
         {isOpen && (
           <Card className="absolute top-full left-0 right-0 mt-2 z-50 glass-card border-white/40 shadow-xl">
             <CardContent className="p-2">
-              <div role="listbox" aria-label={`Select ${label.toLowerCase()} platform`}>
+              <div
+                role="listbox"
+                aria-label={`Select ${label.toLowerCase()} platform`}
+              >
                 {platforms.map((platform) => (
                   <Button
                     key={platform.id}
                     variant="ghost"
                     onClick={() => {
-                      onPlatformChange(platform.id)
-                      setIsOpen(false)
+                      onPlatformChange(platform.id);
+                      setIsOpen(false);
                     }}
                     className={`w-full justify-start rounded-xl mb-1 last:mb-0 hover:bg-white/20 ${
                       selectedPlatform === platform.id ? "bg-white/10" : ""
@@ -82,7 +93,9 @@ export function PlatformDropdown({
                     role="option"
                     aria-selected={selectedPlatform === platform.id}
                   >
-                    <platform.icon className={`w-4 h-4 mr-2 ${platform.color}`} />
+                    <platform.icon
+                      className={`w-4 h-4 mr-2 ${platform.color}`}
+                    />
                     <span className="text-primary-dark">{platform.name}</span>
                   </Button>
                 ))}
@@ -92,5 +105,5 @@ export function PlatformDropdown({
         )}
       </div>
     </div>
-  )
+  );
 }

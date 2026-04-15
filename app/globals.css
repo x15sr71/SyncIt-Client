@@ -7,7 +7,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -102,7 +101,15 @@
 
 /* Gradient background utilities */
 .gradient-background {
-  background: linear-gradient(135deg, #00ccff, #6600ff, #ff0077, #00ffcc, #ff00ff, #00ccff);
+  background: linear-gradient(
+    135deg,
+    #00ccff,
+    #6600ff,
+    #ff0077,
+    #00ffcc,
+    #ff00ff,
+    #00ccff
+  );
   background-size: 400% 400%;
   animation: gradientBG 30s ease infinite;
 }
@@ -146,7 +153,6 @@
 }
 
 /* Remaining animations and effects omitted for brevity — KEEP the ones you use */
-
 
 /* Logo styling */
 .logo-icon {
@@ -222,7 +228,12 @@
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }

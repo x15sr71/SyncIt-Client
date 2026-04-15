@@ -1,24 +1,28 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { Youtube, ArrowLeftRight, PodcastIcon as SpotifyIcon } from "lucide-react"
-import { Header } from "@/components/sync/header"
-import { StepsProgress } from "@/components/sync/steps-progress"
-import { PlatformConnect } from "@/components/sync/platform-connect"
-import { SyncOptions } from "@/components/sync/sync-options"
-import { PlaylistSelection } from "@/components/sync/playlist-selection"
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import {
+  Youtube,
+  ArrowLeftRight,
+  PodcastIcon as SpotifyIcon,
+} from "lucide-react";
+import { Header } from "@/components/sync/header";
+import { StepsProgress } from "@/components/sync/steps-progress";
+import { PlatformConnect } from "@/components/sync/platform-connect";
+import { SyncOptions } from "@/components/sync/sync-options";
+import { PlaylistSelection } from "@/components/sync/playlist-selection";
 
-type Platform = "youtube" | "spotify"
-type SyncMode = "migrate" | "sync"
-type ConnectionStatus = "idle" | "connecting" | "connected" | "error"
+type Platform = "youtube" | "spotify";
+type SyncMode = "migrate" | "sync";
+type ConnectionStatus = "idle" | "connecting" | "connected" | "error";
 
 interface Step {
-  title: string
-  description: string
-  icon: React.ReactNode
+  title: string;
+  description: string;
+  icon: React.ReactNode;
 }
 
 const steps: Step[] = [
@@ -37,7 +41,7 @@ const steps: Step[] = [
     description: "Select how you want to manage your playlists",
     icon: <ArrowLeftRight className="h-6 w-6" />,
   },
-]
+];
 
 const samplePlaylists = [
   {
@@ -64,128 +68,125 @@ const samplePlaylists = [
     songCount: 67,
     imageUrl: "/placeholder.svg?height=50&width=50",
   },
-]
+];
 
 const currentUser = {
   name: "Alex Johnson",
   avatar: "/placeholder.svg?height=40&width=40",
   premium: true,
-}
+};
 
 export default function SyncPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [currentStep, setCurrentStep] = useState(0)
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [currentStep, setCurrentStep] = useState(0);
   const [connectionStatus, setConnectionStatus] = useState<{
-    [key in Platform]?: ConnectionStatus
+    [key in Platform]?: ConnectionStatus;
   }>({
     youtube: "idle",
     spotify: "idle",
-  })
-  const [syncMode, setSyncMode] = useState<SyncMode>("migrate")
+  });
+  const [syncMode, setSyncMode] = useState<SyncMode>("migrate");
   const [selectedPlaylists, setSelectedPlaylists] = useState<{
-    [key: string]: boolean
-  }>({})
-  const [isProcessing, setIsProcessing] = useState(false)
+    [key: string]: boolean;
+  }>({});
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    const youtubeLoginSuccess = searchParams.get("youtubeLoginSuccess")
-    const spotifyLoginSuccess = searchParams.get("spotifyLoginSuccess")
+    const youtubeLoginSuccess = searchParams.get("youtubeLoginSuccess");
+    const spotifyLoginSuccess = searchParams.get("spotifyLoginSuccess");
 
     if (youtubeLoginSuccess === "true") {
       setConnectionStatus((prev) => ({
         ...prev,
         youtube: "connected",
-      }))
-      setCurrentStep(1)
+      }));
+      setCurrentStep(1);
     }
 
     if (spotifyLoginSuccess === "true") {
       setConnectionStatus((prev) => ({
         ...prev,
         spotify: "connected",
-      }))
-      setCurrentStep(2)
+      }));
+      setCurrentStep(2);
     }
-  }, [searchParams])
+  }, [searchParams]);
 
   const handlePlatformConnect = (platform: Platform) => {
     setConnectionStatus((prev) => ({
       ...prev,
       [platform]: "connecting",
-    }))
+    }));
 
-    // Simulate OAuth connection
-    setTimeout(() => {
-      setConnectionStatus((prev) => ({
-        ...prev,
-        [platform]: "connected",
-      }))
-      if (platform === "youtube") {
-        setCurrentStep(1)
-      } else if (platform === "spotify") {
-        setCurrentStep(2)
-      }
-    }, 2000)
-  }
+    // Redirect to backend OAuth endpoint with redirect_after
+    // so the callback returns back to /sync with the appropriate success param
+    const backendUrl =
+      process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3002";
+    const successParam = `${platform}LoginSuccess=true`;
+    const redirectAfter = encodeURIComponent(`/sync?${successParam}`);
+    window.location.href = `${backendUrl}/${platform}/login?redirect_after=${redirectAfter}`;
+  };
 
   const handleDisconnect = (platform: Platform) => {
     setConnectionStatus((prev) => ({
       ...prev,
       [platform]: "idle",
-    }))
+    }));
     if (platform === "youtube") {
-      setCurrentStep(0)
+      setCurrentStep(0);
     } else if (platform === "spotify" && currentStep > 1) {
-      setCurrentStep(1)
+      setCurrentStep(1);
     }
-  }
+  };
 
   const togglePlaylist = (id: string) => {
     setSelectedPlaylists((prev) => ({
       ...prev,
       [id]: !prev[id],
-    }))
-  }
+    }));
+  };
 
   const handleContinue = () => {
     if (currentStep < steps.length) {
-      setCurrentStep(currentStep + 1)
+      setCurrentStep(currentStep + 1);
     } else {
-      setIsProcessing(true)
+      setIsProcessing(true);
       setTimeout(() => {
-        setIsProcessing(false)
-        router.push("/dashboard")
-      }, 3000)
+        setIsProcessing(false);
+        router.push("/dashboard");
+      }, 3000);
     }
-  }
+  };
 
   const getStepStatus = (stepIndex: number) => {
-    if (stepIndex < currentStep) return "complete"
-    if (stepIndex === currentStep) return "current"
-    return "upcoming"
-  }
+    if (stepIndex < currentStep) return "complete";
+    if (stepIndex === currentStep) return "current";
+    return "upcoming";
+  };
 
   const toggleAllPlaylists = () => {
-    const allSelected = Object.values(selectedPlaylists).every((selected) => selected)
+    const allSelected = Object.values(selectedPlaylists).every(
+      (selected) => selected,
+    );
 
     if (allSelected) {
-      setSelectedPlaylists({})
+      setSelectedPlaylists({});
     } else {
-      const newSelectedPlaylists: { [key: string]: boolean } = {}
+      const newSelectedPlaylists: { [key: string]: boolean } = {};
       samplePlaylists.forEach((playlist) => {
-        newSelectedPlaylists[playlist.id] = true
-      })
-      setSelectedPlaylists(newSelectedPlaylists)
+        newSelectedPlaylists[playlist.id] = true;
+      });
+      setSelectedPlaylists(newSelectedPlaylists);
     }
-  }
+  };
 
   const isStepCompleted = (step: number) => {
-    if (step === 0) return connectionStatus.youtube === "connected"
-    if (step === 1) return connectionStatus.spotify === "connected"
-    if (step === 2) return Object.keys(selectedPlaylists).length > 0
-    return false
-  }
+    if (step === 0) return connectionStatus.youtube === "connected";
+    if (step === 1) return connectionStatus.spotify === "connected";
+    if (step === 2) return Object.keys(selectedPlaylists).length > 0;
+    return false;
+  };
 
   return (
     <div className="min-h-screen gradient-background">
@@ -193,7 +194,11 @@ export default function SyncPage() {
 
       <section className="pt-28 pb-20 relative overflow-hidden">
         <div className="container mx-auto px-4">
-          <StepsProgress steps={steps} currentStep={currentStep} getStepStatus={getStepStatus} />
+          <StepsProgress
+            steps={steps}
+            currentStep={currentStep}
+            getStepStatus={getStepStatus}
+          />
 
           <div className="max-w-4xl mx-auto glass-effect rounded-3xl p-8 md:p-10">
             {currentStep === 0 && (
@@ -221,7 +226,11 @@ export default function SyncPage() {
             )}
 
             {currentStep === 2 && (
-              <SyncOptions syncMode={syncMode} setSyncMode={setSyncMode} handleContinue={handleContinue} />
+              <SyncOptions
+                syncMode={syncMode}
+                setSyncMode={setSyncMode}
+                handleContinue={handleContinue}
+              />
             )}
 
             {currentStep === 3 && (
@@ -233,11 +242,11 @@ export default function SyncPage() {
                 isProcessing={isProcessing}
                 syncMode={syncMode}
                 handleContinue={() => {
-                  setIsProcessing(true)
+                  setIsProcessing(true);
                   setTimeout(() => {
-                    setIsProcessing(false)
-                    setCurrentStep(4)
-                  }, 3000)
+                    setIsProcessing(false);
+                    setCurrentStep(4);
+                  }, 3000);
                 }}
               />
             )}
@@ -245,5 +254,5 @@ export default function SyncPage() {
         </div>
       </section>
     </div>
-  )
+  );
 }

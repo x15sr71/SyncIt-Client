@@ -1,28 +1,37 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { CheckCircle, AlertTriangle, RefreshCw, Search, X, Music, Undo2, FolderSyncIcon as Sync } from "lucide-react"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  CheckCircle,
+  AlertTriangle,
+  RefreshCw,
+  Search,
+  X,
+  Music,
+  Undo2,
+  FolderSyncIcon as Sync,
+} from "lucide-react";
 
 interface FailedTrack {
-  id: string
-  title: string
-  artist: string
-  reason: string
+  id: string;
+  title: string;
+  artist: string;
+  reason: string;
 }
 
 interface MigrationResultCardProps {
-  isVisible: boolean
-  onClose: () => void
-  successCount: number
-  failedTracks: FailedTrack[]
-  playlistName: string
-  onRetryFailed: () => void
-  onManualMigrate: (trackId: string) => void
-  onRevertMigration: () => void
-  onKeepInSync: () => void
+  isVisible: boolean;
+  onClose: () => void;
+  successCount: number;
+  failedTracks: FailedTrack[];
+  playlistName: string;
+  onRetryFailed: () => void;
+  onManualMigrate: (trackId: string) => void;
+  onRevertMigration: () => void;
+  onKeepInSync: () => void;
 }
 
 export function MigrationResultCard({
@@ -36,21 +45,21 @@ export function MigrationResultCard({
   onRevertMigration,
   onKeepInSync,
 }: MigrationResultCardProps) {
-  const [retryingTrackId, setRetryingTrackId] = useState<string | null>(null)
+  const [retryingTrackId, setRetryingTrackId] = useState<string | null>(null);
 
-  if (!isVisible) return null
+  if (!isVisible) return null;
 
-  const totalTracks = successCount + failedTracks.length
-  const hasFailures = failedTracks.length > 0
-  const successRate = Math.round((successCount / totalTracks) * 100)
+  const totalTracks = successCount + failedTracks.length;
+  const hasFailures = failedTracks.length > 0;
+  const successRate = Math.round((successCount / totalTracks) * 100);
 
   const handleRetryTrack = (trackId: string) => {
-    setRetryingTrackId(trackId)
+    setRetryingTrackId(trackId);
     setTimeout(() => {
-      setRetryingTrackId(null)
-      onManualMigrate(trackId)
-    }, 2000)
-  }
+      setRetryingTrackId(null);
+      onManualMigrate(trackId);
+    }, 2000);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -72,7 +81,8 @@ export function MigrationResultCard({
                   Migration {hasFailures ? "Partially Complete" : "Complete"}
                 </CardTitle>
                 <p className="text-secondary-dark text-sm mt-1">
-                  {successRate}% success rate • {successCount} of {totalTracks} tracks migrated
+                  {successRate}% success rate • {successCount} of {totalTracks}{" "}
+                  tracks migrated
                 </p>
               </div>
             </div>
@@ -92,18 +102,28 @@ export function MigrationResultCard({
           {/* Summary Stats */}
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center p-6 glass-effect rounded-2xl border border-green-500/30 hover-lift">
-              <div className="text-3xl font-bold text-green-600 mb-2">{successCount}</div>
+              <div className="text-3xl font-bold text-green-600 mb-2">
+                {successCount}
+              </div>
               <div className="text-sm text-green-700 font-medium">Migrated</div>
             </div>
             {hasFailures && (
               <div className="text-center p-6 glass-effect rounded-2xl border border-yellow-500/30 hover-lift">
-                <div className="text-3xl font-bold text-yellow-600 mb-2">{failedTracks.length}</div>
-                <div className="text-sm text-yellow-700 font-medium">Failed</div>
+                <div className="text-3xl font-bold text-yellow-600 mb-2">
+                  {failedTracks.length}
+                </div>
+                <div className="text-sm text-yellow-700 font-medium">
+                  Failed
+                </div>
               </div>
             )}
             <div className="text-center p-6 glass-effect rounded-2xl border border-white/30 hover-lift">
-              <div className="text-3xl font-bold text-primary-dark mb-2">{totalTracks}</div>
-              <div className="text-sm text-secondary-dark font-medium">Total</div>
+              <div className="text-3xl font-bold text-primary-dark mb-2">
+                {totalTracks}
+              </div>
+              <div className="text-sm text-secondary-dark font-medium">
+                Total
+              </div>
             </div>
           </div>
 
@@ -113,9 +133,12 @@ export function MigrationResultCard({
               <div className="w-20 h-20 bg-green-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse-glow shadow-xl">
                 <CheckCircle className="w-12 h-12 text-green-600" />
               </div>
-              <h3 className="text-primary-dark font-bold text-2xl mb-3">Migration Successful!</h3>
+              <h3 className="text-primary-dark font-bold text-2xl mb-3">
+                Migration Successful!
+              </h3>
               <p className="text-secondary-dark mb-6 max-w-md mx-auto">
-                All {successCount} tracks from "{playlistName}" have been successfully migrated.
+                All {successCount} tracks from "{playlistName}" have been
+                successfully migrated.
               </p>
               <div className="flex justify-center">
                 <Button
@@ -160,11 +183,17 @@ export function MigrationResultCard({
                             <Music className="w-6 h-6 text-secondary-dark" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h5 className="text-primary-dark font-semibold truncate text-lg">{track.title}</h5>
-                            <p className="text-secondary-dark text-sm truncate mb-2">{track.artist}</p>
+                            <h5 className="text-primary-dark font-semibold truncate text-lg">
+                              {track.title}
+                            </h5>
+                            <p className="text-secondary-dark text-sm truncate mb-2">
+                              {track.artist}
+                            </p>
                             <div className="inline-flex items-center gap-2 bg-yellow-500/20 px-3 py-1 rounded-xl">
                               <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                              <span className="text-yellow-700 text-xs font-medium">{track.reason}</span>
+                              <span className="text-yellow-700 text-xs font-medium">
+                                {track.reason}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -245,5 +274,5 @@ export function MigrationResultCard({
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

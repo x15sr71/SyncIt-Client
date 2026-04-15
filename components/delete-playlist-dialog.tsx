@@ -76,15 +76,15 @@ export function DeletePlaylistDialog({
                   {state === "loading"
                     ? "Deleting Playlist"
                     : state === "success"
-                    ? "Deletion Successful"
-                    : "Delete Playlist"}
+                      ? "Deletion Successful"
+                      : "Delete Playlist"}
                 </CardTitle>
                 <p className="text-secondary-dark text-sm">
                   {state === "loading"
                     ? "Please wait while we delete your playlist..."
                     : state === "success"
-                    ? "Your playlist has been deleted successfully!"
-                    : "This action cannot be undone"}
+                      ? "Your playlist has been deleted successfully!"
+                      : "This action cannot be undone"}
                 </p>
               </div>
             </div>

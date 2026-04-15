@@ -56,9 +56,10 @@ interface GetYoutubePlaylistsResponse {
   totalResults: number;
 }
 
-
 export default function useGetYoutubePlaylists() {
-  const [youtubePlaylists, setYoutubePlaylists] = useState<YoutubePlaylist[]>([]);
+  const [youtubePlaylists, setYoutubePlaylists] = useState<YoutubePlaylist[]>(
+    [],
+  );
   const [loading, setLoading] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string | null>(null);
 
@@ -67,26 +68,31 @@ export default function useGetYoutubePlaylists() {
     setAuthError(null); // Reset auth error on a new attempt
 
     try {
-      const response = await apiClient.get<GetYoutubePlaylistsResponse>("/getyoutubeplaylists");
+      const response = await apiClient.get<GetYoutubePlaylistsResponse>(
+        "/getyoutubeplaylists",
+      );
       if (response.data.success) {
         setYoutubePlaylists(response.data.data);
       } else {
-        throw new Error("API indicated failure but did not throw an HTTP error.");
+        throw new Error(
+          "API indicated failure but did not throw an HTTP error.",
+        );
       }
     } catch (error) {
       // 1. Check if the error object looks like an Axios error by checking for the 'response' property.
       // We are now directly accessing properties without explicit AxiosError type assertion.
-      if (error && typeof error === 'object' && 'response' in error) {
+      if (error && typeof error === "object" && "response" in error) {
         // Access 'response' and 'data' directly, assuming their structure based on typical Axios errors.
         const errorResponse = (error as any).response; // Use 'any' to bypass strict type checking for this access
 
         // 2. If it is, check the status code.
         if (errorResponse?.status === 401) {
           console.log("Authentication error detected:", errorResponse.data);
-          
+
           // 3. Set the specific auth error state for the UI to handle.
           setAuthError(
-            errorResponse.data?.message || "Your session has expired. Please reconnect."
+            errorResponse.data?.message ||
+              "Your session has expired. Please reconnect.",
           );
           setYoutubePlaylists([]); // Clear any stale data
         } else {

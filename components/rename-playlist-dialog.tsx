@@ -112,19 +112,19 @@ export function RenamePlaylistDialog({
                   {state === "loading"
                     ? "Renaming Playlist"
                     : state === "success"
-                    ? "Rename Successful"
-                    : state === "error"
-                    ? "Rename Failed"
-                    : "Rename Playlist"}
+                      ? "Rename Successful"
+                      : state === "error"
+                        ? "Rename Failed"
+                        : "Rename Playlist"}
                 </CardTitle>
                 <p className="text-secondary-dark text-sm">
                   {state === "loading"
                     ? "Please wait while we update your playlist..."
                     : state === "success"
-                    ? "Your playlist has been renamed successfully!"
-                    : state === "error"
-                    ? error || "Something went wrong. Please try again."
-                    : "Enter a new name for your playlist"}
+                      ? "Your playlist has been renamed successfully!"
+                      : state === "error"
+                        ? error || "Something went wrong. Please try again."
+                        : "Enter a new name for your playlist"}
                 </p>
               </div>
             </div>
@@ -156,7 +156,9 @@ export function RenamePlaylistDialog({
               {/* Error message */}
               {state === "error" && (
                 <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl">
-                  <p className="text-red-600 text-sm">{error || "Failed to rename playlist. Please try again."}</p>
+                  <p className="text-red-600 text-sm">
+                    {error || "Failed to rename playlist. Please try again."}
+                  </p>
                 </div>
               )}
 

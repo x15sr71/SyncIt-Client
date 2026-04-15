@@ -33,7 +33,7 @@ export interface Playlist {
   description?: string;
   isPublic?: boolean;
   source?: "spotify" | "youtube";
-  platform: "spotify" | "youtube";  
+  platform: "spotify" | "youtube";
 }
 
 interface PlaylistPreviewProps {
@@ -45,9 +45,20 @@ interface PlaylistPreviewProps {
   onEmpty?: (id: string) => void;
   onDelete?: (id: string) => void;
   platform?: "spotify" | "youtube";
-  onDeleteSong?: (playlistId: string, songId: string, songTitle: string, platform: "spotify" | "youtube") => void;
+  onDeleteSong?: (
+    playlistId: string,
+    songId: string,
+    songTitle: string,
+    platform: "spotify" | "youtube",
+  ) => void;
   // Add prop to handle song deletion with animation
-  onDeleteSongWithAnimation?: (playlistId: string, songId: string, songTitle: string, platform: "spotify" | "youtube", animateRemoval: (songId: string) => Promise<void>) => void;
+  onDeleteSongWithAnimation?: (
+    playlistId: string,
+    songId: string,
+    songTitle: string,
+    platform: "spotify" | "youtube",
+    animateRemoval: (songId: string) => Promise<void>,
+  ) => void;
 }
 
 const formatDuration = (msOrIso: number | string): string => {
@@ -68,7 +79,7 @@ export function PlaylistPreview({
   onEmpty,
   onDelete,
   onDeleteSong,
-  onDeleteSongWithAnimation
+  onDeleteSongWithAnimation,
 }: PlaylistPreviewProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [loadedSongs, setLoadedSongs] = useState<Song[]>([]);
@@ -87,7 +98,8 @@ export function PlaylistPreview({
     error: errorYoutube,
   } = useGetYoutubePlaylistContent();
 
-  const loading = playlist.platform === "youtube" ? loadingYoutube : loadingSpotify;
+  const loading =
+    playlist.platform === "youtube" ? loadingYoutube : loadingSpotify;
   const error = playlist.platform === "youtube" ? errorYoutube : errorSpotify;
 
   const handleExpand = async () => {
@@ -129,10 +141,10 @@ export function PlaylistPreview({
 
   // Animation function that can be passed to parent
   const animateRemoval = async (songId: string) => {
-    setRemovingSongs(prev => new Set([...prev, songId]));
-    await new Promise(resolve => setTimeout(resolve, 900)); // Wait for full animation
-    setLoadedSongs(prev => prev.filter(song => song.id !== songId));
-    setRemovingSongs(prev => {
+    setRemovingSongs((prev) => new Set([...prev, songId]));
+    await new Promise((resolve) => setTimeout(resolve, 900)); // Wait for full animation
+    setLoadedSongs((prev) => prev.filter((song) => song.id !== songId));
+    setRemovingSongs((prev) => {
       const newSet = new Set(prev);
       newSet.delete(songId);
       return newSet;
@@ -143,7 +155,13 @@ export function PlaylistPreview({
   const handleRemoveSong = (songId: string, songTitle: string) => {
     if (onDeleteSongWithAnimation) {
       // Use the new prop that handles both dialog and animation
-      onDeleteSongWithAnimation(playlist.id, songId, songTitle, playlist.platform, animateRemoval);
+      onDeleteSongWithAnimation(
+        playlist.id,
+        songId,
+        songTitle,
+        playlist.platform,
+        animateRemoval,
+      );
     } else if (onDeleteSong) {
       // Fallback to old behavior (just opens dialog, no animation)
       onDeleteSong(playlist.id, songId, songTitle, playlist.platform);
@@ -182,7 +200,8 @@ export function PlaylistPreview({
               <div className="flex items-center gap-2 text-sm text-secondary-dark">
                 <Music className="w-3 h-3" />
                 <span>
-                  {hasLoadedContent ? loadedSongs.length : playlist.songCount} songs
+                  {hasLoadedContent ? loadedSongs.length : playlist.songCount}{" "}
+                  songs
                 </span>
                 {playlist.isPublic !== undefined && (
                   <>
@@ -246,19 +265,19 @@ export function PlaylistPreview({
                   const isRemoving = removingSongs.has(song.id);
                   // 🆕 Create unique key by combining ID with index to handle duplicates
                   const uniqueKey = `${song.id}-${index}`;
-                  
+
                   return (
                     <div
                       key={uniqueKey} // 🆕 Use unique key instead of just song.id
                       className={`flex items-center justify-between p-2 rounded-lg hover:bg-white/10 transition-all duration-300 group ${
-                        isRemoving 
-                          ? 'animate-pulse bg-red-500/20 border border-red-500/50 transform' 
-                          : ''
+                        isRemoving
+                          ? "animate-pulse bg-red-500/20 border border-red-500/50 transform"
+                          : ""
                       }`}
                       style={{
-                        animation: isRemoving 
-                          ? 'shake 0.6s ease-in-out, fadeOutScale 0.3s ease-in-out 0.3s forwards' 
-                          : undefined
+                        animation: isRemoving
+                          ? "shake 0.6s ease-in-out, fadeOutScale 0.3s ease-in-out 0.3s forwards"
+                          : undefined,
                       }}
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -267,7 +286,7 @@ export function PlaylistPreview({
                             src={song.image_url}
                             alt={song.title}
                             className={`w-10 h-10 rounded-md object-cover transition-all duration-300 ${
-                              isRemoving ? 'grayscale opacity-50' : ''
+                              isRemoving ? "grayscale opacity-50" : ""
                             }`}
                             onError={(e) => {
                               e.currentTarget.onerror = null;
@@ -279,28 +298,34 @@ export function PlaylistPreview({
                             src="/placeholder-song.svg"
                             alt="no album art"
                             className={`w-10 h-10 rounded-md object-cover opacity-50 transition-all duration-300 ${
-                              isRemoving ? 'grayscale opacity-25' : ''
+                              isRemoving ? "grayscale opacity-25" : ""
                             }`}
                           />
                         )}
                         <div className="min-w-0">
-                          <p className={`text-sm font-medium text-primary-dark truncate transition-all duration-300 ${
-                            isRemoving ? 'text-red-400 line-through' : ''
-                          }`}>
+                          <p
+                            className={`text-sm font-medium text-primary-dark truncate transition-all duration-300 ${
+                              isRemoving ? "text-red-400 line-through" : ""
+                            }`}
+                          >
                             {song.title}
                           </p>
-                          <p className={`text-xs text-secondary-dark truncate transition-all duration-300 ${
-                            isRemoving ? 'text-red-300/70 line-through' : ''
-                          }`}>
+                          <p
+                            className={`text-xs text-secondary-dark truncate transition-all duration-300 ${
+                              isRemoving ? "text-red-300/70 line-through" : ""
+                            }`}
+                          >
                             {song.artist}
                           </p>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <span className={`text-xs text-muted-dark transition-all duration-300 ${
-                          isRemoving ? 'text-red-300/70 line-through' : ''
-                        }`}>
+                        <span
+                          className={`text-xs text-muted-dark transition-all duration-300 ${
+                            isRemoving ? "text-red-300/70 line-through" : ""
+                          }`}
+                        >
                           {song.duration}
                         </span>
                         {(onDeleteSong || onDeleteSongWithAnimation) && (
@@ -313,9 +338,9 @@ export function PlaylistPreview({
                             }}
                             disabled={isRemoving}
                             className={`opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-600 hover:bg-red-500/10 rounded-lg p-1 transition-all ${
-                              isRemoving 
-                                ? 'opacity-100 bg-red-500/20 text-red-400 cursor-not-allowed animate-spin' 
-                                : ''
+                              isRemoving
+                                ? "opacity-100 bg-red-500/20 text-red-400 cursor-not-allowed animate-spin"
+                                : ""
                             }`}
                             aria-label={`Remove ${song.title} from playlist`}
                           >
@@ -339,20 +364,54 @@ export function PlaylistPreview({
 
       <style jsx>{`
         @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
-          20%, 40%, 60%, 80% { transform: translateX(3px); }
+          0%,
+          100% {
+            transform: translateX(0);
+          }
+          10%,
+          30%,
+          50%,
+          70%,
+          90% {
+            transform: translateX(-3px);
+          }
+          20%,
+          40%,
+          60%,
+          80% {
+            transform: translateX(3px);
+          }
         }
 
         @keyframes fadeOutScale {
-          0% { opacity: 1; transform: scale(1) translateY(0); max-height: 64px; margin-bottom: 8px; }
-          50% { opacity: 0.5; transform: scale(0.95) translateY(-2px); }
-          100% { opacity: 0; transform: scale(0.8) translateY(-10px); max-height: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; }
+          0% {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            max-height: 64px;
+            margin-bottom: 8px;
+          }
+          50% {
+            opacity: 0.5;
+            transform: scale(0.95) translateY(-2px);
+          }
+          100% {
+            opacity: 0;
+            transform: scale(0.8) translateY(-10px);
+            max-height: 0;
+            margin-bottom: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+          }
         }
 
         @keyframes pulseRed {
-          0%, 100% { background-color: rgba(239, 68, 68, 0.1); }
-          50% { background-color: rgba(239, 68, 68, 0.3); }
+          0%,
+          100% {
+            background-color: rgba(239, 68, 68, 0.1);
+          }
+          50% {
+            background-color: rgba(239, 68, 68, 0.3);
+          }
         }
       `}</style>
     </Card>

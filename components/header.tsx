@@ -1,11 +1,11 @@
-"use client"
-import { Button } from "@/components/ui/button"
-import { Music, Menu, X } from "lucide-react"
-import Link from "next/link"
-import { useState } from "react"
+"use client";
+import { Button } from "@/components/ui/button";
+import { Music, Menu, X } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 
 export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <header
@@ -23,25 +23,43 @@ export function Header() {
             <div className="logo-icon animate-pulse-glow" aria-hidden="true">
               <Music className="h-6 w-6 text-white absolute inset-0 m-auto" />
             </div>
-            <span className="text-xl sm:text-2xl font-bold logo-gradient">SyncIt</span>
+            <span className="text-xl sm:text-2xl font-bold logo-gradient">
+              SyncIt
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8" role="navigation" aria-label="Main navigation">
+          <nav
+            className="hidden md:flex items-center gap-8"
+            role="navigation"
+            aria-label="Main navigation"
+          >
             <button
-              onClick={() => document.getElementById("features")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() =>
+                document
+                  .getElementById("features")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
               className="text-white/90 hover:text-white transition-all duration-300 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded-lg px-3 py-2 hover:bg-white/10"
             >
               Features
             </button>
             <button
-              onClick={() => document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() =>
+                document
+                  .getElementById("how-it-works")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
               className="text-white/90 hover:text-white transition-all duration-300 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded-lg px-3 py-2 hover:bg-white/10"
             >
               How it works
             </button>
             <button
-              onClick={() => document.getElementById("faq")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() =>
+                document
+                  .getElementById("faq")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
               className="text-white/90 hover:text-white transition-all duration-300 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded-lg px-3 py-2 hover:bg-white/10"
             >
               FAQ
@@ -68,7 +86,11 @@ export function Header() {
               aria-controls="mobile-menu"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </Button>
           </div>
         </div>
@@ -84,8 +106,10 @@ export function Header() {
             <div className="flex flex-col space-y-4 p-4">
               <button
                 onClick={() => {
-                  document.getElementById("features")?.scrollIntoView({ behavior: "smooth" })
-                  setIsMenuOpen(false)
+                  document
+                    .getElementById("features")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                  setIsMenuOpen(false);
                 }}
                 className="text-white/90 hover:text-white transition-all duration-300 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded-lg px-3 py-2 hover:bg-white/10 text-left"
               >
@@ -93,8 +117,10 @@ export function Header() {
               </button>
               <button
                 onClick={() => {
-                  document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" })
-                  setIsMenuOpen(false)
+                  document
+                    .getElementById("how-it-works")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                  setIsMenuOpen(false);
                 }}
                 className="text-white/90 hover:text-white transition-all duration-300 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded-lg px-3 py-2 hover:bg-white/10 text-left"
               >
@@ -102,8 +128,10 @@ export function Header() {
               </button>
               <button
                 onClick={() => {
-                  document.getElementById("faq")?.scrollIntoView({ behavior: "smooth" })
-                  setIsMenuOpen(false)
+                  document
+                    .getElementById("faq")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                  setIsMenuOpen(false);
                 }}
                 className="text-white/90 hover:text-white transition-all duration-300 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded-lg px-3 py-2 hover:bg-white/10 text-left"
               >
@@ -114,5 +142,5 @@ export function Header() {
         )}
       </div>
     </header>
-  )
+  );
 }

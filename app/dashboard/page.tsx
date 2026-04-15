@@ -63,8 +63,8 @@ export default function DashboardPage() {
     onPlaylistRenamed: (playlistId, newName) => {
       setLocalSpotifyPlaylists((prev) =>
         prev.map((p: SpotifyPlaylist) =>
-          p.id === playlistId ? { ...p, name: newName } : p
-        )
+          p.id === playlistId ? { ...p, name: newName } : p,
+        ),
       );
       dashboard.setSelectedPlaylists((prev) => {
         const updated = { ...prev };
@@ -74,7 +74,7 @@ export default function DashboardPage() {
     },
     onPlaylistDeleted: (playlistId) => {
       setLocalSpotifyPlaylists((prev) =>
-        prev.filter((p: SpotifyPlaylist) => p.id !== playlistId)
+        prev.filter((p: SpotifyPlaylist) => p.id !== playlistId),
       );
       dashboard.setSelectedPlaylists((prev) => {
         const updated = { ...prev };
@@ -95,8 +95,8 @@ export default function DashboardPage() {
         prev.map((p: any) =>
           p.id === playlistId
             ? { ...p, snippet: { ...p.snippet, title: newName } }
-            : p
-        )
+            : p,
+        ),
       );
       dashboard.setSelectedPlaylists((prev) => {
         const updated = { ...prev };
@@ -106,7 +106,7 @@ export default function DashboardPage() {
     },
     onPlaylistDeleted: (playlistId) => {
       setLocalYoutubePlaylists((prev) =>
-        prev.filter((p: any) => p.id !== playlistId)
+        prev.filter((p: any) => p.id !== playlistId),
       );
       dashboard.setSelectedPlaylists((prev) => {
         const updated = { ...prev };
@@ -139,7 +139,7 @@ export default function DashboardPage() {
       : transformedYoutubePlaylists;
 
   const selectedPlaylistData = sourcePlaylists.find(
-    (p) => p.id === dashboard.selectedPlaylistForMigration
+    (p) => p.id === dashboard.selectedPlaylistForMigration,
   );
 
   // Handlers with all dependencies injected
@@ -278,7 +278,7 @@ export default function DashboardPage() {
           .map((p) => ({ id: p.id, name: p.name, songCount: p.songCount }))}
         selectedPlaylistCount={
           Object.keys(dashboard.selectedPlaylists).filter(
-            (id) => dashboard.selectedPlaylists[id]
+            (id) => dashboard.selectedPlaylists[id],
           ).length
         }
       />
@@ -370,7 +370,7 @@ export default function DashboardPage() {
             handlers.handleDeleteSongConfirm(
               dashboard.deleteSongDialog.playlistId,
               dashboard.deleteSongDialog.songId,
-              dashboard.deleteSongDialog.platform
+              dashboard.deleteSongDialog.platform,
             );
           }
         }}

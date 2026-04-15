@@ -31,12 +31,20 @@ export default function MigrationAction({
   const { startMigration, isLoading, error } = useMigration();
 
   const selectedPlaylistIds = Object.keys(selectedPlaylists).filter(
-    (id) => selectedPlaylists[id]
+    (id) => selectedPlaylists[id],
   );
 
   console.log("DEBUG selectedPlaylistIds:", selectedPlaylistIds);
-  console.log("DEBUG sourcePlaylists:", sourcePlaylists.map((p) => p.id));
-  console.log("DEBUG Migration direction:", sourcePlatform, "to", targetPlatform);
+  console.log(
+    "DEBUG sourcePlaylists:",
+    sourcePlaylists.map((p) => p.id),
+  );
+  console.log(
+    "DEBUG Migration direction:",
+    sourcePlatform,
+    "to",
+    targetPlatform,
+  );
 
   const handleStartMigration = async () => {
     if (selectedPlaylistIds.length === 0) return;
@@ -50,7 +58,7 @@ export default function MigrationAction({
       if (!playlist) {
         console.warn(
           "MigrationAction: Playlist not found in sourcePlaylists",
-          firstPlaylistId
+          firstPlaylistId,
         );
         onMigrationError?.("Selected playlist not found.");
         return;
@@ -66,7 +74,7 @@ export default function MigrationAction({
       // For Spotify to YouTube, we might need a target playlist
       // For now, we'll let the backend handle playlist creation
       let targetPlaylistId: string | undefined;
-      
+
       // You can extend this logic to allow user selection of target playlist
       // or create new playlists as needed
       if (sourcePlatform === "spotify" && targetPlatform === "youtube") {

@@ -1,22 +1,25 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { X, ArrowRight, Music, AlertTriangle } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { X, ArrowRight, Music, AlertTriangle } from "lucide-react";
 
 interface MigrationConfirmationDialogProps {
-  isOpen: boolean
-  onClose: () => void
-  onConfirm: (playlistNames: { [playlistId: string]: string }, useOriginalNames: boolean) => void
-  originalPlaylistName: string
-  sourcePlatform: string
-  destinationPlatform: string
-  trackCount: number
-  selectedPlaylists: Array<{ id: string; name: string; songCount: number }>
-  selectedPlaylistCount: number
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: (
+    playlistNames: { [playlistId: string]: string },
+    useOriginalNames: boolean,
+  ) => void;
+  originalPlaylistName: string;
+  sourcePlatform: string;
+  destinationPlatform: string;
+  trackCount: number;
+  selectedPlaylists: Array<{ id: string; name: string; songCount: number }>;
+  selectedPlaylistCount: number;
 }
 
 export function MigrationConfirmationDialog({
@@ -30,61 +33,71 @@ export function MigrationConfirmationDialog({
   selectedPlaylists,
   selectedPlaylistCount,
 }: MigrationConfirmationDialogProps) {
-  const [useOriginalNames, setUseOriginalNames] = useState(true)
-  const [singleCustomName, setSingleCustomName] = useState(originalPlaylistName)
-  const [customNames, setCustomNames] = useState<{ [key: string]: string }>({})
+  const [useOriginalNames, setUseOriginalNames] = useState(true);
+  const [singleCustomName, setSingleCustomName] =
+    useState(originalPlaylistName);
+  const [customNames, setCustomNames] = useState<{ [key: string]: string }>({});
 
   // Initialize custom names when dialog opens or playlists change
   useEffect(() => {
     if (isOpen && selectedPlaylists.length > 0) {
-      const initialNames: { [key: string]: string } = {}
+      const initialNames: { [key: string]: string } = {};
       selectedPlaylists.forEach((playlist) => {
-        initialNames[playlist.id] = playlist.name
-      })
-      setCustomNames(initialNames)
-      setSingleCustomName(selectedPlaylists[0]?.name || originalPlaylistName)
+        initialNames[playlist.id] = playlist.name;
+      });
+      setCustomNames(initialNames);
+      setSingleCustomName(selectedPlaylists[0]?.name || originalPlaylistName);
     }
-  }, [isOpen, selectedPlaylists, originalPlaylistName])
+  }, [isOpen, selectedPlaylists, originalPlaylistName]);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   const handleConfirm = () => {
     if (selectedPlaylistCount === 1) {
       // Single playlist
-      const playlistId = selectedPlaylists[0].id
-      const finalName = useOriginalNames ? selectedPlaylists[0].name : singleCustomName.trim()
-      onConfirm({ [playlistId]: finalName }, useOriginalNames)
+      const playlistId = selectedPlaylists[0].id;
+      const finalName = useOriginalNames
+        ? selectedPlaylists[0].name
+        : singleCustomName.trim();
+      onConfirm({ [playlistId]: finalName }, useOriginalNames);
     } else {
       // Multiple playlists
-      const finalNames: { [playlistId: string]: string } = {}
+      const finalNames: { [playlistId: string]: string } = {};
       selectedPlaylists.forEach((playlist) => {
-        finalNames[playlist.id] = useOriginalNames ? playlist.name : customNames[playlist.id]?.trim() || playlist.name
-      })
-      onConfirm(finalNames, useOriginalNames)
+        finalNames[playlist.id] = useOriginalNames
+          ? playlist.name
+          : customNames[playlist.id]?.trim() || playlist.name;
+      });
+      onConfirm(finalNames, useOriginalNames);
     }
-  }
+  };
 
   const updateCustomName = (playlistId: string, newName: string) => {
     setCustomNames((prev) => ({
       ...prev,
       [playlistId]: newName,
-    }))
-  }
+    }));
+  };
 
   // Check if all custom names are valid
   const isValidCustomNames = () => {
-    if (useOriginalNames) return true
+    if (useOriginalNames) return true;
 
     if (selectedPlaylistCount === 1) {
-      return singleCustomName.trim().length > 0
+      return singleCustomName.trim().length > 0;
     }
 
-    return selectedPlaylists.every((playlist) => customNames[playlist.id]?.trim().length > 0)
-  }
+    return selectedPlaylists.every(
+      (playlist) => customNames[playlist.id]?.trim().length > 0,
+    );
+  };
 
-  const isYouTubeTarget = destinationPlatform === "youtube"
-  const totalTracks = selectedPlaylists.reduce((sum, playlist) => sum + playlist.songCount, 0)
-  const exceedsYouTubeLimit = isYouTubeTarget && totalTracks > 100
+  const isYouTubeTarget = destinationPlatform === "youtube";
+  const totalTracks = selectedPlaylists.reduce(
+    (sum, playlist) => sum + playlist.songCount,
+    0,
+  );
+  const exceedsYouTubeLimit = isYouTubeTarget && totalTracks > 100;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -96,7 +109,9 @@ export function MigrationConfirmationDialog({
                 <Music className="w-6 h-6 text-white" />
               </div>
               <div>
-                <CardTitle className="text-primary-dark text-xl font-bold">Confirm Migration</CardTitle>
+                <CardTitle className="text-primary-dark text-xl font-bold">
+                  Confirm Migration
+                </CardTitle>
                 <p className="text-secondary-dark text-sm">
                   {selectedPlaylistCount === 1
                     ? "Configure your playlist migration"
@@ -123,8 +138,12 @@ export function MigrationConfirmationDialog({
               <div className="w-14 h-14 bg-green-500/20 border-2 border-green-500/40 rounded-2xl flex items-center justify-center mb-3 shadow-lg">
                 <Music className="w-7 h-7 text-green-600" />
               </div>
-              <div className="text-sm font-medium text-secondary-dark mb-1">From</div>
-              <div className="text-primary-dark font-bold capitalize">{sourcePlatform}</div>
+              <div className="text-sm font-medium text-secondary-dark mb-1">
+                From
+              </div>
+              <div className="text-primary-dark font-bold capitalize">
+                {sourcePlatform}
+              </div>
             </div>
             <div className="flex flex-col items-center">
               <ArrowRight className="w-8 h-8 text-purple-500 animate-pulse mb-2" />
@@ -134,8 +153,12 @@ export function MigrationConfirmationDialog({
               <div className="w-14 h-14 bg-red-500/20 border-2 border-red-500/40 rounded-2xl flex items-center justify-center mb-3 shadow-lg">
                 <Music className="w-7 h-7 text-red-600" />
               </div>
-              <div className="text-sm font-medium text-secondary-dark mb-1">To</div>
-              <div className="text-primary-dark font-bold capitalize">{destinationPlatform}</div>
+              <div className="text-sm font-medium text-secondary-dark mb-1">
+                To
+              </div>
+              <div className="text-primary-dark font-bold capitalize">
+                {destinationPlatform}
+              </div>
             </div>
           </div>
 
@@ -147,13 +170,16 @@ export function MigrationConfirmationDialog({
                   <AlertTriangle className="w-6 h-6 text-yellow-700" />
                 </div>
                 <div>
-                  <h4 className="text-yellow-800 font-bold text-lg mb-2">YouTube Music API Limitation</h4>
+                  <h4 className="text-yellow-800 font-bold text-lg mb-2">
+                    YouTube Music API Limitation
+                  </h4>
                   <p className="text-yellow-900 text-sm leading-relaxed">
                     {selectedPlaylistCount === 1
                       ? `This playlist has ${trackCount} tracks`
                       : `These playlists have a total of ${totalTracks} tracks`}
-                    , but YouTube Music allows only <span className="font-semibold">100 tracks per day</span> via API.
-                    The migration will be split across multiple days.
+                    , but YouTube Music allows only{" "}
+                    <span className="font-semibold">100 tracks per day</span>{" "}
+                    via API. The migration will be split across multiple days.
                   </p>
                 </div>
               </div>
@@ -180,7 +206,10 @@ export function MigrationConfirmationDialog({
                 className="mt-1 w-4 h-4 text-purple-600 bg-white/20 border-white/30 focus:ring-purple-500 focus:ring-2"
               />
               <div className="flex-1">
-                <Label htmlFor="original-names" className="text-primary-dark font-semibold cursor-pointer">
+                <Label
+                  htmlFor="original-names"
+                  className="text-primary-dark font-semibold cursor-pointer"
+                >
                   Use original name{selectedPlaylistCount > 1 ? "s" : ""}
                 </Label>
                 <p className="text-sm text-secondary-dark mt-1">
@@ -205,7 +234,10 @@ export function MigrationConfirmationDialog({
                 className="mt-1 w-4 h-4 text-purple-600 bg-white/20 border-white/30 focus:ring-purple-500 focus:ring-2"
               />
               <div className="flex-1 space-y-3">
-                <Label htmlFor="custom-names" className="text-primary-dark font-semibold cursor-pointer">
+                <Label
+                  htmlFor="custom-names"
+                  className="text-primary-dark font-semibold cursor-pointer"
+                >
                   Customize name{selectedPlaylistCount > 1 ? "s" : ""}
                 </Label>
 
@@ -226,7 +258,9 @@ export function MigrationConfirmationDialog({
                         </Label>
                         <Input
                           value={customNames[playlist.id] || playlist.name}
-                          onChange={(e) => updateCustomName(playlist.id, e.target.value)}
+                          onChange={(e) =>
+                            updateCustomName(playlist.id, e.target.value)
+                          }
                           disabled={useOriginalNames}
                           className="bg-white/10 border-white/30 text-primary-dark placeholder-secondary-dark rounded-xl focus:ring-purple-500 focus:border-purple-500 shadow-lg disabled:opacity-50"
                           placeholder={`Custom name for ${playlist.name}`}
@@ -259,5 +293,5 @@ export function MigrationConfirmationDialog({
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

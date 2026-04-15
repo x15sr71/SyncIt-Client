@@ -18,7 +18,9 @@ interface GetYoutubePlaylistContentResponse {
 }
 
 export default function useGetYoutubePlaylistContent() {
-  const [playlistContent, setPlaylistContent] = useState<Record<string, YouTubeTrack[]>>({});
+  const [playlistContent, setPlaylistContent] = useState<
+    Record<string, YouTubeTrack[]>
+  >({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,7 +31,7 @@ export default function useGetYoutubePlaylistContent() {
     try {
       const response = await apiClient.post<GetYoutubePlaylistContentResponse>(
         "/youtubeplaylistcontent",
-        { playlistIds }
+        { playlistIds },
       );
 
       const { success, data, message, error: apiError } = response.data;
