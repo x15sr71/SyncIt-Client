@@ -12,7 +12,10 @@ export interface Playlist {
   platform: "spotify" | "youtube";
 }
 
-export function useTransformedPlaylists(localSpotifyPlaylists: any[], localYoutubePlaylists: any[]) {
+export function useTransformedPlaylists(
+  localSpotifyPlaylists: any[],
+  localYoutubePlaylists: any[],
+) {
   const transformedSpotifyPlaylists: Playlist[] = useMemo(() => {
     return localSpotifyPlaylists.map((p: any) => ({
       id: p.id,

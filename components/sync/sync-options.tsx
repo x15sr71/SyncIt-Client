@@ -1,18 +1,22 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeftRight, Copy } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowLeftRight, Copy } from "lucide-react";
 
-type SyncMode = "migrate" | "sync"
+type SyncMode = "migrate" | "sync";
 
 interface SyncOptionsProps {
-  syncMode: SyncMode
-  setSyncMode: (mode: SyncMode) => void
-  handleContinue: () => void
+  syncMode: SyncMode;
+  setSyncMode: (mode: SyncMode) => void;
+  handleContinue: () => void;
 }
 
-export function SyncOptions({ syncMode, setSyncMode, handleContinue }: SyncOptionsProps) {
+export function SyncOptions({
+  syncMode,
+  setSyncMode,
+  handleContinue,
+}: SyncOptionsProps) {
   const options = [
     {
       id: "migrate" as SyncMode,
@@ -24,16 +28,19 @@ export function SyncOptions({ syncMode, setSyncMode, handleContinue }: SyncOptio
     {
       id: "sync" as SyncMode,
       title: "Continuous Sync",
-      description: "Keep your playlists synchronized across platforms automatically",
+      description:
+        "Keep your playlists synchronized across platforms automatically",
       icon: ArrowLeftRight,
       recommended: false,
     },
-  ]
+  ];
 
   return (
     <div className="text-center">
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-white mb-4">Choose Your Sync Method</h2>
+        <h2 className="text-3xl font-bold text-white mb-4">
+          Choose Your Sync Method
+        </h2>
         <p className="text-white/80 text-lg max-w-2xl mx-auto">
           Select how you want to manage your playlists across platforms
         </p>
@@ -41,7 +48,7 @@ export function SyncOptions({ syncMode, setSyncMode, handleContinue }: SyncOptio
 
       <div className="grid md:grid-cols-2 gap-6 mb-8">
         {options.map((option) => {
-          const Icon = option.icon
+          const Icon = option.icon;
           return (
             <Card
               key={option.id}
@@ -61,11 +68,13 @@ export function SyncOptions({ syncMode, setSyncMode, handleContinue }: SyncOptio
                 <div className="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Icon className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">{option.title}</h3>
+                <h3 className="text-xl font-bold text-white mb-3">
+                  {option.title}
+                </h3>
                 <p className="text-white/80">{option.description}</p>
               </CardContent>
             </Card>
-          )
+          );
         })}
       </div>
 
@@ -76,5 +85,5 @@ export function SyncOptions({ syncMode, setSyncMode, handleContinue }: SyncOptio
         Continue with {syncMode === "migrate" ? "Migration" : "Sync"}
       </Button>
     </div>
-  )
+  );
 }

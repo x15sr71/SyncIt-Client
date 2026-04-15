@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChevronDown } from "lucide-react"
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
@@ -35,28 +35,42 @@ const faqs = [
     answer:
       "Free users can sync up to 5 playlists. Premium users get unlimited playlist syncing, automatic updates every 20 minutes, and priority support.",
   },
-]
+];
 
 export function FAQSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index)
-  }
+    setOpenIndex(openIndex === index ? null : index);
+  };
 
   return (
-    <section id="faq" className="py-20 relative scroll-mt-20" role="region" aria-labelledby="faq-heading">
+    <section
+      id="faq"
+      className="py-20 relative scroll-mt-20"
+      role="region"
+      aria-labelledby="faq-heading"
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 id="faq-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2
+            id="faq-heading"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6"
+          >
             Frequently Asked <span className="logo-gradient">Questions</span>
           </h2>
-          <p className="text-lg text-white/80 max-w-3xl mx-auto">Everything you need to know about SyncIt</p>
+          <p className="text-lg text-white/80 max-w-3xl mx-auto">
+            Everything you need to know about SyncIt
+          </p>
         </div>
 
         <div className="max-w-4xl mx-auto space-y-4">
           {faqs.map((faq, index) => (
-            <Card key={index} className="glass-effect border-white/20 hover-lift overflow-hidden" role="article">
+            <Card
+              key={index}
+              className="glass-effect border-white/20 hover-lift overflow-hidden"
+              role="article"
+            >
               <CardHeader
                 className="cursor-pointer transition-all duration-200 hover:bg-white/5"
                 onClick={() => toggleFAQ(index)}
@@ -66,8 +80,8 @@ export function FAQSection() {
                 aria-controls={`faq-content-${index}`}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault()
-                    toggleFAQ(index)
+                    e.preventDefault();
+                    toggleFAQ(index);
                   }
                 }}
               >
@@ -84,7 +98,9 @@ export function FAQSection() {
 
               <div
                 className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                  openIndex === index ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                  openIndex === index
+                    ? "max-h-96 opacity-100"
+                    : "max-h-0 opacity-0"
                 }`}
               >
                 <CardContent
@@ -105,5 +121,5 @@ export function FAQSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

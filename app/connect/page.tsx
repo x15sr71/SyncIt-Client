@@ -1,34 +1,33 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Music, Check, Loader2, ArrowLeft } from "lucide-react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Music, Check, Loader2, ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function ConnectPage() {
   const [connections, setConnections] = useState({
     spotify: false,
     youtube: false,
-  })
+  });
   const [loading, setLoading] = useState({
     spotify: false,
     youtube: false,
-  })
-  const router = useRouter()
+  });
+  const router = useRouter();
 
   const handleConnect = async (platform: "spotify" | "youtube") => {
-    setLoading((prev) => ({ ...prev, [platform]: true }))
+    setLoading((prev) => ({ ...prev, [platform]: true }));
 
-    // Simulate OAuth connection
-    setTimeout(() => {
-      setConnections((prev) => ({ ...prev, [platform]: true }))
-      setLoading((prev) => ({ ...prev, [platform]: false }))
-    }, 2000)
-  }
+    // Redirect to backend OAuth endpoint
+    const backendUrl =
+      process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3002";
+    window.location.href = `${backendUrl}/${platform}/login`;
+  };
 
-  const canProceed = connections.spotify && connections.youtube
+  const canProceed = connections.spotify && connections.youtube;
 
   return (
     <div className="min-h-screen gradient-background-subdued">
@@ -48,14 +47,24 @@ export default function ConnectPage() {
             </Link>
           </div>
 
-          <Card className="glass-card animate-float border-white/40" role="main" aria-labelledby="connect-title">
+          <Card
+            className="glass-card animate-float border-white/40"
+            role="main"
+            aria-labelledby="connect-title"
+          >
             <CardHeader className="text-center pb-6">
-              <div className="flex items-center justify-center mb-4" aria-hidden="true">
+              <div
+                className="flex items-center justify-center mb-4"
+                aria-hidden="true"
+              >
                 <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-4 rounded-2xl animate-pulse-glow shadow-xl">
                   <Music className="w-8 h-8 text-white" />
                 </div>
               </div>
-              <CardTitle id="connect-title" className="text-2xl font-bold text-primary-dark mb-2">
+              <CardTitle
+                id="connect-title"
+                className="text-2xl font-bold text-primary-dark mb-2"
+              >
                 Connect Your Accounts
               </CardTitle>
               <p className="text-secondary-dark" role="doc-subtitle">
@@ -80,10 +89,15 @@ export default function ConnectPage() {
                         <Music className="w-6 h-6 text-white" />
                       </div>
                       <div>
-                        <h3 id="spotify-heading" className="text-primary-dark font-semibold">
+                        <h3
+                          id="spotify-heading"
+                          className="text-primary-dark font-semibold"
+                        >
                           Spotify
                         </h3>
-                        <p className="text-secondary-dark text-sm">Connect your Spotify account</p>
+                        <p className="text-secondary-dark text-sm">
+                          Connect your Spotify account
+                        </p>
                       </div>
                     </div>
                     {connections.spotify ? (
@@ -102,7 +116,14 @@ export default function ConnectPage() {
                         className="bg-green-500 hover:bg-green-600 text-white rounded-xl focus-visible:outline-2 focus-visible:outline-green-400 focus-visible:outline-offset-2 transition-all hover:scale-105 shadow-lg"
                         aria-describedby="spotify-description"
                       >
-                        {loading.spotify ? <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /> : "Connect"}
+                        {loading.spotify ? (
+                          <Loader2
+                            className="w-4 h-4 animate-spin"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          "Connect"
+                        )}
                       </Button>
                     )}
                   </div>
@@ -125,10 +146,15 @@ export default function ConnectPage() {
                         <Music className="w-6 h-6 text-white" />
                       </div>
                       <div>
-                        <h3 id="youtube-heading" className="text-primary-dark font-semibold">
+                        <h3
+                          id="youtube-heading"
+                          className="text-primary-dark font-semibold"
+                        >
                           YouTube Music
                         </h3>
-                        <p className="text-secondary-dark text-sm">Connect your YouTube Music account</p>
+                        <p className="text-secondary-dark text-sm">
+                          Connect your YouTube Music account
+                        </p>
                       </div>
                     </div>
                     {connections.youtube ? (
@@ -147,7 +173,14 @@ export default function ConnectPage() {
                         className="bg-red-500 hover:bg-red-600 text-white rounded-xl focus-visible:outline-2 focus-visible:outline-red-400 focus-visible:outline-offset-2 transition-all hover:scale-105 shadow-lg"
                         aria-describedby="youtube-description"
                       >
-                        {loading.youtube ? <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /> : "Connect"}
+                        {loading.youtube ? (
+                          <Loader2
+                            className="w-4 h-4 animate-spin"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          "Connect"
+                        )}
                       </Button>
                     )}
                   </div>
@@ -174,5 +207,5 @@ export default function ConnectPage() {
         </div>
       </main>
     </div>
-  )
+  );
 }

@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Youtube, Music, Check, Loader2, X } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Youtube, Music, Check, Loader2, X } from "lucide-react";
 
-type Platform = "youtube" | "spotify"
-type ConnectionStatus = "idle" | "connecting" | "connected" | "error"
+type Platform = "youtube" | "spotify";
+type ConnectionStatus = "idle" | "connecting" | "connected" | "error";
 
 interface PlatformConnectProps {
-  platform: Platform
-  connectionStatus: ConnectionStatus
-  handlePlatformConnect: (platform: Platform) => void
-  handleDisconnect: (platform: Platform) => void
-  isStepCompleted: (step: number) => boolean
-  handleContinue: () => void
-  step: number
+  platform: Platform;
+  connectionStatus: ConnectionStatus;
+  handlePlatformConnect: (platform: Platform) => void;
+  handleDisconnect: (platform: Platform) => void;
+  isStepCompleted: (step: number) => boolean;
+  handleContinue: () => void;
+  step: number;
 }
 
 export function PlatformConnect({
@@ -31,28 +31,36 @@ export function PlatformConnect({
       icon: Youtube,
       color: "bg-red-500",
       hoverColor: "hover:bg-red-600",
-      description: "Connect your YouTube Music account to access your playlists and start syncing your music.",
+      description:
+        "Connect your YouTube Music account to access your playlists and start syncing your music.",
     },
     spotify: {
       name: "Spotify",
       icon: Music,
       color: "bg-green-500",
       hoverColor: "hover:bg-green-600",
-      description: "Connect your Spotify account to enable seamless playlist synchronization.",
+      description:
+        "Connect your Spotify account to enable seamless playlist synchronization.",
     },
-  }
+  };
 
-  const config = platformConfig[platform]
-  const Icon = config.icon
+  const config = platformConfig[platform];
+  const Icon = config.icon;
 
   return (
     <div className="text-center">
       <div className="mb-8">
-        <div className={`w-24 h-24 ${config.color} rounded-full flex items-center justify-center mx-auto mb-6`}>
+        <div
+          className={`w-24 h-24 ${config.color} rounded-full flex items-center justify-center mx-auto mb-6`}
+        >
           <Icon className="w-12 h-12 text-white" />
         </div>
-        <h2 className="text-3xl font-bold text-white mb-4">Connect {config.name}</h2>
-        <p className="text-white/80 text-lg max-w-2xl mx-auto">{config.description}</p>
+        <h2 className="text-3xl font-bold text-white mb-4">
+          Connect {config.name}
+        </h2>
+        <p className="text-white/80 text-lg max-w-2xl mx-auto">
+          {config.description}
+        </p>
       </div>
 
       <div className="space-y-6">
@@ -68,7 +76,9 @@ export function PlatformConnect({
         {connectionStatus === "connecting" && (
           <div className="flex items-center justify-center space-x-3">
             <Loader2 className="w-6 h-6 text-white animate-spin" />
-            <span className="text-white text-lg">Connecting to {config.name}...</span>
+            <span className="text-white text-lg">
+              Connecting to {config.name}...
+            </span>
           </div>
         )}
 
@@ -76,7 +86,9 @@ export function PlatformConnect({
           <div className="space-y-6">
             <div className="flex items-center justify-center space-x-3 text-green-400">
               <Check className="w-8 h-8" />
-              <span className="text-xl font-semibold">Successfully connected to {config.name}!</span>
+              <span className="text-xl font-semibold">
+                Successfully connected to {config.name}!
+              </span>
             </div>
             <div className="flex space-x-4 justify-center">
               <Button
@@ -112,5 +124,5 @@ export function PlatformConnect({
         )}
       </div>
     </div>
-  )
+  );
 }

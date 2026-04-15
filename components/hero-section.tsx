@@ -1,13 +1,17 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { ArrowRight, Play, Sparkles } from "lucide-react"
-import Link from "next/link"
-import { AnimatedPhones } from "./animated-phones"
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Play, Sparkles } from "lucide-react";
+import Link from "next/link";
+import { AnimatedPhones } from "./animated-phones";
 
 export function HeroSection() {
   return (
-    <section className="pt-32 pb-20 relative overflow-hidden" role="main" aria-labelledby="hero-heading">
+    <section
+      className="pt-32 pb-20 relative overflow-hidden"
+      role="main"
+      aria-labelledby="hero-heading"
+    >
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-float" />
@@ -38,8 +42,8 @@ export function HeroSection() {
                 <span className="logo-gradient">Everywhere</span>
               </h1>
               <p className="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                Seamlessly transfer and sync your playlists between Spotify, YouTube Music, and more. Never lose your
-                favorite tracks again.
+                Seamlessly transfer and sync your playlists between Spotify,
+                YouTube Music, and more. Never lose your favorite tracks again.
               </p>
             </div>
 
@@ -59,7 +63,11 @@ export function HeroSection() {
                 variant="outline"
                 size="lg"
                 className="border-white/30 text-white hover:bg-white/10 font-semibold px-8 py-4 rounded-full backdrop-blur-sm transition-all hover:scale-105 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 bg-transparent"
-                onClick={() => document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" })}
+                onClick={() =>
+                  document
+                    .getElementById("how-it-works")
+                    ?.scrollIntoView({ behavior: "smooth" })
+                }
                 aria-label="Learn how SyncIt works"
               >
                 How It Works
@@ -70,15 +78,21 @@ export function HeroSection() {
             {/* Stats */}
             <div className="grid grid-cols-3 gap-8 pt-8 border-t border-white/20">
               <div className="text-center lg:text-left">
-                <div className="text-2xl sm:text-3xl font-bold text-white">50K+</div>
+                <div className="text-2xl sm:text-3xl font-bold text-white">
+                  50K+
+                </div>
                 <div className="text-sm text-white/70">Users</div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-2xl sm:text-3xl font-bold text-white">1M+</div>
+                <div className="text-2xl sm:text-3xl font-bold text-white">
+                  1M+
+                </div>
                 <div className="text-sm text-white/70">Songs Synced</div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-2xl sm:text-3xl font-bold text-white">99.9%</div>
+                <div className="text-2xl sm:text-3xl font-bold text-white">
+                  99.9%
+                </div>
                 <div className="text-sm text-white/70">Uptime</div>
               </div>
             </div>
@@ -91,5 +105,5 @@ export function HeroSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -1,12 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { PlaylistPreview } from "@/components/playlist-preview";
 import { Loader2, AlertCircle, Music } from "lucide-react";
 
@@ -39,7 +34,13 @@ interface PlaylistsDisplayProps {
   handleEmptyPlaylist: (id: string) => void;
   handleDeletePlaylist: (id: string) => void;
   // Updated to accept the new function signature with animation
-  handleDeleteSongFromPlaylist?: (playlistId: string, songId: string, songTitle: string, platform: "spotify" | "youtube", animateRemoval: (songId: string) => Promise<void>) => void;
+  handleDeleteSongFromPlaylist?: (
+    playlistId: string,
+    songId: string,
+    songTitle: string,
+    platform: "spotify" | "youtube",
+    animateRemoval: (songId: string) => Promise<void>,
+  ) => void;
   isLoadingSource?: boolean;
   sourceError?: string | null;
 }
@@ -66,20 +67,19 @@ export default function PlaylistsDisplay({
     window.location.reload();
   };
 
-  const renderPlaylistContent = (
-    playlists: Playlist[],
-    isSource: boolean
-  ) => (
+  const renderPlaylistContent = (playlists: Playlist[], isSource: boolean) => (
     <div className="relative max-h-96 overflow-hidden rounded-b-xl">
       {/* Top fade overlay */}
       <div className="pointer-events-none absolute top-0 left-0 w-full h-6 z-10 bg-gradient-to-b from-[#ffffff0a] to-transparent" />
-      
+
       <CardContent className="space-y-4 max-h-96 overflow-y-auto min-w-0 break-words pr-2 bg-white/5 backdrop-blur-md rounded-b-xl scroll-fade-container">
         {isSource && isLoadingSource ? (
           <div className="flex flex-col items-center justify-center py-12 space-y-3">
             <Loader2 className="h-8 w-8 animate-spin text-primary-dark" />
             <div className="text-secondary-dark text-center">
-              <p className="font-medium">Loading {selectedSource} playlists...</p>
+              <p className="font-medium">
+                Loading {selectedSource} playlists...
+              </p>
               <p className="text-sm mt-1">This may take a moment</p>
             </div>
           </div>
@@ -87,15 +87,22 @@ export default function PlaylistsDisplay({
           <div className="flex flex-col items-center justify-center py-12 space-y-4">
             <AlertCircle className="h-12 w-12 text-red-500" />
             <div className="text-center space-y-3">
-              <p className="text-red-600 font-medium">Failed to load playlists</p>
-              <p className="text-sm text-secondary-dark max-w-xs">{sourceError}</p>
+              <p className="text-red-600 font-medium">
+                Failed to load playlists
+              </p>
+              <p className="text-sm text-secondary-dark max-w-xs">
+                {sourceError}
+              </p>
               <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                {sourceError.includes("connect") || sourceError.includes("unauthorized") ? (
+                {sourceError.includes("connect") ||
+                sourceError.includes("unauthorized") ? (
                   <button
                     className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium"
                     onClick={handleConnectSpotify}
                   >
-                    Connect {selectedSource === "spotify" ? "Spotify" : "YouTube"} Account
+                    Connect{" "}
+                    {selectedSource === "spotify" ? "Spotify" : "YouTube"}{" "}
+                    Account
                   </button>
                 ) : (
                   <button
@@ -112,7 +119,9 @@ export default function PlaylistsDisplay({
           <div className="flex flex-col items-center justify-center py-12 space-y-3">
             <Music className="h-12 w-12 text-secondary-dark/50" />
             <div className="text-center">
-              <p className="text-secondary-dark font-medium">No playlists found</p>
+              <p className="text-secondary-dark font-medium">
+                No playlists found
+              </p>
               <p className="text-sm text-secondary-dark/70 mt-1">
                 {isSource
                   ? `Create some playlists on ${selectedSource} to get started`
@@ -126,7 +135,9 @@ export default function PlaylistsDisplay({
               key={playlist.id}
               playlist={playlist}
               platform={selectedSource}
-              isSelected={isSource ? selectedPlaylists[playlist.id] || false : false}
+              isSelected={
+                isSource ? selectedPlaylists[playlist.id] || false : false
+              }
               onToggle={isSource ? togglePlaylist : () => {}}
               showCheckbox={isSource}
               onRename={handleRenamePlaylist}

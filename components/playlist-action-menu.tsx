@@ -1,22 +1,28 @@
-"use client"
+"use client";
 
-import { useState, useRef, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { MoreVertical, Edit3, Trash2, FolderX } from "lucide-react"
+import { useState, useRef, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { MoreVertical, Edit3, Trash2, FolderX } from "lucide-react";
 
 interface PlaylistActionMenuProps {
-  playlistId: string
-  playlistName: string
-  onRename: (id: string) => void
-  onEmpty: (id: string) => void
-  onDelete: (id: string) => void
+  playlistId: string;
+  playlistName: string;
+  onRename: (id: string) => void;
+  onEmpty: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
-export function PlaylistActionMenu({ playlistId, playlistName, onRename, onEmpty, onDelete }: PlaylistActionMenuProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
-  const buttonRef = useRef<HTMLButtonElement>(null)
+export function PlaylistActionMenu({
+  playlistId,
+  playlistName,
+  onRename,
+  onEmpty,
+  onDelete,
+}: PlaylistActionMenuProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -28,40 +34,40 @@ export function PlaylistActionMenu({ playlistId, playlistName, onRename, onEmpty
         !menuRef.current.contains(event.target as Node) &&
         !buttonRef.current.contains(event.target as Node)
       ) {
-        setIsOpen(false)
+        setIsOpen(false);
       }
-    }
+    };
 
     if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside)
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [isOpen])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   // Close menu on escape key
   useEffect(() => {
     const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === "Escape" && isOpen) {
-        setIsOpen(false)
+        setIsOpen(false);
       }
-    }
+    };
 
     if (isOpen) {
-      document.addEventListener("keydown", handleEscapeKey)
+      document.addEventListener("keydown", handleEscapeKey);
     }
 
     return () => {
-      document.removeEventListener("keydown", handleEscapeKey)
-    }
-  }, [isOpen])
+      document.removeEventListener("keydown", handleEscapeKey);
+    };
+  }, [isOpen]);
 
   const handleAction = (action: () => void) => {
-    action()
-    setIsOpen(false)
-  }
+    action();
+    setIsOpen(false);
+  };
 
   return (
     <div className="relative">
@@ -70,8 +76,8 @@ export function PlaylistActionMenu({ playlistId, playlistName, onRename, onEmpty
         variant="ghost"
         size="sm"
         onClick={(e) => {
-          e.stopPropagation()
-          setIsOpen(!isOpen)
+          e.stopPropagation();
+          setIsOpen(!isOpen);
         }}
         className="text-secondary-dark hover:text-primary-dark hover:bg-white/20 rounded-xl transition-all p-2"
         aria-label={`Actions for ${playlistName}`}
@@ -123,5 +129,5 @@ export function PlaylistActionMenu({ playlistId, playlistName, onRename, onEmpty
         </Card>
       )}
     </div>
-  )
+  );
 }

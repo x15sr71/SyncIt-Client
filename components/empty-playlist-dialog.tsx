@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { X, FolderX, Loader2, CheckCircle, AlertTriangle } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { X, FolderX, Loader2, CheckCircle, AlertTriangle } from "lucide-react";
 
 interface EmptyPlaylistDialogProps {
-  isOpen: boolean
-  onClose: () => void
-  playlistId: string
-  playlistName: string
-  songCount: number
-  onEmpty: (playlistId: string) => void
+  isOpen: boolean;
+  onClose: () => void;
+  playlistId: string;
+  playlistName: string;
+  songCount: number;
+  onEmpty: (playlistId: string) => void;
 }
 
-type EmptyState = "confirm" | "loading" | "success"
+type EmptyState = "confirm" | "loading" | "success";
 
 export function EmptyPlaylistDialog({
   isOpen,
@@ -24,37 +24,37 @@ export function EmptyPlaylistDialog({
   songCount,
   onEmpty,
 }: EmptyPlaylistDialogProps) {
-  const [state, setState] = useState<EmptyState>("confirm")
+  const [state, setState] = useState<EmptyState>("confirm");
 
   // Reset state when dialog opens
   useEffect(() => {
     if (isOpen) {
-      setState("confirm")
+      setState("confirm");
     }
-  }, [isOpen])
+  }, [isOpen]);
 
   // Auto-close after success
   useEffect(() => {
     if (state === "success") {
       const timer = setTimeout(() => {
-        onClose()
-      }, 2000) // Close after 2 seconds to show success message
+        onClose();
+      }, 2000); // Close after 2 seconds to show success message
 
-      return () => clearTimeout(timer)
+      return () => clearTimeout(timer);
     }
-  }, [state, onClose])
+  }, [state, onClose]);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   const handleEmpty = async () => {
-    setState("loading")
+    setState("loading");
 
     // Simulate API call with 3-second delay
     setTimeout(() => {
-      onEmpty(playlistId)
-      setState("success")
-    }, 3000)
-  }
+      onEmpty(playlistId);
+      setState("success");
+    }, 3000);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -114,8 +114,9 @@ export function EmptyPlaylistDialog({
                       Do you really want to empty the whole playlist?
                     </p>
                     <p className="text-orange-600 text-sm">
-                      This will remove all <strong>{songCount} songs</strong> from "<strong>{playlistName}</strong>".
-                      The playlist will remain but will be empty.
+                      This will remove all <strong>{songCount} songs</strong>{" "}
+                      from "<strong>{playlistName}</strong>". The playlist will
+                      remain but will be empty.
                     </p>
                   </div>
                 </div>
@@ -145,7 +146,9 @@ export function EmptyPlaylistDialog({
               <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse-glow shadow-xl">
                 <Loader2 className="w-8 h-8 text-white animate-spin" />
               </div>
-              <h3 className="text-primary-dark font-bold text-lg mb-2">Removing all songs...</h3>
+              <h3 className="text-primary-dark font-bold text-lg mb-2">
+                Removing all songs...
+              </h3>
               <p className="text-secondary-dark">This may take a few moments</p>
 
               {/* Loading animation */}
@@ -168,16 +171,22 @@ export function EmptyPlaylistDialog({
               <div className="w-20 h-20 bg-green-500/20 border-2 border-green-500/40 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse-glow shadow-xl">
                 <CheckCircle className="w-12 h-12 text-green-600" />
               </div>
-              <h3 className="text-primary-dark font-bold text-xl mb-3">Emptying Successfully Completed!</h3>
-              <p className="text-secondary-dark mb-2">All songs have been removed from:</p>
+              <h3 className="text-primary-dark font-bold text-xl mb-3">
+                Emptying Successfully Completed!
+              </h3>
+              <p className="text-secondary-dark mb-2">
+                All songs have been removed from:
+              </p>
               <p className="text-primary-dark font-semibold text-lg bg-green-500/10 px-4 py-2 rounded-xl border border-green-500/20">
                 "{playlistName}"
               </p>
-              <p className="text-secondary-dark text-sm mt-4 opacity-70">This dialog will close automatically...</p>
+              <p className="text-secondary-dark text-sm mt-4 opacity-70">
+                This dialog will close automatically...
+              </p>
             </div>
           )}
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

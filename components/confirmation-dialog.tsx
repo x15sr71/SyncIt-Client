@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertTriangle, X } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AlertTriangle, X } from "lucide-react";
 
 interface ConfirmationDialogProps {
-  isOpen: boolean
-  onClose: () => void
-  onConfirm: () => void
-  title: string
-  message: string
-  confirmText?: string
-  confirmVariant?: "default" | "destructive"
-  icon?: React.ReactNode
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  title: string;
+  message: string;
+  confirmText?: string;
+  confirmVariant?: "default" | "destructive";
+  icon?: React.ReactNode;
 }
 
 export function ConfirmationDialog({
@@ -27,12 +27,12 @@ export function ConfirmationDialog({
   confirmVariant = "default",
   icon,
 }: ConfirmationDialogProps) {
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   const handleConfirm = () => {
-    onConfirm()
-    onClose()
-  }
+    onConfirm();
+    onClose();
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -53,7 +53,9 @@ export function ConfirmationDialog({
                   />
                 )}
               </div>
-              <CardTitle className="text-primary-dark text-xl font-bold">{title}</CardTitle>
+              <CardTitle className="text-primary-dark text-xl font-bold">
+                {title}
+              </CardTitle>
             </div>
             <Button
               variant="ghost"
@@ -92,5 +94,5 @@ export function ConfirmationDialog({
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
