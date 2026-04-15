@@ -18,7 +18,9 @@ interface GetPlaylistContentResponse {
 }
 
 export default function useGetSpotifyPlaylistContent() {
-  const [playlistContent, setPlaylistContent] = useState<Record<string, SpotifyTrack[]>>({});
+  const [playlistContent, setPlaylistContent] = useState<
+    Record<string, SpotifyTrack[]>
+  >({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,7 +31,7 @@ export default function useGetSpotifyPlaylistContent() {
     try {
       const response = await apiClient.post<GetPlaylistContentResponse>(
         "/spotifyplaylistcontent",
-        { playlistIds }
+        { playlistIds },
       );
 
       const { success, data, message, error: apiError } = response.data;

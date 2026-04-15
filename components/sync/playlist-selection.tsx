@@ -1,26 +1,26 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Badge } from "@/components/ui/badge"
-import { Music, Loader2 } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { Music, Loader2 } from "lucide-react";
 
 interface Playlist {
-  id: string
-  name: string
-  songCount: number
-  imageUrl: string
+  id: string;
+  name: string;
+  songCount: number;
+  imageUrl: string;
 }
 
 interface PlaylistSelectionProps {
-  playlists: Playlist[]
-  selectedPlaylists: { [key: string]: boolean }
-  togglePlaylist: (id: string) => void
-  toggleAllPlaylists: () => void
-  isProcessing: boolean
-  syncMode: "migrate" | "sync"
-  handleContinue: () => void
+  playlists: Playlist[];
+  selectedPlaylists: { [key: string]: boolean };
+  togglePlaylist: (id: string) => void;
+  toggleAllPlaylists: () => void;
+  isProcessing: boolean;
+  syncMode: "migrate" | "sync";
+  handleContinue: () => void;
 }
 
 export function PlaylistSelection({
@@ -32,8 +32,8 @@ export function PlaylistSelection({
   syncMode,
   handleContinue,
 }: PlaylistSelectionProps) {
-  const selectedCount = Object.values(selectedPlaylists).filter(Boolean).length
-  const allSelected = selectedCount === playlists.length
+  const selectedCount = Object.values(selectedPlaylists).filter(Boolean).length;
+  const allSelected = selectedCount === playlists.length;
 
   if (isProcessing) {
     return (
@@ -44,9 +44,11 @@ export function PlaylistSelection({
         <h2 className="text-3xl font-bold text-white mb-4">
           {syncMode === "migrate" ? "Migrating" : "Syncing"} Your Playlists
         </h2>
-        <p className="text-white/80 text-lg">Please wait while we process your music...</p>
+        <p className="text-white/80 text-lg">
+          Please wait while we process your music...
+        </p>
       </div>
-    )
+    );
   }
 
   return (
@@ -54,7 +56,8 @@ export function PlaylistSelection({
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-white mb-4">Select Playlists</h2>
         <p className="text-white/80 text-lg max-w-2xl mx-auto">
-          Choose which playlists you want to {syncMode === "migrate" ? "migrate" : "sync"}
+          Choose which playlists you want to{" "}
+          {syncMode === "migrate" ? "migrate" : "sync"}
         </p>
       </div>
 
@@ -95,7 +98,9 @@ export function PlaylistSelection({
                 </div>
                 <div className="flex-1">
                   <h3 className="text-white font-medium">{playlist.name}</h3>
-                  <p className="text-white/70 text-sm">{playlist.songCount} songs</p>
+                  <p className="text-white/70 text-sm">
+                    {playlist.songCount} songs
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -109,9 +114,10 @@ export function PlaylistSelection({
           disabled={selectedCount === 0}
           className="bg-white text-purple-600 hover:bg-white/90 px-8 py-3 text-lg font-semibold rounded-full hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {syncMode === "migrate" ? "Start Migration" : "Start Sync"} ({selectedCount} playlists)
+          {syncMode === "migrate" ? "Start Migration" : "Start Sync"} (
+          {selectedCount} playlists)
         </Button>
       </div>
     </div>
-  )
+  );
 }

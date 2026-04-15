@@ -15,14 +15,20 @@ export const useMigration = () => {
   const [error, setError] = useState<string | null>(null);
 
   const startMigration = async (params: MigrationParams) => {
-    const { playlistId, playlistName, sourcePlatform, targetPlatform, targetPlaylistId } = params;
-    
-    console.log("useMigration: Starting migration", { 
-      playlistId, 
-      playlistName, 
-      sourcePlatform, 
+    const {
+      playlistId,
+      playlistName,
+      sourcePlatform,
       targetPlatform,
-      targetPlaylistId 
+      targetPlaylistId,
+    } = params;
+
+    console.log("useMigration: Starting migration", {
+      playlistId,
+      playlistName,
+      sourcePlatform,
+      targetPlatform,
+      targetPlaylistId,
     });
 
     setIsLoading(true);
@@ -70,7 +76,9 @@ export const useMigration = () => {
           try {
             const errorText = await response.text();
             errorMessage = errorText || errorMessage;
-            console.error("useMigration: Fallback text error response", { errorText });
+            console.error("useMigration: Fallback text error response", {
+              errorText,
+            });
           } catch (textErr) {
             console.error("useMigration: Failed to parse error", { textErr });
           }
@@ -81,16 +89,18 @@ export const useMigration = () => {
 
       const data = await response.json();
       return data;
-
     } catch (err: any) {
       let userFriendlyMessage = err?.message || "Migration failed";
 
       if (err.name === "TypeError" && err.message.includes("fetch")) {
-        userFriendlyMessage = "Cannot connect to the migration server. Please check if the server is running on port 3002.";
+        userFriendlyMessage =
+          "Cannot connect to the migration server. Please check if the server is running on port 3002.";
       } else if (err.message.includes("ECONNREFUSED")) {
-        userFriendlyMessage = "Connection refused. Please check if the migration server is running.";
+        userFriendlyMessage =
+          "Connection refused. Please check if the migration server is running.";
       } else if (err.message.includes("CORS")) {
-        userFriendlyMessage = "CORS error. Please check server CORS configuration.";
+        userFriendlyMessage =
+          "CORS error. Please check server CORS configuration.";
       }
 
       setError(userFriendlyMessage);

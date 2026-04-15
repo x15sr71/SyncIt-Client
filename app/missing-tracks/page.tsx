@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Music, ArrowLeft, Search, X, Check } from "lucide-react"
-import Link from "next/link"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Music, ArrowLeft, Search, X, Check } from "lucide-react";
+import Link from "next/link";
 
 interface MissingTrack {
-  id: string
-  originalTitle: string
-  artist: string
-  status: "pending" | "found" | "skipped"
-  suggestions?: string[]
+  id: string;
+  originalTitle: string;
+  artist: string;
+  status: "pending" | "found" | "skipped";
+  suggestions?: string[];
 }
 
 export default function MissingTracksPage() {
@@ -23,30 +23,47 @@ export default function MissingTracksPage() {
       originalTitle: "Rare Song Title",
       artist: "Obscure Artist",
       status: "pending",
-      suggestions: ["Similar Song - Different Artist", "Rare Song - Cover Version"],
+      suggestions: [
+        "Similar Song - Different Artist",
+        "Rare Song - Cover Version",
+      ],
     },
     {
       id: "2",
       originalTitle: "Live Version Track",
       artist: "Famous Band",
       status: "pending",
-      suggestions: ["Studio Version - Famous Band", "Live Album Version - Famous Band"],
+      suggestions: [
+        "Studio Version - Famous Band",
+        "Live Album Version - Famous Band",
+      ],
     },
     {
       id: "3",
       originalTitle: "Remix Track",
       artist: "DJ Producer",
       status: "pending",
-      suggestions: ["Original Version - Original Artist", "Different Remix - Another DJ"],
+      suggestions: [
+        "Original Version - Original Artist",
+        "Different Remix - Another DJ",
+      ],
     },
-  ])
+  ]);
 
   const handleTrackAction = (trackId: string, action: "found" | "skipped") => {
-    setMissingTracks((prev) => prev.map((track) => (track.id === trackId ? { ...track, status: action } : track)))
-  }
+    setMissingTracks((prev) =>
+      prev.map((track) =>
+        track.id === trackId ? { ...track, status: action } : track,
+      ),
+    );
+  };
 
-  const pendingTracks = missingTracks.filter((track) => track.status === "pending")
-  const resolvedTracks = missingTracks.filter((track) => track.status !== "pending")
+  const pendingTracks = missingTracks.filter(
+    (track) => track.status === "pending",
+  );
+  const resolvedTracks = missingTracks.filter(
+    (track) => track.status !== "pending",
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
@@ -54,7 +71,11 @@ export default function MissingTracksPage() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center space-x-4">
             <Link href="/dashboard">
-              <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-white hover:bg-white/10"
+              >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Dashboard
               </Button>
@@ -63,7 +84,10 @@ export default function MissingTracksPage() {
               <Music className="w-6 h-6 text-white" />
             </div>
             <h1 className="text-2xl font-bold text-white">Missing Tracks</h1>
-            <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-300">
+            <Badge
+              variant="secondary"
+              className="bg-yellow-500/20 text-yellow-300"
+            >
               {pendingTracks.length} remaining
             </Badge>
           </div>
@@ -75,7 +99,8 @@ export default function MissingTracksPage() {
           <CardHeader>
             <CardTitle className="text-white">Unmatched Tracks</CardTitle>
             <p className="text-gray-300">
-              These tracks couldn't be automatically matched. You can search manually or skip them.
+              These tracks couldn't be automatically matched. You can search
+              manually or skip them.
             </p>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -84,15 +109,24 @@ export default function MissingTracksPage() {
                 <CardContent className="p-4">
                   <div className="space-y-4">
                     <div>
-                      <h3 className="text-white font-medium">{track.originalTitle}</h3>
+                      <h3 className="text-white font-medium">
+                        {track.originalTitle}
+                      </h3>
                       <p className="text-gray-400">{track.artist}</p>
                     </div>
 
                     <div className="space-y-2">
-                      <p className="text-sm text-gray-300">Suggested matches:</p>
+                      <p className="text-sm text-gray-300">
+                        Suggested matches:
+                      </p>
                       {track.suggestions?.map((suggestion, index) => (
-                        <div key={index} className="flex items-center justify-between bg-white/5 p-2 rounded">
-                          <span className="text-white text-sm">{suggestion}</span>
+                        <div
+                          key={index}
+                          className="flex items-center justify-between bg-white/5 p-2 rounded"
+                        >
+                          <span className="text-white text-sm">
+                            {suggestion}
+                          </span>
                           <Button
                             size="sm"
                             onClick={() => handleTrackAction(track.id, "found")}
@@ -145,15 +179,22 @@ export default function MissingTracksPage() {
             </CardHeader>
             <CardContent className="space-y-2">
               {resolvedTracks.map((track) => (
-                <div key={track.id} className="flex items-center justify-between p-2 bg-white/5 rounded">
+                <div
+                  key={track.id}
+                  className="flex items-center justify-between p-2 bg-white/5 rounded"
+                >
                   <div>
                     <span className="text-white">{track.originalTitle}</span>
-                    <span className="text-gray-400 ml-2">by {track.artist}</span>
+                    <span className="text-gray-400 ml-2">
+                      by {track.artist}
+                    </span>
                   </div>
                   <Badge
                     variant={track.status === "found" ? "default" : "secondary"}
                     className={
-                      track.status === "found" ? "bg-green-500/20 text-green-300" : "bg-gray-500/20 text-gray-300"
+                      track.status === "found"
+                        ? "bg-green-500/20 text-green-300"
+                        : "bg-gray-500/20 text-gray-300"
                     }
                   >
                     {track.status === "found" ? "Found" : "Skipped"}
@@ -173,5 +214,5 @@ export default function MissingTracksPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

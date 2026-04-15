@@ -1,27 +1,27 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Music, Chrome, Loader2, ArrowLeft } from "lucide-react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Music, Chrome, Loader2, ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function AuthPage() {
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleGoogleSignIn = async () => {
-    setIsLoading(true)
-    
+    setIsLoading(true);
+
     try {
       // Redirect to your backend Google OAuth endpoint
-      window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3002'}/google/login`
+      window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3002"}/google/login`;
     } catch (error) {
-      console.error('Error initiating Google sign-in:', error)
-      setIsLoading(false)
+      console.error("Error initiating Google sign-in:", error);
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen gradient-background-subdued">
@@ -41,14 +41,24 @@ export default function AuthPage() {
             </Link>
           </div>
 
-          <Card className="glass-card animate-float border-white/40" role="main" aria-labelledby="auth-title">
+          <Card
+            className="glass-card animate-float border-white/40"
+            role="main"
+            aria-labelledby="auth-title"
+          >
             <CardHeader className="text-center pb-6">
-              <div className="flex items-center justify-center mb-4" aria-hidden="true">
+              <div
+                className="flex items-center justify-center mb-4"
+                aria-hidden="true"
+              >
                 <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-4 rounded-2xl animate-pulse-glow shadow-xl">
                   <Music className="w-8 h-8 text-white" />
                 </div>
               </div>
-              <CardTitle id="auth-title" className="text-2xl font-bold text-primary-dark mb-2">
+              <CardTitle
+                id="auth-title"
+                className="text-2xl font-bold text-primary-dark mb-2"
+              >
                 Welcome to SyncIt
               </CardTitle>
               <p className="text-secondary-dark" role="doc-subtitle">
@@ -65,7 +75,10 @@ export default function AuthPage() {
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" aria-hidden="true" />
+                    <Loader2
+                      className="w-5 h-5 mr-2 animate-spin"
+                      aria-hidden="true"
+                    />
                     <span>Signing in...</span>
                   </>
                 ) : (
@@ -99,5 +112,5 @@ export default function AuthPage() {
         </div>
       </main>
     </div>
-  )
+  );
 }

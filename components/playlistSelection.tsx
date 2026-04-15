@@ -104,7 +104,7 @@ export default function PlaylistSelection({
           </div>
 
           {/* YouTube Music API Limitation Notice */}
-          {(selectedTarget === "youtube") && (
+          {selectedTarget === "youtube" && (
             <div className="mt-4 p-3 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/20 rounded-xl shadow min-w-0">
               <div className="flex items-start gap-2 min-w-0">
                 <div className="w-6 h-6 bg-yellow-500/30 rounded-md flex items-center justify-center flex-shrink-0 shadow">

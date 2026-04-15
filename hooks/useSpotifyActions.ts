@@ -5,7 +5,7 @@ interface UseSpotifyActionsProps {
   onPlaylistRenamed?: (playlistId: string, newName: string) => void;
   onPlaylistDeleted?: (playlistId: string) => void;
   refreshPlaylists?: () => Promise<void>;
-  showToast?: (message: string, type: 'success' | 'error') => void;
+  showToast?: (message: string, type: "success" | "error") => void;
 }
 
 export default function useSpotifyActions(props?: UseSpotifyActionsProps) {
@@ -16,19 +16,22 @@ export default function useSpotifyActions(props?: UseSpotifyActionsProps) {
     setLoading(true);
     setError(null);
     try {
-      console.log(`Attempting to rename playlist ${playlistId} to "${newName}"`);
+      console.log(
+        `Attempting to rename playlist ${playlistId} to "${newName}"`,
+      );
 
       const res = await apiClient.post<{ success: boolean; message?: string }>(
         "/spotify/rename-playlist",
-        { playlistId, newName }
+        { playlistId, newName },
       );
 
       console.log("Rename playlist response:", res.data);
 
       if (!res.data.success) {
-        const errorMessage = res.data.message || "Rename operation failed on server";
+        const errorMessage =
+          res.data.message || "Rename operation failed on server";
         if (props?.showToast) {
-          props.showToast(errorMessage, 'error');
+          props.showToast(errorMessage, "error");
         }
         throw new Error(errorMessage);
       }
@@ -41,21 +44,26 @@ export default function useSpotifyActions(props?: UseSpotifyActionsProps) {
 
       // Show success toast
       if (props?.showToast) {
-        props.showToast('Playlist renamed successfully!', 'success');
+        props.showToast("Playlist renamed successfully!", "success");
       }
 
-      console.log("Playlist renamed successfully in UI. Spotify API may take ~30 seconds to reflect changes.");
+      console.log(
+        "Playlist renamed successfully in UI. Spotify API may take ~30 seconds to reflect changes.",
+      );
 
       return res.data;
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || err.message || "Failed to rename playlist.";
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to rename playlist.";
       setError(errorMessage);
-      
+
       // Show error toast for network/server errors
       if (props?.showToast) {
-        props.showToast(errorMessage, 'error');
+        props.showToast(errorMessage, "error");
       }
-      
+
       throw err;
     } finally {
       setLoading(false);
@@ -66,7 +74,9 @@ export default function useSpotifyActions(props?: UseSpotifyActionsProps) {
     setLoading(true);
     setError(null);
     try {
-      const res = await apiClient.post("/spotify/delete-playlist", { playlistId });
+      const res = await apiClient.post("/spotify/delete-playlist", {
+        playlistId,
+      });
 
       if (props?.onPlaylistDeleted) {
         props.onPlaylistDeleted(playlistId);
@@ -78,7 +88,10 @@ export default function useSpotifyActions(props?: UseSpotifyActionsProps) {
 
       return res.data;
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || err.message || "Failed to delete playlist.";
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to delete playlist.";
       setError(errorMessage);
       throw err;
     } finally {
@@ -86,12 +99,17 @@ export default function useSpotifyActions(props?: UseSpotifyActionsProps) {
     }
   };
 
-  const deleteSongFromPlaylist = async (playlistId: string, trackUri: string) => {
+  const deleteSongFromPlaylist = async (
+    playlistId: string,
+    trackUri: string,
+  ) => {
     setLoading(true);
     setError(null);
     try {
       // Ensure we're sending the correct URI format
-      const formattedTrackUri = trackUri.startsWith("spotify:track:") ? trackUri : `spotify:track:${trackUri}`;
+      const formattedTrackUri = trackUri.startsWith("spotify:track:")
+        ? trackUri
+        : `spotify:track:${trackUri}`;
 
       const res = await apiClient.post("/spotify/delete-song", {
         playlistId,
@@ -101,7 +119,9 @@ export default function useSpotifyActions(props?: UseSpotifyActionsProps) {
       return res.data;
     } catch (err: any) {
       const errorMessage =
-        err.response?.data?.message || err.message || "Failed to delete song from playlist.";
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to delete song from playlist.";
       setError(errorMessage);
       throw err;
     } finally {

@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { Music, Twitter, Github, Mail } from "lucide-react"
-import Link from "next/link"
+import { Music, Twitter, Github, Mail } from "lucide-react";
+import Link from "next/link";
 
 export function Footer() {
   return (
@@ -17,8 +17,8 @@ export function Footer() {
               <span className="text-2xl font-bold logo-gradient">SyncIt</span>
             </Link>
             <p className="text-white/80 mb-6 max-w-md">
-              The ultimate music synchronization platform. Keep your playlists in sync across all your favorite
-              streaming services.
+              The ultimate music synchronization platform. Keep your playlists
+              in sync across all your favorite streaming services.
             </p>
             <div className="flex space-x-4">
               <a
@@ -125,7 +125,9 @@ export function Footer() {
         </div>
 
         <div className="border-t border-white/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-white/60 text-sm">© 2024 SyncIt. All rights reserved.</p>
+          <p className="text-white/60 text-sm">
+            © 2024 SyncIt. All rights reserved.
+          </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <a
               href="#"
@@ -149,5 +151,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

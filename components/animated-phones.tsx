@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Music, ArrowRight } from "lucide-react"
+import { useEffect, useState } from "react";
+import { Music, ArrowRight } from "lucide-react";
 
 const playlistSongs = [
   { title: "Bohemian Rhapsody", artist: "Queen", duration: "5:55" },
@@ -10,17 +10,17 @@ const playlistSongs = [
   { title: "Dance Monkey", artist: "Tones and I", duration: "3:29" },
   { title: "Someone Like You", artist: "Adele", duration: "4:45" },
   { title: "Stay With Me", artist: "Sam Smith", duration: "2:52" },
-]
+];
 
 export function AnimatedPhones() {
-  const [currentSongIndex, setCurrentSongIndex] = useState(0)
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSongIndex((prev) => (prev + 1) % playlistSongs.length)
-    }, 2000)
-    return () => clearInterval(interval)
-  }, [])
+      setCurrentSongIndex((prev) => (prev + 1) % playlistSongs.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="flex-1 flex flex-col sm:flex-row items-center justify-center gap-8">
@@ -43,7 +43,9 @@ export function AnimatedPhones() {
               <div
                 key={`yt-${index}`}
                 className={`p-3 rounded-lg transition-all duration-500 ${
-                  index === currentSongIndex ? "bg-red-500/20 translate-x-8 opacity-0" : "hover:bg-white/5"
+                  index === currentSongIndex
+                    ? "bg-red-500/20 translate-x-8 opacity-0"
+                    : "hover:bg-white/5"
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -51,8 +53,12 @@ export function AnimatedPhones() {
                     <Music className="h-5 w-5 text-white/60" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-white text-sm font-medium truncate">{song.title}</div>
-                    <div className="text-gray-400 text-xs truncate">{song.artist}</div>
+                    <div className="text-white text-sm font-medium truncate">
+                      {song.title}
+                    </div>
+                    <div className="text-gray-400 text-xs truncate">
+                      {song.artist}
+                    </div>
                   </div>
                   <div className="text-gray-400 text-xs">{song.duration}</div>
                 </div>
@@ -88,7 +94,9 @@ export function AnimatedPhones() {
               <div
                 key={`sp-${index}`}
                 className={`p-3 rounded-lg transition-all duration-500 ${
-                  index === currentSongIndex ? "bg-green-500/20 -translate-x-8 opacity-0" : "hover:bg-white/5"
+                  index === currentSongIndex
+                    ? "bg-green-500/20 -translate-x-8 opacity-0"
+                    : "hover:bg-white/5"
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -96,8 +104,12 @@ export function AnimatedPhones() {
                     <Music className="h-5 w-5 text-white/60" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-white text-sm font-medium truncate">{song.title}</div>
-                    <div className="text-gray-400 text-xs truncate">{song.artist}</div>
+                    <div className="text-white text-sm font-medium truncate">
+                      {song.title}
+                    </div>
+                    <div className="text-gray-400 text-xs truncate">
+                      {song.artist}
+                    </div>
                   </div>
                   <div className="text-gray-400 text-xs">{song.duration}</div>
                 </div>
@@ -107,5 +119,5 @@ export function AnimatedPhones() {
         </div>
       </div>
     </div>
-  )
+  );
 }
