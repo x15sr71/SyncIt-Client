@@ -36,52 +36,53 @@ export function SyncOptions({
   ];
 
   return (
-    <div className="text-center">
+    <div className="text-center fade-in-up">
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-white mb-4">
+        <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-2">
           Choose Your Sync Method
         </h2>
-        <p className="text-white/80 text-lg max-w-2xl mx-auto">
+        <p className="text-muted-foreground max-w-md mx-auto">
           Select how you want to manage your playlists across platforms
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6 mb-8">
+      <div className="grid md:grid-cols-2 gap-4 mb-8 text-left">
         {options.map((option) => {
           const Icon = option.icon;
           return (
             <Card
               key={option.id}
-              className={`cursor-pointer transition-all duration-300 hover:scale-105 ${
+              className={`cursor-pointer transition-all duration-200 ${
                 syncMode === option.id
-                  ? "bg-white/20 border-white/40 ring-2 ring-white/50"
-                  : "bg-white/10 border-white/20 hover:bg-white/15"
+                  ? "border-brand-300 ring-2 ring-brand-200"
+                  : "hover:bg-accent/40"
               }`}
               onClick={() => setSyncMode(option.id)}
             >
-              <CardContent className="p-6 text-center">
-                {option.recommended && (
-                  <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block">
-                    RECOMMENDED
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-brand-gradStart to-brand-gradEnd rounded-lg flex items-center justify-center shadow-soft">
+                    <Icon className="w-5 h-5 text-white" />
                   </div>
-                )}
-                <div className="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Icon className="w-8 h-8 text-white" />
+                  {option.recommended && (
+                    <span className="text-[0.72rem] font-medium px-2.5 py-0.5 rounded-full border border-brand-200 bg-brand-50 text-brand-700">
+                      Recommended
+                    </span>
+                  )}
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">
+                <h3 className="text-base font-semibold text-foreground mb-1">
                   {option.title}
                 </h3>
-                <p className="text-white/80">{option.description}</p>
+                <p className="text-sm text-muted-foreground">
+                  {option.description}
+                </p>
               </CardContent>
             </Card>
           );
         })}
       </div>
 
-      <Button
-        onClick={handleContinue}
-        className="bg-white text-purple-600 hover:bg-white/90 px-8 py-3 text-lg font-semibold rounded-full hover:scale-105 transition-all"
-      >
+      <Button onClick={handleContinue} className="px-6">
         Continue with {syncMode === "migrate" ? "Migration" : "Sync"}
       </Button>
     </div>

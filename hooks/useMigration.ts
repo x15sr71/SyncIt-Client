@@ -39,11 +39,13 @@ export const useMigration = () => {
       let endpoint = "";
       let requestBody: any = { playlistId, playlistName };
 
+      const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
       if (sourcePlatform === "youtube" && targetPlatform === "spotify") {
-        endpoint = "http://localhost:3002/youtube-to-spotify";
+        endpoint = `${baseUrl}/youtube-to-spotify`;
         // YouTube to Spotify uses existing structure
       } else if (sourcePlatform === "spotify" && targetPlatform === "youtube") {
-        endpoint = "http://localhost:3002/spotify-to-youtube";
+        endpoint = `${baseUrl}/spotify-to-youtube`;
         // Add target YouTube playlist ID if provided
         if (targetPlaylistId) {
           requestBody.youtubePlaylistId = targetPlaylistId;
@@ -88,7 +90,12 @@ export const useMigration = () => {
       }
 
       const data = await response.json();
-      return data;
+      return {
+        ...data,
+        successCount: data.successCount ?? data.numberOfTracksAdded ?? 0,
+        failedTracks: data.failedTracks ?? data.failedTrackDetails ?? [],
+        playlistName: data.playlistName ?? params.playlistName,
+      };
     } catch (err: any) {
       let userFriendlyMessage = err?.message || "Migration failed";
 

@@ -47,7 +47,7 @@ export default function useGetSpotifyPlaylists() {
     try {
       console.log("Fetching Spotify playlists...");
       const response = await apiClient.get<GetPlaylistsResponse>(
-        "/getSpotifyPlaylists",
+        "/getSpotifyplaylists",
       );
       console.log("Spotify playlists response:", response.data);
 

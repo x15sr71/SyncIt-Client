@@ -115,9 +115,9 @@ export default function MigrationAction({
         size="lg"
         onClick={handleStartMigration}
         disabled={selectedPlaylistIds.length === 0 || isLoading}
-        className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-2xl px-8 py-4 focus-visible:outline-2 focus-visible:outline-purple-400 focus-visible:outline-offset-2 transition-all hover:scale-105 shadow-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+        className="px-6"
       >
-        <ArrowRight className="w-5 h-5 mr-2" />
+        <ArrowRight className="w-4 h-4" />
         {isLoading
           ? "Migrating..."
           : `${getMigrationText()} (${selectedPlaylistIds.length} selected)`}

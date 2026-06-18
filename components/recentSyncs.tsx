@@ -5,19 +5,19 @@ export default function RecentSyncs() {
   return (
     <>
       <Card
-        className="glass-card border-white/40 hover-lift min-w-0"
+        className="hover-lift min-w-0"
         role="region"
         aria-labelledby="recent-syncs-heading"
       >
-        <CardHeader>
+        <CardHeader className="pb-3">
           <CardTitle
             id="recent-syncs-heading"
-            className="text-primary-dark truncate"
+            className="text-foreground text-base font-semibold truncate"
           >
-            Recent Syncs
+            Recent syncs
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 min-w-0 break-words">
+        <CardContent className="space-y-2 min-w-0 break-words">
           <SyncStatus
             playlistName="My Favorites"
             status="success"

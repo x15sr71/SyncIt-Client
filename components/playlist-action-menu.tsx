@@ -74,12 +74,12 @@ export function PlaylistActionMenu({
       <Button
         ref={buttonRef}
         variant="ghost"
-        size="sm"
+        size="icon"
         onClick={(e) => {
           e.stopPropagation();
           setIsOpen(!isOpen);
         }}
-        className="text-secondary-dark hover:text-primary-dark hover:bg-white/20 rounded-xl transition-all p-2"
+        className="h-8 w-8 text-muted-foreground hover:text-foreground"
         aria-label={`Actions for ${playlistName}`}
         aria-expanded={isOpen}
         aria-haspopup="menu"
@@ -90,39 +90,39 @@ export function PlaylistActionMenu({
       {isOpen && (
         <Card
           ref={menuRef}
-          className="absolute right-0 top-full mt-2 z-50 w-48 glass-card border-white/40 shadow-xl animate-in slide-in-from-top-2 duration-200"
+          className="absolute right-0 top-full mt-2 z-50 w-48 shadow-elev animate-in slide-in-from-top-2 duration-200"
           role="menu"
         >
-          <CardContent className="p-2">
-            <div className="space-y-1">
+          <CardContent className="p-1.5">
+            <div className="space-y-0.5">
               <Button
                 variant="ghost"
                 onClick={() => handleAction(() => onRename(playlistId))}
-                className="w-full justify-start text-primary-dark hover:bg-white/20 rounded-xl transition-all"
+                className="w-full justify-start text-foreground"
                 role="menuitem"
               >
-                <Edit3 className="w-4 h-4 mr-3" />
-                Rename Playlist
+                <Edit3 className="w-4 h-4 mr-2" />
+                Rename playlist
               </Button>
 
               <Button
                 variant="ghost"
                 onClick={() => handleAction(() => onEmpty(playlistId))}
-                className="w-full justify-start text-primary-dark hover:bg-white/20 rounded-xl transition-all"
+                className="w-full justify-start text-foreground"
                 role="menuitem"
               >
-                <FolderX className="w-4 h-4 mr-3" />
-                Empty Playlist
+                <FolderX className="w-4 h-4 mr-2" />
+                Empty playlist
               </Button>
 
               <Button
                 variant="ghost"
                 onClick={() => handleAction(() => onDelete(playlistId))}
-                className="w-full justify-start text-red-600 hover:bg-red-500/10 hover:text-red-700 rounded-xl transition-all"
+                className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700"
                 role="menuitem"
               >
-                <Trash2 className="w-4 h-4 mr-3" />
-                Delete Playlist
+                <Trash2 className="w-4 h-4 mr-2" />
+                Delete playlist
               </Button>
             </div>
           </CardContent>

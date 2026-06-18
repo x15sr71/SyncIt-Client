@@ -89,49 +89,49 @@ export function MigrationLoadingCard({
   const totalPlaylists = playlists.length;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <Card className="w-full max-w-2xl bg-white/15 backdrop-blur-20 border border-white/30 rounded-3xl shadow-2xl">
-        <CardHeader className="text-center pb-6 border-b border-white/20">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mb-4 animate-pulse-glow shadow-xl">
-            <Loader2 className="w-8 h-8 text-white animate-spin" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-900/40 backdrop-blur-sm fade-in-up">
+      <Card className="w-full max-w-2xl shadow-elev">
+        <CardHeader className="text-center pb-5 border-b border-border">
+          <div className="mx-auto w-14 h-14 bg-gradient-to-br from-brand-gradStart to-brand-gradEnd rounded-xl2 flex items-center justify-center mb-3 shadow-soft">
+            <Loader2 className="w-7 h-7 text-white animate-spin" />
           </div>
-          <CardTitle className="text-primary-dark text-2xl font-bold">
+          <CardTitle className="text-foreground text-xl font-semibold">
             Migrating Playlists
           </CardTitle>
-          <p className="text-secondary-dark text-sm">
+          <p className="text-muted-foreground text-sm">
             {currentPlaylistIndex + 1} of {totalPlaylists} playlists • Please
             wait while we sync your music
           </p>
         </CardHeader>
 
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-5 pt-6">
           {/* Migration Flow Visualization */}
-          <div className="flex items-center justify-center space-x-6 p-6 glass-effect rounded-2xl">
+          <div className="flex items-center justify-center space-x-6 p-5 rounded-lg border border-border bg-muted/40">
             <div className="text-center">
-              <div className="w-14 h-14 bg-green-500/20 border-2 border-green-500/40 rounded-2xl flex items-center justify-center mb-3 shadow-lg">
-                <Music className="w-7 h-7 text-green-600" />
+              <div className="w-12 h-12 bg-green-50 border border-green-200 rounded-lg flex items-center justify-center mb-2">
+                <Music className="w-6 h-6 text-green-600" />
               </div>
-              <div className="text-sm font-medium text-secondary-dark mb-1">
+              <div className="text-xs font-medium text-muted-foreground mb-0.5">
                 From
               </div>
-              <div className="text-primary-dark font-bold capitalize">
+              <div className="text-foreground font-semibold capitalize text-sm">
                 {sourcePlatform}
               </div>
             </div>
 
-            <div className="flex flex-col items-center">
-              <ArrowRight className="w-8 h-8 text-purple-500 animate-pulse mb-2" />
-              <div className="text-xs text-secondary-dark">Migrating</div>
+            <div className="sync-link">
+              <div className="sync-pulse"></div>
+              <span className="sync-dot"></span>
             </div>
 
             <div className="text-center">
-              <div className="w-14 h-14 bg-red-500/20 border-2 border-red-500/40 rounded-2xl flex items-center justify-center mb-3 shadow-lg">
-                <Music className="w-7 h-7 text-red-600" />
+              <div className="w-12 h-12 bg-red-50 border border-red-200 rounded-lg flex items-center justify-center mb-2">
+                <Music className="w-6 h-6 text-red-600" />
               </div>
-              <div className="text-sm font-medium text-secondary-dark mb-1">
+              <div className="text-xs font-medium text-muted-foreground mb-0.5">
                 To
               </div>
-              <div className="text-primary-dark font-bold capitalize">
+              <div className="text-foreground font-semibold capitalize text-sm">
                 {targetPlatform}
               </div>
             </div>
@@ -139,33 +139,27 @@ export function MigrationLoadingCard({
 
           {/* Current Playlist */}
           {currentPlaylist && currentPlaylistIndex < playlists.length && (
-            <div className="text-center p-6 glass-effect rounded-2xl border border-purple-500/30">
-              <h3 className="text-primary-dark font-bold text-xl mb-2">
+            <div className="text-center p-5 rounded-lg border border-brand-200 bg-brand-50/50">
+              <h3 className="text-foreground font-semibold text-base mb-1">
                 Currently Migrating
               </h3>
-              <h4 className="text-primary-dark font-semibold text-lg mb-1">
+              <h4 className="text-foreground font-medium mb-0.5">
                 {currentPlaylist.name}
               </h4>
-              <p className="text-secondary-dark text-sm mb-4">
+              <p className="text-muted-foreground text-sm mb-4">
                 {currentPlaylist.totalTracks} tracks total
               </p>
 
               {/* Progress Bar */}
-              <div className="space-y-2 mb-4">
+              <div className="space-y-2 mb-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-secondary-dark">Progress</span>
-                  <span className="text-primary-dark font-medium">75%</span>
+                  <span className="text-muted-foreground">Progress</span>
+                  <span className="text-foreground font-medium">75%</span>
                 </div>
-                <div className="relative">
-                  <Progress
-                    value={75}
-                    className="h-3 bg-white/20 rounded-full overflow-hidden"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full animate-shimmer" />
-                </div>
+                <Progress value={75} className="h-2" />
               </div>
 
-              <p className="text-secondary-dark text-sm">
+              <p className="text-muted-foreground text-sm">
                 Matching songs across platforms...
               </p>
             </div>
@@ -173,24 +167,24 @@ export function MigrationLoadingCard({
 
           {/* Completed Playlists */}
           {completedPlaylists.length > 0 && currentPlaylistIndex >= 0 && (
-            <div className="space-y-3">
-              <h4 className="text-primary-dark font-semibold flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-600" />
+            <div className="space-y-2">
+              <h4 className="text-foreground font-medium text-sm flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-green-600" />
                 Completed Playlists
               </h4>
               <div className="space-y-2 max-h-32 overflow-y-auto">
                 {completedPlaylists.map((playlist) => (
                   <div
                     key={playlist.id}
-                    className="flex items-center justify-between p-3 glass-effect rounded-xl"
+                    className="flex items-center justify-between p-3 rounded-lg border border-border"
                   >
                     <div className="flex items-center gap-3">
                       <CheckCircle className="w-4 h-4 text-green-600" />
-                      <span className="text-primary-dark font-medium">
+                      <span className="text-foreground font-medium text-sm">
                         {playlist.name}
                       </span>
                     </div>
-                    <span className="text-secondary-dark text-sm">
+                    <span className="text-muted-foreground text-sm">
                       {playlist.totalTracks} tracks
                     </span>
                   </div>
@@ -201,11 +195,11 @@ export function MigrationLoadingCard({
 
           {/* Loading Animation */}
           <div className="flex justify-center">
-            <div className="flex space-x-2">
+            <div className="flex space-x-1.5">
               {[0, 1, 2].map((i) => (
                 <div
                   key={i}
-                  className="w-3 h-3 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-bounce"
+                  className="w-2 h-2 bg-brand-400 rounded-full animate-bounce"
                   style={{ animationDelay: `${i * 0.2}s` }}
                 />
               ))}

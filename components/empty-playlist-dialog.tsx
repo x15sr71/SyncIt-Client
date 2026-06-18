@@ -57,29 +57,29 @@ export function EmptyPlaylistDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <Card className="w-full max-w-md bg-white/15 backdrop-blur-20 border border-white/30 rounded-3xl shadow-2xl">
-        <CardHeader className="pb-4 border-b border-white/20">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-900/40 backdrop-blur-sm fade-in-up">
+      <Card className="w-full max-w-md shadow-elev">
+        <CardHeader className="pb-4 border-b border-border">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-2xl flex items-center justify-center shadow-xl">
+              <div className="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center shadow-soft">
                 {state === "loading" ? (
-                  <Loader2 className="w-6 h-6 text-white animate-spin" />
+                  <Loader2 className="w-5 h-5 text-white animate-spin" />
                 ) : state === "success" ? (
-                  <CheckCircle className="w-6 h-6 text-white" />
+                  <CheckCircle className="w-5 h-5 text-white" />
                 ) : (
-                  <FolderX className="w-6 h-6 text-white" />
+                  <FolderX className="w-5 h-5 text-white" />
                 )}
               </div>
               <div>
-                <CardTitle className="text-primary-dark text-xl font-bold">
+                <CardTitle className="text-foreground text-lg font-semibold">
                   {state === "loading"
                     ? "Emptying Playlist"
                     : state === "success"
                       ? "Emptying Successful"
                       : "Empty Playlist"}
                 </CardTitle>
-                <p className="text-secondary-dark text-sm">
+                <p className="text-muted-foreground text-sm">
                   {state === "loading"
                     ? "Please wait while we remove all songs..."
                     : state === "success"
@@ -91,9 +91,9 @@ export function EmptyPlaylistDialog({
             {state === "confirm" && (
               <Button
                 variant="ghost"
-                size="sm"
+                size="icon"
                 onClick={onClose}
-                className="text-secondary-dark hover:text-primary-dark hover:bg-white/20 rounded-xl transition-all"
+                className="h-8 w-8 text-muted-foreground hover:text-foreground"
                 aria-label="Close dialog"
               >
                 <X className="w-4 h-4" />
@@ -102,18 +102,18 @@ export function EmptyPlaylistDialog({
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-5 pt-6">
           {state === "confirm" && (
             <>
               {/* Warning message */}
-              <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-2xl">
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
                 <div className="flex items-start gap-3">
-                  <AlertTriangle className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
+                  <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-orange-700 font-medium text-sm mb-1">
+                    <p className="text-amber-700 font-medium text-sm mb-1">
                       Do you really want to empty the whole playlist?
                     </p>
-                    <p className="text-orange-600 text-sm">
+                    <p className="text-amber-700 text-sm">
                       This will remove all <strong>{songCount} songs</strong>{" "}
                       from "<strong>{playlistName}</strong>". The playlist will
                       remain but will be empty.
@@ -123,17 +123,13 @@ export function EmptyPlaylistDialog({
               </div>
 
               {/* Action buttons */}
-              <div className="flex space-x-3 pt-4">
-                <Button
-                  variant="outline"
-                  onClick={onClose}
-                  className="flex-1 rounded-2xl border-white/30 text-secondary-dark hover:bg-white/10 hover:text-primary-dark bg-transparent shadow-lg transition-all hover:scale-105"
-                >
+              <div className="flex space-x-3 pt-2">
+                <Button variant="outline" onClick={onClose} className="flex-1">
                   No, Cancel
                 </Button>
                 <Button
                   onClick={handleEmpty}
-                  className="flex-1 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white rounded-2xl font-semibold shadow-xl transition-all hover:scale-105"
+                  className="flex-1 bg-amber-500 hover:bg-amber-600 text-white"
                 >
                   Yes, Empty
                 </Button>
@@ -143,21 +139,22 @@ export function EmptyPlaylistDialog({
 
           {state === "loading" && (
             <div className="text-center py-8">
-              <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse-glow shadow-xl">
-                <Loader2 className="w-8 h-8 text-white animate-spin" />
+              <div className="w-14 h-14 bg-amber-500 rounded-xl2 flex items-center justify-center mx-auto mb-5 shadow-soft">
+                <Loader2 className="w-7 h-7 text-white animate-spin" />
               </div>
-              <h3 className="text-primary-dark font-bold text-lg mb-2">
+              <h3 className="text-foreground font-semibold text-base mb-1">
                 Removing all songs...
               </h3>
-              <p className="text-secondary-dark">This may take a few moments</p>
+              <p className="text-sm text-muted-foreground">
+                This may take a few moments
+              </p>
 
-              {/* Loading animation */}
-              <div className="flex justify-center mt-6">
-                <div className="flex space-x-2">
+              <div className="flex justify-center mt-5">
+                <div className="flex space-x-1.5">
                   {[0, 1, 2].map((i) => (
                     <div
                       key={i}
-                      className="w-3 h-3 bg-gradient-to-r from-orange-400 to-yellow-400 rounded-full animate-bounce"
+                      className="w-2 h-2 bg-amber-400 rounded-full animate-bounce"
                       style={{ animationDelay: `${i * 0.2}s` }}
                     />
                   ))}
@@ -168,19 +165,19 @@ export function EmptyPlaylistDialog({
 
           {state === "success" && (
             <div className="text-center py-8">
-              <div className="w-20 h-20 bg-green-500/20 border-2 border-green-500/40 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse-glow shadow-xl">
-                <CheckCircle className="w-12 h-12 text-green-600" />
+              <div className="w-16 h-16 bg-green-50 border border-green-200 rounded-xl2 flex items-center justify-center mx-auto mb-5">
+                <CheckCircle className="w-9 h-9 text-green-600" />
               </div>
-              <h3 className="text-primary-dark font-bold text-xl mb-3">
+              <h3 className="text-foreground font-semibold text-lg mb-2">
                 Emptying Successfully Completed!
               </h3>
-              <p className="text-secondary-dark mb-2">
+              <p className="text-sm text-muted-foreground mb-2">
                 All songs have been removed from:
               </p>
-              <p className="text-primary-dark font-semibold text-lg bg-green-500/10 px-4 py-2 rounded-xl border border-green-500/20">
+              <p className="text-foreground font-medium bg-green-50 px-4 py-2 rounded-lg border border-green-200 inline-block">
                 "{playlistName}"
               </p>
-              <p className="text-secondary-dark text-sm mt-4 opacity-70">
+              <p className="text-muted-foreground text-xs mt-4">
                 This dialog will close automatically...
               </p>
             </div>

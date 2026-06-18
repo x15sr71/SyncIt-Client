@@ -91,24 +91,24 @@ export function RenamePlaylistDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <Card className="w-full max-w-md bg-white/15 backdrop-blur-20 border border-white/30 rounded-3xl shadow-2xl">
-        <CardHeader className="pb-4 border-b border-white/20">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-900/40 backdrop-blur-sm fade-in-up">
+      <Card className="w-full max-w-md shadow-elev">
+        <CardHeader className="pb-4 border-b border-border">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-xl">
+              <div className="w-10 h-10 bg-gradient-to-br from-brand-gradStart to-brand-gradEnd rounded-lg flex items-center justify-center shadow-soft">
                 {state === "loading" ? (
-                  <Loader2 className="w-6 h-6 text-white animate-spin" />
+                  <Loader2 className="w-5 h-5 text-white animate-spin" />
                 ) : state === "success" ? (
-                  <CheckCircle className="w-6 h-6 text-white" />
+                  <CheckCircle className="w-5 h-5 text-white" />
                 ) : state === "error" ? (
-                  <X className="w-6 h-6 text-white" />
+                  <X className="w-5 h-5 text-white" />
                 ) : (
-                  <Edit3 className="w-6 h-6 text-white" />
+                  <Edit3 className="w-5 h-5 text-white" />
                 )}
               </div>
               <div>
-                <CardTitle className="text-primary-dark text-xl font-bold">
+                <CardTitle className="text-foreground text-lg font-semibold">
                   {state === "loading"
                     ? "Renaming Playlist"
                     : state === "success"
@@ -117,7 +117,7 @@ export function RenamePlaylistDialog({
                         ? "Rename Failed"
                         : "Rename Playlist"}
                 </CardTitle>
-                <p className="text-secondary-dark text-sm">
+                <p className="text-muted-foreground text-sm">
                   {state === "loading"
                     ? "Please wait while we update your playlist..."
                     : state === "success"
@@ -131,9 +131,9 @@ export function RenamePlaylistDialog({
             {(state === "input" || state === "error") && (
               <Button
                 variant="ghost"
-                size="sm"
+                size="icon"
                 onClick={onClose}
-                className="text-secondary-dark hover:text-primary-dark hover:bg-white/20 rounded-xl transition-all"
+                className="h-8 w-8 text-muted-foreground hover:text-foreground"
                 aria-label="Close dialog"
               >
                 <X className="w-4 h-4" />
@@ -142,20 +142,20 @@ export function RenamePlaylistDialog({
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-5 pt-6">
           {(state === "input" || state === "error") && (
             <>
               {/* Current playlist info */}
-              <div className="p-4 glass-effect rounded-2xl border border-white/20">
-                <p className="text-secondary-dark text-sm mb-1">
-                  Current name:
+              <div className="p-3 rounded-lg border border-border bg-muted/50">
+                <p className="text-muted-foreground text-xs mb-1">
+                  Current name
                 </p>
-                <p className="text-primary-dark font-semibold">{currentName}</p>
+                <p className="text-foreground font-medium">{currentName}</p>
               </div>
 
               {/* Error message */}
               {state === "error" && (
-                <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                   <p className="text-red-600 text-sm">
                     {error || "Failed to rename playlist. Please try again."}
                   </p>
@@ -163,10 +163,10 @@ export function RenamePlaylistDialog({
               )}
 
               {/* New name input */}
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <Label
                   htmlFor="new-playlist-name"
-                  className="text-primary-dark font-medium"
+                  className="text-foreground font-medium text-sm"
                 >
                   New playlist name
                 </Label>
@@ -175,25 +175,20 @@ export function RenamePlaylistDialog({
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="bg-white/10 border-white/30 text-primary-dark placeholder-secondary-dark rounded-xl focus:ring-purple-500 focus:border-purple-500 shadow-lg"
                   placeholder="Enter new playlist name"
                   autoFocus
                 />
               </div>
 
               {/* Action buttons */}
-              <div className="flex space-x-3 pt-4">
-                <Button
-                  variant="outline"
-                  onClick={onClose}
-                  className="flex-1 rounded-2xl border-white/30 text-secondary-dark hover:bg-white/10 hover:text-primary-dark bg-transparent shadow-lg transition-all hover:scale-105"
-                >
+              <div className="flex space-x-3 pt-2">
+                <Button variant="outline" onClick={onClose} className="flex-1">
                   Cancel
                 </Button>
                 <Button
                   onClick={state === "error" ? handleRetry : handleRename}
                   disabled={!newName.trim() || newName.trim() === currentName}
-                  className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-2xl font-semibold shadow-xl transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  className="flex-1"
                 >
                   {state === "error" ? "Try Again" : "Rename Playlist"}
                 </Button>
@@ -203,21 +198,22 @@ export function RenamePlaylistDialog({
 
           {state === "loading" && (
             <div className="text-center py-8">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse-glow shadow-xl">
-                <Loader2 className="w-8 h-8 text-white animate-spin" />
+              <div className="w-14 h-14 bg-gradient-to-br from-brand-gradStart to-brand-gradEnd rounded-xl2 flex items-center justify-center mx-auto mb-5 shadow-soft">
+                <Loader2 className="w-7 h-7 text-white animate-spin" />
               </div>
-              <h3 className="text-primary-dark font-bold text-lg mb-2">
+              <h3 className="text-foreground font-semibold text-base mb-1">
                 Updating playlist name...
               </h3>
-              <p className="text-secondary-dark">This may take a few moments</p>
+              <p className="text-sm text-muted-foreground">
+                This may take a few moments
+              </p>
 
-              {/* Loading animation */}
-              <div className="flex justify-center mt-6">
-                <div className="flex space-x-2">
+              <div className="flex justify-center mt-5">
+                <div className="flex space-x-1.5">
                   {[0, 1, 2].map((i) => (
                     <div
                       key={i}
-                      className="w-3 h-3 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-bounce"
+                      className="w-2 h-2 bg-brand-400 rounded-full animate-bounce"
                       style={{ animationDelay: `${i * 0.2}s` }}
                     />
                   ))}
@@ -228,19 +224,19 @@ export function RenamePlaylistDialog({
 
           {state === "success" && (
             <div className="text-center py-8">
-              <div className="w-20 h-20 bg-green-500/20 border-2 border-green-500/40 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse-glow shadow-xl">
-                <CheckCircle className="w-12 h-12 text-green-600" />
+              <div className="w-16 h-16 bg-green-50 border border-green-200 rounded-xl2 flex items-center justify-center mx-auto mb-5">
+                <CheckCircle className="w-9 h-9 text-green-600" />
               </div>
-              <h3 className="text-primary-dark font-bold text-xl mb-3">
+              <h3 className="text-foreground font-semibold text-lg mb-2">
                 Playlist Renamed!
               </h3>
-              <p className="text-secondary-dark mb-2">
+              <p className="text-sm text-muted-foreground mb-2">
                 Your playlist is now called:
               </p>
-              <p className="text-primary-dark font-semibold text-lg bg-green-500/10 px-4 py-2 rounded-xl border border-green-500/20">
+              <p className="text-foreground font-medium bg-green-50 px-4 py-2 rounded-lg border border-green-200 inline-block">
                 "{newName}"
               </p>
-              <p className="text-secondary-dark text-sm mt-4 opacity-70">
+              <p className="text-muted-foreground text-xs mt-4">
                 This dialog will close automatically...
               </p>
             </div>

@@ -29,16 +29,16 @@ export function PlatformConnect({
     youtube: {
       name: "YouTube Music",
       icon: Youtube,
-      color: "bg-red-500",
-      hoverColor: "hover:bg-red-600",
+      color: "bg-[#ff3b3b]",
+      hoverColor: "hover:bg-[#e62e2e]",
       description:
         "Connect your YouTube Music account to access your playlists and start syncing your music.",
     },
     spotify: {
       name: "Spotify",
       icon: Music,
-      color: "bg-green-500",
-      hoverColor: "hover:bg-green-600",
+      color: "bg-[#1db954]",
+      hoverColor: "hover:bg-[#179c45]",
       description:
         "Connect your Spotify account to enable seamless playlist synchronization.",
     },
@@ -48,17 +48,17 @@ export function PlatformConnect({
   const Icon = config.icon;
 
   return (
-    <div className="text-center">
+    <div className="text-center fade-in-up">
       <div className="mb-8">
         <div
-          className={`w-24 h-24 ${config.color} rounded-full flex items-center justify-center mx-auto mb-6`}
+          className={`w-20 h-20 ${config.color} rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-soft`}
         >
-          <Icon className="w-12 h-12 text-white" />
+          <Icon className="w-10 h-10 text-white" />
         </div>
-        <h2 className="text-3xl font-bold text-white mb-4">
+        <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-2">
           Connect {config.name}
         </h2>
-        <p className="text-white/80 text-lg max-w-2xl mx-auto">
+        <p className="text-muted-foreground max-w-md mx-auto">
           {config.description}
         </p>
       </div>
@@ -67,7 +67,7 @@ export function PlatformConnect({
         {connectionStatus === "idle" && (
           <Button
             onClick={() => handlePlatformConnect(platform)}
-            className={`${config.color} ${config.hoverColor} text-white px-8 py-4 text-lg font-semibold rounded-full hover:scale-105 transition-all`}
+            className={`${config.color} ${config.hoverColor} text-white px-6 py-3`}
           >
             Connect {config.name}
           </Button>
@@ -75,48 +75,42 @@ export function PlatformConnect({
 
         {connectionStatus === "connecting" && (
           <div className="flex items-center justify-center space-x-3">
-            <Loader2 className="w-6 h-6 text-white animate-spin" />
-            <span className="text-white text-lg">
+            <Loader2 className="w-5 h-5 text-brand-500 animate-spin" />
+            <span className="text-foreground">
               Connecting to {config.name}...
             </span>
           </div>
         )}
 
         {connectionStatus === "connected" && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-center space-x-3 text-green-400">
-              <Check className="w-8 h-8" />
-              <span className="text-xl font-semibold">
+          <div className="space-y-5">
+            <div className="flex items-center justify-center space-x-2 text-green-600">
+              <Check className="w-6 h-6" />
+              <span className="text-base font-medium">
                 Successfully connected to {config.name}!
               </span>
             </div>
-            <div className="flex space-x-4 justify-center">
+            <div className="flex space-x-3 justify-center">
               <Button
                 onClick={() => handleDisconnect(platform)}
                 variant="outline"
-                className="border-white/20 text-white hover:bg-white/10 bg-transparent"
               >
-                <X className="w-4 h-4 mr-2" />
+                <X className="w-4 h-4" />
                 Disconnect
               </Button>
-              <Button
-                onClick={handleContinue}
-                className="bg-white text-purple-600 hover:bg-white/90 px-8 py-2 font-semibold rounded-full hover:scale-105 transition-all"
-              >
-                Continue
-              </Button>
+              <Button onClick={handleContinue}>Continue</Button>
             </div>
           </div>
         )}
 
         {connectionStatus === "error" && (
           <div className="text-center">
-            <div className="text-red-400 text-lg font-semibold mb-4">
+            <div className="text-red-600 font-medium mb-4">
               Failed to connect to {config.name}. Please try again.
             </div>
             <Button
               onClick={() => handlePlatformConnect(platform)}
-              className={`${config.color} ${config.hoverColor} text-white px-8 py-4 text-lg font-semibold rounded-full hover:scale-105 transition-all`}
+              className={`${config.color} ${config.hoverColor} text-white px-6 py-3`}
             >
               Try Again
             </Button>

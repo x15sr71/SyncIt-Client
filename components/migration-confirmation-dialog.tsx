@@ -100,19 +100,19 @@ export function MigrationConfirmationDialog({
   const exceedsYouTubeLimit = isYouTubeTarget && totalTracks > 100;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <Card className="w-full max-w-lg bg-white/15 backdrop-blur-20 border border-white/30 rounded-3xl shadow-2xl max-h-[90vh] overflow-hidden">
-        <CardHeader className="pb-6 border-b border-white/20">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-900/40 backdrop-blur-sm fade-in-up">
+      <Card className="w-full max-w-lg shadow-elev max-h-[90vh] overflow-hidden">
+        <CardHeader className="pb-5 border-b border-border">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center animate-pulse-glow shadow-xl">
-                <Music className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 bg-gradient-to-br from-brand-gradStart to-brand-gradEnd rounded-lg flex items-center justify-center shadow-soft">
+                <Music className="w-5 h-5 text-white" />
               </div>
               <div>
-                <CardTitle className="text-primary-dark text-xl font-bold">
+                <CardTitle className="text-foreground text-lg font-semibold">
                   Confirm Migration
                 </CardTitle>
-                <p className="text-secondary-dark text-sm">
+                <p className="text-muted-foreground text-sm">
                   {selectedPlaylistCount === 1
                     ? "Configure your playlist migration"
                     : `Configure migration for ${selectedPlaylistCount} playlists`}
@@ -121,9 +121,9 @@ export function MigrationConfirmationDialog({
             </div>
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               onClick={onClose}
-              className="text-secondary-dark hover:text-primary-dark hover:bg-white/20 rounded-xl transition-all"
+              className="h-8 w-8 text-muted-foreground hover:text-foreground"
               aria-label="Close dialog"
             >
               <X className="w-4 h-4" />
@@ -131,32 +131,32 @@ export function MigrationConfirmationDialog({
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-6 overflow-y-auto max-h-[60vh]">
+        <CardContent className="space-y-5 overflow-y-auto max-h-[60vh] pt-6">
           {/* Migration Flow Visualization */}
-          <div className="flex items-center justify-center space-x-6 p-6 glass-effect rounded-2xl">
+          <div className="flex items-center justify-center space-x-6 p-5 rounded-lg border border-border bg-muted/40">
             <div className="text-center">
-              <div className="w-14 h-14 bg-green-500/20 border-2 border-green-500/40 rounded-2xl flex items-center justify-center mb-3 shadow-lg">
-                <Music className="w-7 h-7 text-green-600" />
+              <div className="w-12 h-12 bg-green-50 border border-green-200 rounded-lg flex items-center justify-center mb-2">
+                <Music className="w-6 h-6 text-green-600" />
               </div>
-              <div className="text-sm font-medium text-secondary-dark mb-1">
+              <div className="text-xs font-medium text-muted-foreground mb-0.5">
                 From
               </div>
-              <div className="text-primary-dark font-bold capitalize">
+              <div className="text-foreground font-semibold capitalize text-sm">
                 {sourcePlatform}
               </div>
             </div>
-            <div className="flex flex-col items-center">
-              <ArrowRight className="w-8 h-8 text-purple-500 animate-pulse mb-2" />
-              <div className="text-xs text-secondary-dark">Migrate</div>
+            <div className="sync-link">
+              <div className="sync-pulse"></div>
+              <span className="sync-dot"></span>
             </div>
             <div className="text-center">
-              <div className="w-14 h-14 bg-red-500/20 border-2 border-red-500/40 rounded-2xl flex items-center justify-center mb-3 shadow-lg">
-                <Music className="w-7 h-7 text-red-600" />
+              <div className="w-12 h-12 bg-red-50 border border-red-200 rounded-lg flex items-center justify-center mb-2">
+                <Music className="w-6 h-6 text-red-600" />
               </div>
-              <div className="text-sm font-medium text-secondary-dark mb-1">
+              <div className="text-xs font-medium text-muted-foreground mb-0.5">
                 To
               </div>
-              <div className="text-primary-dark font-bold capitalize">
+              <div className="text-foreground font-semibold capitalize text-sm">
                 {destinationPlatform}
               </div>
             </div>
@@ -164,16 +164,16 @@ export function MigrationConfirmationDialog({
 
           {/* YouTube Music API Limitation Warning */}
           {exceedsYouTubeLimit && (
-            <div className="p-5 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-2 border-yellow-500/40 rounded-2xl shadow-lg">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-yellow-500/30 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                  <AlertTriangle className="w-6 h-6 text-yellow-700" />
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <AlertTriangle className="w-5 h-5 text-amber-600" />
                 </div>
                 <div>
-                  <h4 className="text-yellow-800 font-bold text-lg mb-2">
+                  <h4 className="text-amber-800 font-semibold text-sm mb-1">
                     YouTube Music API Limitation
                   </h4>
-                  <p className="text-yellow-900 text-sm leading-relaxed">
+                  <p className="text-amber-700 text-sm leading-relaxed">
                     {selectedPlaylistCount === 1
                       ? `This playlist has ${trackCount} tracks`
                       : `These playlists have a total of ${totalTracks} tracks`}
@@ -187,14 +187,14 @@ export function MigrationConfirmationDialog({
           )}
 
           {/* Playlist Name Options */}
-          <div className="space-y-4">
-            <h3 className="text-primary-dark font-semibold">
+          <div className="space-y-3">
+            <h3 className="text-foreground font-medium text-sm">
               Choose playlist name{selectedPlaylistCount > 1 ? "s" : ""}:
             </h3>
 
             {/* Use Original Names Option */}
             <div
-              className="flex items-start space-x-3 p-4 glass-effect rounded-2xl hover:bg-white/20 transition-all cursor-pointer"
+              className="flex items-start space-x-3 p-3.5 rounded-lg border border-border hover:bg-accent/40 transition-colors cursor-pointer"
               onClick={() => setUseOriginalNames(true)}
             >
               <input
@@ -203,16 +203,16 @@ export function MigrationConfirmationDialog({
                 name="playlist-naming"
                 checked={useOriginalNames}
                 onChange={() => setUseOriginalNames(true)}
-                className="mt-1 w-4 h-4 text-purple-600 bg-white/20 border-white/30 focus:ring-purple-500 focus:ring-2"
+                className="mt-1 w-4 h-4 accent-brand-500"
               />
               <div className="flex-1">
                 <Label
                   htmlFor="original-names"
-                  className="text-primary-dark font-semibold cursor-pointer"
+                  className="text-foreground font-medium cursor-pointer"
                 >
                   Use original name{selectedPlaylistCount > 1 ? "s" : ""}
                 </Label>
-                <p className="text-sm text-secondary-dark mt-1">
+                <p className="text-sm text-muted-foreground mt-0.5">
                   {selectedPlaylistCount > 1
                     ? `Keep the original names for all ${selectedPlaylistCount} playlists`
                     : `Create playlist with the same name: "${originalPlaylistName}"`}
@@ -222,7 +222,7 @@ export function MigrationConfirmationDialog({
 
             {/* Custom Names Option */}
             <div
-              className="flex items-start space-x-3 p-4 glass-effect rounded-2xl hover:bg-white/20 transition-all cursor-pointer"
+              className="flex items-start space-x-3 p-3.5 rounded-lg border border-border hover:bg-accent/40 transition-colors cursor-pointer"
               onClick={() => setUseOriginalNames(false)}
             >
               <input
@@ -231,12 +231,12 @@ export function MigrationConfirmationDialog({
                 name="playlist-naming"
                 checked={!useOriginalNames}
                 onChange={() => setUseOriginalNames(false)}
-                className="mt-1 w-4 h-4 text-purple-600 bg-white/20 border-white/30 focus:ring-purple-500 focus:ring-2"
+                className="mt-1 w-4 h-4 accent-brand-500"
               />
               <div className="flex-1 space-y-3">
                 <Label
                   htmlFor="custom-names"
-                  className="text-primary-dark font-semibold cursor-pointer"
+                  className="text-foreground font-medium cursor-pointer"
                 >
                   Customize name{selectedPlaylistCount > 1 ? "s" : ""}
                 </Label>
@@ -246,14 +246,14 @@ export function MigrationConfirmationDialog({
                     value={singleCustomName}
                     onChange={(e) => setSingleCustomName(e.target.value)}
                     disabled={useOriginalNames}
-                    className="bg-white/10 border-white/30 text-primary-dark placeholder-secondary-dark rounded-xl focus:ring-purple-500 focus:border-purple-500 shadow-lg disabled:opacity-50"
+                    className="disabled:opacity-50"
                     placeholder="Enter custom playlist name"
                   />
                 ) : (
                   <div className="space-y-3 max-h-48 overflow-y-auto">
                     {selectedPlaylists.map((playlist) => (
-                      <div key={playlist.id} className="space-y-2">
-                        <Label className="text-sm text-secondary-dark font-medium">
+                      <div key={playlist.id} className="space-y-1.5">
+                        <Label className="text-xs text-muted-foreground font-medium">
                           {playlist.name} ({playlist.songCount} tracks)
                         </Label>
                         <Input
@@ -262,7 +262,7 @@ export function MigrationConfirmationDialog({
                             updateCustomName(playlist.id, e.target.value)
                           }
                           disabled={useOriginalNames}
-                          className="bg-white/10 border-white/30 text-primary-dark placeholder-secondary-dark rounded-xl focus:ring-purple-500 focus:border-purple-500 shadow-lg disabled:opacity-50"
+                          className="disabled:opacity-50"
                           placeholder={`Custom name for ${playlist.name}`}
                         />
                       </div>
@@ -274,18 +274,14 @@ export function MigrationConfirmationDialog({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex space-x-3 pt-6 border-t border-white/20">
-            <Button
-              variant="outline"
-              onClick={onClose}
-              className="flex-1 rounded-2xl border-white/30 text-secondary-dark hover:bg-white/10 hover:text-primary-dark bg-transparent shadow-lg transition-all hover:scale-105"
-            >
+          <div className="flex space-x-3 pt-5 border-t border-border">
+            <Button variant="outline" onClick={onClose} className="flex-1">
               Cancel
             </Button>
             <Button
               onClick={handleConfirm}
               disabled={!isValidCustomNames()}
-              className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-2xl font-semibold shadow-xl transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="flex-1"
             >
               Start Migration
             </Button>

@@ -37,14 +37,14 @@ export function PlaylistSelection({
 
   if (isProcessing) {
     return (
-      <div className="text-center py-12">
-        <div className="w-24 h-24 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-6">
-          <Loader2 className="w-12 h-12 text-white animate-spin" />
+      <div className="text-center py-12 fade-in-up">
+        <div className="w-16 h-16 bg-gradient-to-br from-brand-gradStart to-brand-gradEnd rounded-xl2 flex items-center justify-center mx-auto mb-5 shadow-soft">
+          <Loader2 className="w-8 h-8 text-white animate-spin" />
         </div>
-        <h2 className="text-3xl font-bold text-white mb-4">
+        <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-2">
           {syncMode === "migrate" ? "Migrating" : "Syncing"} Your Playlists
         </h2>
-        <p className="text-white/80 text-lg">
+        <p className="text-muted-foreground">
           Please wait while we process your music...
         </p>
       </div>
@@ -52,53 +52,57 @@ export function PlaylistSelection({
   }
 
   return (
-    <div>
+    <div className="fade-in-up">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-white mb-4">Select Playlists</h2>
-        <p className="text-white/80 text-lg max-w-2xl mx-auto">
+        <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-2">
+          Select Playlists
+        </h2>
+        <p className="text-muted-foreground max-w-md mx-auto">
           Choose which playlists you want to{" "}
           {syncMode === "migrate" ? "migrate" : "sync"}
         </p>
       </div>
 
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-3">
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center space-x-2.5">
           <Checkbox
             checked={allSelected}
             onCheckedChange={toggleAllPlaylists}
-            className="border-white/40 data-[state=checked]:bg-white data-[state=checked]:text-purple-600"
           />
-          <span className="text-white font-medium">Select All Playlists</span>
+          <span className="text-foreground font-medium text-sm">
+            Select All Playlists
+          </span>
         </div>
-        <Badge variant="secondary" className="bg-white/20 text-white">
+        <Badge variant="outline" className="bg-brand-50 text-brand-700 border-brand-200">
           {selectedCount} selected
         </Badge>
       </div>
 
-      <div className="grid gap-4 mb-8 max-h-96 overflow-y-auto">
+      <div className="grid gap-2 mb-8 max-h-96 overflow-y-auto">
         {playlists.map((playlist) => (
           <Card
             key={playlist.id}
             className={`cursor-pointer transition-all duration-200 ${
               selectedPlaylists[playlist.id]
-                ? "bg-white/20 border-white/40"
-                : "bg-white/10 border-white/20 hover:bg-white/15"
+                ? "border-brand-300 ring-2 ring-brand-200"
+                : "hover:bg-accent/40"
             }`}
             onClick={() => togglePlaylist(playlist.id)}
           >
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-4">
+            <CardContent className="p-3.5">
+              <div className="flex items-center space-x-3">
                 <Checkbox
                   checked={selectedPlaylists[playlist.id] || false}
                   onCheckedChange={() => togglePlaylist(playlist.id)}
-                  className="border-white/40 data-[state=checked]:bg-white data-[state=checked]:text-purple-600"
                 />
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-400 rounded-lg flex items-center justify-center">
-                  <Music className="w-6 h-6 text-white" />
+                <div className="w-10 h-10 bg-gradient-to-br from-brand-gradStart to-brand-gradEnd rounded-lg flex items-center justify-center shrink-0">
+                  <Music className="w-5 h-5 text-white" />
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-white font-medium">{playlist.name}</h3>
-                  <p className="text-white/70 text-sm">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-foreground font-medium text-sm truncate">
+                    {playlist.name}
+                  </h3>
+                  <p className="text-muted-foreground text-xs">
                     {playlist.songCount} songs
                   </p>
                 </div>
@@ -112,7 +116,7 @@ export function PlaylistSelection({
         <Button
           onClick={handleContinue}
           disabled={selectedCount === 0}
-          className="bg-white text-purple-600 hover:bg-white/90 px-8 py-3 text-lg font-semibold rounded-full hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6"
         >
           {syncMode === "migrate" ? "Start Migration" : "Start Sync"} (
           {selectedCount} playlists)

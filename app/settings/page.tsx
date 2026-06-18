@@ -31,30 +31,25 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen gradient-background-subdued">
       <header
-        className="border-b border-white/20 backdrop-blur-lg"
+        className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-40"
         role="banner"
-        style={{ background: "transparent" }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center space-x-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+          <div className="flex items-center gap-3">
             <Link href="/dashboard">
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-primary-dark hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-gray-800 focus-visible:outline-offset-2 rounded-xl backdrop-blur-sm"
                 aria-label="Go back to dashboard"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
+                <ArrowLeft className="w-4 h-4" />
+                Dashboard
               </Button>
             </Link>
-            <div
-              className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-2xl animate-pulse-glow shadow-xl"
-              aria-hidden="true"
-            >
-              <Music className="w-6 h-6 text-white" />
+            <div className="logo-icon" aria-hidden="true">
+              <Music className="w-4 h-4 text-white" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-primary-dark">
+            <h1 className="text-base sm:text-lg font-semibold text-foreground">
               Settings
             </h1>
           </div>
@@ -64,7 +59,7 @@ export default function SettingsPage() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {/* Connected Accounts */}
         <Card
-          className="glass-card border-white/40 hover-lift"
+          className="hover-lift"
           role="region"
           aria-labelledby="connected-accounts-settings-heading"
         >
@@ -100,7 +95,7 @@ export default function SettingsPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-white/30 text-primary-dark hover:bg-white/20 bg-transparent rounded-xl focus-visible:outline-2 focus-visible:outline-gray-800 focus-visible:outline-offset-2"
+                  className="focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
                 >
                   <RefreshCw className="w-4 h-4 mr-1" />
                   Refresh
@@ -140,7 +135,7 @@ export default function SettingsPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-white/30 text-primary-dark hover:bg-white/20 bg-transparent rounded-xl focus-visible:outline-2 focus-visible:outline-gray-800 focus-visible:outline-offset-2"
+                  className="focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
                 >
                   <RefreshCw className="w-4 h-4 mr-1" />
                   Refresh
@@ -160,7 +155,7 @@ export default function SettingsPage() {
 
         {/* Sync Preferences */}
         <Card
-          className="glass-card border-white/40 hover-lift"
+          className="hover-lift"
           role="region"
           aria-labelledby="sync-preferences-heading"
         >
@@ -240,7 +235,7 @@ export default function SettingsPage() {
 
         {/* Notifications */}
         <Card
-          className="glass-card border-white/40 hover-lift"
+          className="hover-lift"
           role="region"
           aria-labelledby="notification-preferences-heading"
         >

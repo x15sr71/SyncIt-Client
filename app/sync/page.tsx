@@ -200,7 +200,7 @@ export default function SyncPage() {
             getStepStatus={getStepStatus}
           />
 
-          <div className="max-w-4xl mx-auto glass-effect rounded-3xl p-8 md:p-10">
+          <div className="max-w-4xl mx-auto glass-effect rounded-xl2 p-8 md:p-10">
             {currentStep === 0 && (
               <PlatformConnect
                 platform="youtube"

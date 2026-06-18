@@ -35,33 +35,33 @@ export function ConfirmationDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <Card className="w-full max-w-md bg-white/15 backdrop-blur-20 border border-white/30 rounded-3xl shadow-2xl">
-        <CardHeader className="pb-4 border-b border-white/20">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-900/40 backdrop-blur-sm fade-in-up">
+      <Card className="w-full max-w-md shadow-elev">
+        <CardHeader className="pb-4 border-b border-border">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div
-                className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl ${
+                className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                   confirmVariant === "destructive"
-                    ? "bg-red-500/20 border-2 border-red-500/40"
-                    : "bg-yellow-500/20 border-2 border-yellow-500/40"
+                    ? "bg-red-50 border border-red-200"
+                    : "bg-amber-50 border border-amber-200"
                 }`}
               >
                 {icon || (
                   <AlertTriangle
-                    className={`w-6 h-6 ${confirmVariant === "destructive" ? "text-red-600" : "text-yellow-600"}`}
+                    className={`w-5 h-5 ${confirmVariant === "destructive" ? "text-red-600" : "text-amber-600"}`}
                   />
                 )}
               </div>
-              <CardTitle className="text-primary-dark text-xl font-bold">
+              <CardTitle className="text-foreground text-lg font-semibold">
                 {title}
               </CardTitle>
             </div>
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               onClick={onClose}
-              className="text-secondary-dark hover:text-primary-dark hover:bg-white/20 rounded-xl transition-all"
+              className="h-8 w-8 text-muted-foreground hover:text-foreground"
               aria-label="Close dialog"
             >
               <X className="w-4 h-4" />
@@ -69,24 +69,21 @@ export function ConfirmationDialog({
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-6">
-          <p className="text-secondary-dark leading-relaxed">{message}</p>
+        <CardContent className="space-y-6 pt-6">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            {message}
+          </p>
 
-          <div className="flex space-x-3 pt-4">
-            <Button
-              variant="outline"
-              onClick={onClose}
-              className="flex-1 rounded-2xl border-white/30 text-secondary-dark hover:bg-white/10 hover:text-primary-dark bg-transparent shadow-lg transition-all hover:scale-105"
-            >
+          <div className="flex space-x-3">
+            <Button variant="outline" onClick={onClose} className="flex-1">
               Cancel
             </Button>
             <Button
               onClick={handleConfirm}
-              className={`flex-1 rounded-2xl font-semibold shadow-xl transition-all hover:scale-105 ${
-                confirmVariant === "destructive"
-                  ? "bg-red-500 hover:bg-red-600 text-white"
-                  : "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
-              }`}
+              variant={
+                confirmVariant === "destructive" ? "destructive" : "default"
+              }
+              className="flex-1"
             >
               {confirmText}
             </Button>
