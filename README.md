@@ -117,6 +117,13 @@ Install Dependencies
 npm install
 ```
 
+Create a `.env.local` from `.env.example`. In development the client calls
+the backend directly at `NEXT_PUBLIC_BACKEND_URL` (default
+`http://127.0.0.1:3002`). **Open the app at `http://127.0.0.1:3000`, not
+`localhost:3000`** — Spotify's OAuth redirect URI must use the loopback IP
+and session cookies are host-scoped, so every dev URL must agree on the
+host.
+
 Run the Development Server
 
 ```
@@ -128,6 +135,19 @@ Build for Production
 ```
 npm run build && npm run start
 ```
+
+### How the client reaches the backend in production
+
+`next.config.mjs` rewrites `/api/backend/:path*` to the deployed backend
+(`BACKEND_INTERNAL_URL`, falling back to `NEXT_PUBLIC_BACKEND_URL`). All
+browser traffic — API calls *and* the OAuth login/callback navigations — is
+same-origin, so the backend's `sameSite: 'lax'` session cookie works without
+third-party-cookie tricks. OAuth provider redirect URIs must therefore point
+at `https://<client-domain>/api/backend/{google,spotify,youtube}/callback`.
+
+Alternative (documented, not wired): host client and backend on subdomains
+of one registrable domain and switch the backend cookie to
+`sameSite: 'none'; secure` with a shared `domain` — see the backend README.
 
 ## 💡 About SyncIt
 
