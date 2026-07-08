@@ -1,13 +1,28 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
-const stats = [
-  { label: "Total syncs", value: "24" },
-  { label: "Tracks moved", value: "2,847" },
-  { label: "Success rate", value: "95%" },
-  { label: "Pending review", value: "3" },
-];
+interface QuickStatsProps {
+  totalSyncs?: number;
+  tracksMigrated?: number;
+  successRate?: number | null;
+  activeAutoSyncs?: number;
+}
 
-export default function QuickStats() {
+export default function QuickStats({
+  totalSyncs,
+  tracksMigrated,
+  successRate,
+  activeAutoSyncs,
+}: QuickStatsProps) {
+  const stats = [
+    { label: "Total syncs", value: totalSyncs?.toLocaleString() ?? "—" },
+    { label: "Tracks moved", value: tracksMigrated?.toLocaleString() ?? "—" },
+    {
+      label: "Success rate",
+      value: successRate === null || successRate === undefined ? "—" : `${successRate}%`,
+    },
+    { label: "Auto-syncs on", value: activeAutoSyncs?.toLocaleString() ?? "—" },
+  ];
+
   return (
     <Card
       className="hover-lift min-w-0"

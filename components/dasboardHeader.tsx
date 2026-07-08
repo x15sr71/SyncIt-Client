@@ -1,4 +1,4 @@
-import { Music, Settings, User, Sun, Moon, Menu, X } from "lucide-react";
+import { Music, Settings, User, Sun, Moon, Menu, X, LogOut } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -8,6 +8,7 @@ interface DashboardHeaderProps {
   setDarkMode: (value: boolean) => void;
   isMobileMenuOpen: boolean;
   setIsMobileMenuOpen: (value: boolean) => void;
+  onLogout?: () => void;
 }
 
 export default function DashboardHeader({
@@ -15,6 +16,7 @@ export default function DashboardHeader({
   setDarkMode,
   isMobileMenuOpen,
   setIsMobileMenuOpen,
+  onLogout,
 }: DashboardHeaderProps) {
   return (
     <header
@@ -69,6 +71,13 @@ export default function DashboardHeader({
                 Profile
               </Button>
             </Link>
+
+            {onLogout && (
+              <Button variant="ghost" size="sm" onClick={onLogout}>
+                <LogOut className="w-4 h-4" />
+                Log out
+              </Button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -138,6 +147,19 @@ export default function DashboardHeader({
                   Profile
                 </Button>
               </Link>
+              {onLogout && (
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    onLogout();
+                  }}
+                >
+                  <LogOut className="w-4 h-4" />
+                  Log out
+                </Button>
+              )}
             </div>
           </nav>
         )}

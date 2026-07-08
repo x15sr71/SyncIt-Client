@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,8 +8,12 @@ import { Music, Check, Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { backendUrl } from "@/utils/api";
+import useMe from "@/hooks/useMe";
 
 export default function ConnectPage() {
+  // Real connection status from GET /me — previously this state was never
+  // set, so "Continue" could never enable.
+  const { me, unauthenticated } = useMe();
   const [connections, setConnections] = useState({
     spotify: false,
     youtube: false,
@@ -20,11 +24,29 @@ export default function ConnectPage() {
   });
   const router = useRouter();
 
+  useEffect(() => {
+    if (me) {
+      setConnections({
+        spotify: me.connections.spotify.connected && !me.connections.spotify.needsReconnect,
+        youtube: me.connections.youtube.connected && !me.connections.youtube.needsReconnect,
+      });
+    }
+  }, [me]);
+
+  useEffect(() => {
+    if (unauthenticated) {
+      router.push("/auth");
+    }
+  }, [unauthenticated, router]);
+
   const handleConnect = async (platform: "spotify" | "youtube") => {
     setLoading((prev) => ({ ...prev, [platform]: true }));
 
-    // Redirect to backend OAuth endpoint
-    window.location.href = backendUrl(`/${platform}/login`);
+    // Redirect to backend OAuth endpoint; come back to this page after.
+    const redirectAfter = encodeURIComponent("/connect");
+    window.location.href = backendUrl(
+      `/${platform}/login?redirect_after=${redirectAfter}`,
+    );
   };
 
   const canProceed = connections.spotify && connections.youtube;

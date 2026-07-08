@@ -24,6 +24,9 @@ import DashboardHeader from "@/components/dasboardHeader";
 import useGetSpotifyPlaylists, {
   SpotifyPlaylist,
 } from "@/hooks/getSpotifyPlaylists";
+import useMe from "@/hooks/useMe";
+import apiClient, { backendUrl } from "@/utils/api";
+import { useRouter } from "next/navigation";
 import useGetYoutubePlaylists from "@/hooks/getYoutubePlaylists";
 import useSpotifyActions from "@/hooks/useSpotifyActions";
 import useYouTubeActions from "@/hooks/useYouTubeActions";
@@ -31,6 +34,32 @@ import useYouTubeActions from "@/hooks/useYouTubeActions";
 
 export default function DashboardPage() {
   const dashboard = useDashboardState();
+  const router = useRouter();
+
+  // Session, connection status and sync stats from GET /me
+  const { me, unauthenticated, refetch: refetchMe } = useMe();
+
+  useEffect(() => {
+    if (unauthenticated) {
+      router.push("/auth");
+    }
+  }, [unauthenticated, router]);
+
+  const handleConnectPlatform = (platform: "spotify" | "youtube") => {
+    const redirectAfter = encodeURIComponent("/dashboard");
+    window.location.href = backendUrl(
+      `/${platform}/login?redirect_after=${redirectAfter}`,
+    );
+  };
+
+  const handleLogout = async () => {
+    try {
+      await apiClient.post("/auth/logout");
+    } catch {
+      // best-effort — clear the client either way
+    }
+    router.push("/auth");
+  };
 
   // Playlist fetches
   const { fetchPlaylists, spotifyPlaylists } = useGetSpotifyPlaylists();
@@ -183,6 +212,9 @@ export default function DashboardPage() {
 
     // Show migration results dialog
     dashboard.setShowMigrationResult(true);
+
+    // Refresh /me so stats and recent syncs reflect the new run
+    refetchMe();
   };
 
   const handleMigrationError = (error: string) => {
@@ -220,11 +252,26 @@ export default function DashboardPage() {
         setDarkMode={dashboard.setDarkMode}
         isMobileMenuOpen={dashboard.isMobileMenuOpen}
         setIsMobileMenuOpen={dashboard.setIsMobileMenuOpen}
+        onLogout={handleLogout}
       />
       <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-w-0">
         <div className="grid lg:grid-cols-4 gap-6 lg:gap-8 w-full min-w-0">
           <div className="lg:col-span-3 space-y-6 w-full min-w-0">
-            <ConnectedAccounts />
+            <ConnectedAccounts
+              spotify={me?.connections.spotify}
+              youtube={me?.connections.youtube}
+              spotifyPlaylistCount={
+                localSpotifyPlaylists.length > 0
+                  ? localSpotifyPlaylists.length
+                  : undefined
+              }
+              youtubePlaylistCount={
+                localYoutubePlaylists.length > 0
+                  ? localYoutubePlaylists.length
+                  : undefined
+              }
+              onConnect={handleConnectPlatform}
+            />
             <PlaylistSelection
               selectedSource={dashboard.selectedSource}
               setSelectedSource={dashboard.setSelectedSource}
@@ -258,8 +305,20 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="space-y-6 w-full min-w-0">
-            <RecentSyncs />
-            <QuickStats />
+            <RecentSyncs
+              syncs={me?.recentSyncs}
+              resolvePlaylistName={(playlistId) =>
+                [...transformedSpotifyPlaylists, ...transformedYoutubePlaylists].find(
+                  (p) => p.id === playlistId,
+                )?.name
+              }
+            />
+            <QuickStats
+              totalSyncs={me?.stats.totalSyncs}
+              tracksMigrated={me?.stats.tracksMigrated}
+              successRate={me?.stats.successRate}
+              activeAutoSyncs={me?.stats.activeAutoSyncs}
+            />
           </div>
         </div>
       </main>
