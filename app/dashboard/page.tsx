@@ -25,6 +25,7 @@ import useGetSpotifyPlaylists, {
   SpotifyPlaylist,
 } from "@/hooks/getSpotifyPlaylists";
 import useMe from "@/hooks/useMe";
+import useAutoSync, { FREQUENCY_TO_MINUTES } from "@/hooks/useAutoSync";
 import apiClient, { backendUrl } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import useGetYoutubePlaylists from "@/hooks/getYoutubePlaylists";
@@ -38,6 +39,7 @@ export default function DashboardPage() {
 
   // Session, connection status and sync stats from GET /me
   const { me, unauthenticated, refetch: refetchMe } = useMe();
+  const { enableAutoSync } = useAutoSync();
 
   useEffect(() => {
     if (unauthenticated) {
@@ -371,7 +373,32 @@ export default function DashboardPage() {
       <SyncPreferencesDialog
         isOpen={dashboard.showSyncPreferences}
         onClose={() => dashboard.setShowSyncPreferences(false)}
-        onConfirm={handlers.handleSyncPreferencesConfirm}
+        onConfirm={async (frequency) => {
+          // Wire "Keep in Sync" to the auto-sync backend — the dialog
+          // previously only cleared local state (audit P2-11).
+          const playlistId = dashboard.selectedPlaylistForMigration;
+          const intervalMinutes = FREQUENCY_TO_MINUTES[frequency] ?? 60;
+          if (!playlistId) {
+            showToast("Could not determine which playlist to keep in sync", "error");
+            return;
+          }
+          try {
+            await enableAutoSync({
+              playlistId,
+              sourcePlatform: dashboard.selectedSource,
+              destinationPlatform: dashboard.selectedTarget,
+              intervalMinutes,
+            });
+            showToast(
+              `Auto-sync enabled (every ${intervalMinutes >= 1440 ? "24 hours" : intervalMinutes >= 180 ? "3 hours" : "hour"})`,
+              "success",
+            );
+            refetchMe();
+          } catch (err: any) {
+            showToast(err?.message || "Failed to enable auto-sync", "error");
+          }
+          handlers.handleSyncPreferencesConfirm();
+        }}
         playlistName={dashboard.migrationResults.playlistName}
       />
       <ConfirmationDialog
