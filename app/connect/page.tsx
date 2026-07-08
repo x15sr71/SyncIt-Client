@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Music, Check, Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { backendUrl } from "@/utils/api";
 
 export default function ConnectPage() {
   const [connections, setConnections] = useState({
@@ -23,9 +24,7 @@ export default function ConnectPage() {
     setLoading((prev) => ({ ...prev, [platform]: true }));
 
     // Redirect to backend OAuth endpoint
-    const backendUrl =
-      process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3002";
-    window.location.href = `${backendUrl}/${platform}/login`;
+    window.location.href = backendUrl(`/${platform}/login`);
   };
 
   const canProceed = connections.spotify && connections.youtube;

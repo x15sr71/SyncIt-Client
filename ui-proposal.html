@@ -1,0 +1,1681 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SyncIt — UI Proposal (mockup)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Geist", "system-ui", "sans-serif"],
+              mono: ["Geist Mono", "monospace"],
+            },
+            colors: {
+              ink: {
+                900: "#0f0e17",
+                800: "#1a1925",
+                700: "#2a2838",
+                600: "#3a384c",
+                500: "#5c5870",
+                400: "#878398",
+                300: "#a8a4b8",
+                200: "#d4d1de",
+                100: "#ebe9f0",
+                50: "#f7f6fa",
+              },
+              brand: {
+                50: "#f0eefb",
+                100: "#dcd6f5",
+                200: "#b6abe9",
+                300: "#8a78d8",
+                400: "#7561cf",
+                500: "#5e4dbf",
+                600: "#4b3da3",
+                700: "#3d3286",
+              },
+              accent: {
+                indigo: "#667eea",
+                violet: "#764ba2",
+              },
+              platform: {
+                spotify: "#1db954",
+                youtube: "#ff3b3b",
+              },
+            },
+            boxShadow: {
+              soft: "0 1px 2px rgba(15,14,23,0.04), 0 1px 3px rgba(15,14,23,0.04)",
+              card: "0 1px 2px rgba(15,14,23,0.04), 0 4px 16px rgba(15,14,23,0.05)",
+              elev: "0 8px 28px rgba(94,77,191,0.10), 0 2px 6px rgba(15,14,23,0.04)",
+            },
+            borderRadius: {
+              xl2: "14px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :root {
+        --bg-soft: #fbfaff;
+        --bg-page: #f5f3fb;
+        --surface: #ffffff;
+        --border: #ebe7f3;
+        --border-strong: #d8d1ec;
+        --ink-900: #0f0e17;
+        --ink-700: #2a2838;
+        --ink-500: #5c5870;
+        --ink-400: #878398;
+        --brand-grad: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --brand-grad-soft: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.08),
+          rgba(118, 75, 162, 0.08)
+        );
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Geist", system-ui, -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background:
+          radial-gradient(
+            1200px 600px at 20% -10%,
+            rgba(102, 126, 234, 0.07),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px 500px at 100% 10%,
+            rgba(118, 75, 162, 0.06),
+            transparent 60%
+          ),
+          var(--bg-page);
+        color: var(--ink-900);
+        letter-spacing: -0.005em;
+      }
+
+      .brand-grad {
+        background: var(--brand-grad);
+      }
+      .brand-text {
+        background: var(--brand-grad);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .brand-border {
+        border: 1px solid var(--border);
+      }
+      .brand-border-strong {
+        border: 1px solid var(--border-strong);
+      }
+
+      /* Subtle entry animation */
+      .fade-in-up {
+        animation: fade-in-up 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .stagger > * {
+        opacity: 0;
+        animation: fade-in-up 320ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+      .stagger > *:nth-child(1) {
+        animation-delay: 40ms;
+      }
+      .stagger > *:nth-child(2) {
+        animation-delay: 100ms;
+      }
+      .stagger > *:nth-child(3) {
+        animation-delay: 160ms;
+      }
+      .stagger > *:nth-child(4) {
+        animation-delay: 220ms;
+      }
+      .stagger > *:nth-child(5) {
+        animation-delay: 280ms;
+      }
+      .stagger > *:nth-child(6) {
+        animation-delay: 340ms;
+      }
+
+      @keyframes fade-in-up {
+        from {
+          opacity: 0;
+          transform: translate3d(0, 8px, 0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+
+      /* Card hover — barely there */
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        transition:
+          border-color 150ms ease-out,
+          box-shadow 200ms ease-out,
+          transform 150ms ease-out;
+      }
+      .card-hover:hover {
+        border-color: var(--border-strong);
+        box-shadow: 0 1px 2px rgba(15, 14, 23, 0.04),
+          0 6px 20px rgba(94, 77, 191, 0.06);
+        transform: translateY(-1px);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-weight: 500;
+        line-height: 1;
+        border-radius: 10px;
+        padding: 0.6rem 1rem;
+        font-size: 0.92rem;
+        transition:
+          background-color 140ms ease-out,
+          color 140ms ease-out,
+          border-color 140ms ease-out,
+          transform 140ms ease-out,
+          box-shadow 200ms ease-out;
+        will-change: transform;
+      }
+      .btn:active {
+        transform: scale(0.99);
+      }
+      .btn-primary {
+        background: var(--brand-grad);
+        color: white;
+        box-shadow: 0 4px 14px rgba(94, 77, 191, 0.22);
+      }
+      .btn-primary:hover {
+        box-shadow: 0 6px 20px rgba(94, 77, 191, 0.32);
+        transform: translateY(-1px);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--ink-700);
+      }
+      .btn-ghost:hover {
+        background: rgba(102, 126, 234, 0.07);
+        color: var(--ink-900);
+      }
+      .btn-outline {
+        background: var(--surface);
+        color: var(--ink-700);
+        border: 1px solid var(--border-strong);
+      }
+      .btn-outline:hover {
+        border-color: #b9aed8;
+        color: var(--ink-900);
+      }
+      .btn-danger-outline {
+        background: var(--surface);
+        color: #b42318;
+        border: 1px solid #f3c5c1;
+      }
+      .btn-danger-outline:hover {
+        background: #fef2f1;
+      }
+
+      .input {
+        width: 100%;
+        background: var(--surface);
+        border: 1px solid var(--border-strong);
+        border-radius: 10px;
+        padding: 0.6rem 0.85rem;
+        font-size: 0.92rem;
+        color: var(--ink-900);
+        transition:
+          border-color 140ms ease-out,
+          box-shadow 200ms ease-out;
+      }
+      .input:focus {
+        outline: none;
+        border-color: #8a78d8;
+        box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.12);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.72rem;
+        font-weight: 500;
+        padding: 0.22rem 0.55rem;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+      }
+      .badge-success {
+        color: #166534;
+        background: #ecfdf3;
+        border-color: #c7f0d8;
+      }
+      .badge-info {
+        color: #1e40af;
+        background: #eef2ff;
+        border-color: #d1d8f5;
+      }
+      .badge-warn {
+        color: #92400e;
+        background: #fef6e0;
+        border-color: #f3e0a8;
+      }
+      .badge-brand {
+        color: #3d3286;
+        background: #efebfb;
+        border-color: #d8cef0;
+      }
+      .badge-error {
+        color: #b42318;
+        background: #fef2f1;
+        border-color: #f3c5c1;
+      }
+      .badge-muted {
+        color: var(--ink-500);
+        background: #f4f2f8;
+      }
+
+      .text-secondary {
+        color: var(--ink-500);
+      }
+      .text-muted {
+        color: var(--ink-400);
+      }
+
+      .divider {
+        border-top: 1px solid var(--border);
+      }
+
+      /* Sync motif — soft pulse between platform icons */
+      .sync-link {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .sync-pulse {
+        height: 2px;
+        width: 56px;
+        background: linear-gradient(
+          90deg,
+          rgba(102, 126, 234, 0.0),
+          rgba(102, 126, 234, 0.45),
+          rgba(118, 75, 162, 0.45),
+          rgba(118, 75, 162, 0.0)
+        );
+        background-size: 200% 100%;
+        border-radius: 999px;
+        animation: sync-flow 3.6s ease-in-out infinite;
+      }
+      .sync-dot {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: #764ba2;
+        transform: translate(-50%, -50%);
+        animation: sync-dot 3.6s ease-in-out infinite;
+        box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.12);
+      }
+      @keyframes sync-flow {
+        0% {
+          background-position: 150% 0;
+        }
+        100% {
+          background-position: -150% 0;
+        }
+      }
+      @keyframes sync-dot {
+        0%,
+        100% {
+          opacity: 0;
+          transform: translate(-180%, -50%);
+        }
+        45% {
+          opacity: 1;
+        }
+        55% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          transform: translate(180%, -50%);
+        }
+      }
+
+      .logo-mark {
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        background: var(--brand-grad);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        box-shadow: 0 4px 14px rgba(94, 77, 191, 0.28);
+      }
+      .logo-mark.sm {
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+      }
+      .logo-mark.lg {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+      }
+
+      .platform-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.45rem 0.7rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-weight: 500;
+        font-size: 0.88rem;
+      }
+      .platform-icon {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 700;
+      }
+      .platform-icon.spotify {
+        background: #1db954;
+      }
+      .platform-icon.youtube {
+        background: #ff3b3b;
+      }
+
+      /* Nav switcher */
+      .nav-pill {
+        padding: 0.35rem 0.7rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--ink-500);
+        transition:
+          color 140ms ease-out,
+          background-color 140ms ease-out;
+        white-space: nowrap;
+      }
+      .nav-pill:hover {
+        color: var(--ink-900);
+        background: rgba(118, 75, 162, 0.06);
+      }
+      .nav-pill.active {
+        color: white;
+        background: var(--brand-grad);
+        box-shadow: 0 4px 12px rgba(94, 77, 191, 0.22);
+      }
+
+      .page {
+        display: none;
+      }
+      .page.active {
+        display: block;
+      }
+
+      /* Progress */
+      .progress-track {
+        height: 6px;
+        background: #ece8f7;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--brand-grad);
+        border-radius: 999px;
+      }
+
+      /* Footer of mockup viewport */
+      .legend-bar {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.86);
+        border-bottom: 1px solid var(--border);
+      }
+
+      /* Subtle hover on rows */
+      .row-hover {
+        transition: background-color 140ms ease-out;
+      }
+      .row-hover:hover {
+        background: rgba(102, 126, 234, 0.04);
+      }
+
+      /* Floating "soft" decorative blobs (very subtle, replaces aggressive gradient bg) */
+      .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        opacity: 0.45;
+        pointer-events: none;
+      }
+      .blob-a {
+        width: 360px;
+        height: 360px;
+        background: rgba(102, 126, 234, 0.25);
+      }
+      .blob-b {
+        width: 320px;
+        height: 320px;
+        background: rgba(118, 75, 162, 0.22);
+      }
+
+      /* Stepper */
+      .step-dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.78rem;
+        font-weight: 600;
+        background: #ece8f7;
+        color: var(--ink-500);
+        border: 1px solid var(--border);
+      }
+      .step-dot.active {
+        background: var(--brand-grad);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 12px rgba(94, 77, 191, 0.28);
+      }
+      .step-dot.done {
+        background: #efebfb;
+        color: #3d3286;
+        border-color: #d8cef0;
+      }
+      .step-line {
+        height: 2px;
+        flex: 1;
+        background: #ece8f7;
+        border-radius: 999px;
+      }
+      .step-line.done {
+        background: linear-gradient(90deg, #8a78d8, #c1b2e8);
+      }
+
+      /* Reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        .fade-in-up,
+        .stagger > *,
+        .sync-pulse,
+        .sync-dot {
+          animation: none !important;
+        }
+        * {
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* Mobile: legend bar wraps */
+      @media (max-width: 720px) {
+        .nav-scroller {
+          overflow-x: auto;
+          padding-bottom: 6px;
+          -webkit-overflow-scrolling: touch;
+        }
+        .nav-scroller::-webkit-scrollbar {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <!-- ===== Legend / Page switcher ===== -->
+    <div class="legend-bar sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+        <div class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3 shrink-0">
+            <span class="logo-mark sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M9 18V6l10-2v12"
+                  stroke="white"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <circle cx="6" cy="18" r="3" fill="white" />
+                <circle cx="16" cy="16" r="3" fill="white" />
+              </svg>
+            </span>
+            <div class="flex flex-col leading-tight">
+              <span class="font-semibold text-[0.92rem]"
+                >SyncIt — UI Proposal</span
+              >
+              <span class="text-[0.72rem] text-muted">mockup · v1</span>
+            </div>
+          </div>
+          <nav class="nav-scroller flex items-center gap-1 min-w-0" id="nav">
+            <button class="nav-pill active" data-page="landing">Landing /</button>
+            <button class="nav-pill" data-page="auth">Sign in /auth</button>
+            <button class="nav-pill" data-page="connect">Connect /connect</button>
+            <button class="nav-pill" data-page="dashboard">Dashboard /dashboard</button>
+            <button class="nav-pill" data-page="sync">Sync wizard /sync</button>
+            <button class="nav-pill" data-page="missing">Missing tracks /missing-tracks</button>
+            <button class="nav-pill" data-page="settings">Settings /settings</button>
+            <button class="nav-pill" data-page="profile">Profile /profile</button>
+            <button class="nav-pill" data-page="notfound">404</button>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== LANDING ===================== -->
+    <section id="page-landing" class="page active">
+      <!-- Top app header -->
+      <header class="relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+          <div class="flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2.5">
+              <span class="logo-mark">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M9 18V6l10-2v12"
+                    stroke="white"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <circle cx="6" cy="18" r="3" fill="white" />
+                  <circle cx="16" cy="16" r="3" fill="white" />
+                </svg>
+              </span>
+              <span class="font-semibold text-lg tracking-tight"
+                >Sync<span class="brand-text">It</span></span
+              >
+            </a>
+            <nav class="hidden md:flex items-center gap-1">
+              <a class="nav-pill" href="#features">Features</a>
+              <a class="nav-pill" href="#how">How it works</a>
+              <a class="nav-pill" href="#faq">FAQ</a>
+            </nav>
+            <button
+              class="btn btn-primary"
+              onclick="goto('dashboard')"
+            >
+              Get started
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M5 12h14M13 6l6 6-6 6"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Hero -->
+      <section class="relative overflow-hidden">
+        <span class="blob blob-a" style="top: -120px; right: -80px"></span>
+        <span class="blob blob-b" style="bottom: -160px; left: -100px"></span>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 relative">
+          <div class="grid lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-7 space-y-7 fade-in-up">
+              <div
+                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white brand-border text-[0.78rem] text-secondary"
+              >
+                <span class="w-1.5 h-1.5 rounded-full bg-platform-spotify"></span>
+                Sync music across Spotify · YouTube Music · more soon
+              </div>
+              <h1 class="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.05]">
+                Sync your music<br />
+                <span class="brand-text">everywhere.</span>
+              </h1>
+              <p class="text-lg text-secondary max-w-xl leading-relaxed">
+                Move playlists between Spotify and YouTube Music in one click.
+                Smart matching keeps your favorite tracks intact — even the
+                obscure ones.
+              </p>
+              <div class="flex flex-col sm:flex-row gap-3">
+                <button class="btn btn-primary px-5 py-3" onclick="goto('auth')">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M8 5v14l11-7-11-7z" fill="white" />
+                  </svg>
+                  Start syncing
+                </button>
+                <button
+                  class="btn btn-outline px-5 py-3"
+                  onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})"
+                >
+                  How it works
+                </button>
+              </div>
+              <div class="grid grid-cols-3 gap-6 pt-8 divider">
+                <div>
+                  <div class="text-2xl font-semibold">50K+</div>
+                  <div class="text-sm text-muted">Active users</div>
+                </div>
+                <div>
+                  <div class="text-2xl font-semibold">1M+</div>
+                  <div class="text-sm text-muted">Songs synced</div>
+                </div>
+                <div>
+                  <div class="text-2xl font-semibold">99.9%</div>
+                  <div class="text-sm text-muted">Uptime</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Visual: connected platforms -->
+            <div class="lg:col-span-5">
+              <div class="card p-8 fade-in-up" style="animation-delay: 120ms">
+                <div class="text-xs text-muted font-mono mb-4">live sync</div>
+                <div class="flex items-center justify-between">
+                  <div class="flex flex-col items-center gap-2">
+                    <div
+                      class="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-semibold"
+                      style="background: #1db954"
+                    >
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2" />
+                        <path d="M7 14c3-1 7-1 10 1M7 11c4-1.5 9-1 12 1M8 8c3-1 8-.5 11 1.5" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+                      </svg>
+                    </div>
+                    <div class="text-sm font-medium">Spotify</div>
+                    <div class="text-[0.7rem] text-muted">142 playlists</div>
+                  </div>
+                  <div class="flex-1 px-4 sync-link justify-center">
+                    <div class="sync-pulse"></div>
+                    <span class="sync-dot"></span>
+                  </div>
+                  <div class="flex flex-col items-center gap-2">
+                    <div
+                      class="w-14 h-14 rounded-2xl flex items-center justify-center text-white"
+                      style="background: #ff3b3b"
+                    >
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                        <rect x="3" y="6" width="18" height="12" rx="3" stroke="white" stroke-width="2"/>
+                        <path d="M11 10v4l3-2-3-2z" fill="white"/>
+                      </svg>
+                    </div>
+                    <div class="text-sm font-medium">YouTube Music</div>
+                    <div class="text-[0.7rem] text-muted">98 playlists</div>
+                  </div>
+                </div>
+                <div class="mt-6 divider pt-4 space-y-2">
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-secondary">My Favorites</span>
+                    <span class="badge badge-success">synced · 42</span>
+                  </div>
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-secondary">Workout Mix</span>
+                    <span class="badge badge-info">syncing</span>
+                  </div>
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-secondary">Late-night Drive</span>
+                    <span class="badge badge-muted">queued</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features -->
+      <section id="features" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="max-w-2xl mb-12">
+            <div class="text-sm font-medium brand-text mb-2">Why SyncIt</div>
+            <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight">
+              Built for people with too many playlists.
+            </h2>
+            <p class="text-secondary mt-3">
+              Six things we focused on so switching platforms feels effortless.
+            </p>
+          </div>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 stagger">
+            <!-- 6 feature cards -->
+            <div class="card card-hover p-6">
+              <div class="logo-mark sm mb-4"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="white"/></svg></div>
+              <div class="font-medium mb-1">Lightning fast</div>
+              <p class="text-sm text-secondary">Thousands of songs synced in seconds. Concurrent transfers under the hood.</p>
+            </div>
+            <div class="card card-hover p-6">
+              <div class="logo-mark sm mb-4"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z" stroke="white" stroke-width="2" fill="none"/></svg></div>
+              <div class="font-medium mb-1">Secure &amp; private</div>
+              <p class="text-sm text-secondary">OAuth scopes only. We never store your listening data — read-only by default.</p>
+            </div>
+            <div class="card card-hover p-6">
+              <div class="logo-mark sm mb-4"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="white" stroke-width="2"/><circle cx="17" cy="10" r="2.5" stroke="white" stroke-width="2"/><path d="M3 19c1-3 4-5 6-5s5 2 6 5" stroke="white" stroke-width="2"/></svg></div>
+              <div class="font-medium mb-1">Multi-platform</div>
+              <p class="text-sm text-secondary">Spotify and YouTube Music today. Apple Music, Tidal, Deezer in the pipeline.</p>
+            </div>
+            <div class="card card-hover p-6">
+              <div class="logo-mark sm mb-4"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4-7-11a4 4 0 017-3 4 4 0 017 3c0 7-7 11-7 11z" stroke="white" stroke-width="2"/></svg></div>
+              <div class="font-medium mb-1">Smart matching</div>
+              <p class="text-sm text-secondary">AI-assisted track pairing for live versions, remixes, and edge cases.</p>
+            </div>
+            <div class="card card-hover p-6">
+              <div class="logo-mark sm mb-4"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="white" stroke-width="2"/><path d="M12 7v5l3 2" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+              <div class="font-medium mb-1">Real-time sync</div>
+              <p class="text-sm text-secondary">Keep changes mirrored both ways. Add a song, it's in both libraries.</p>
+            </div>
+            <div class="card card-hover p-6">
+              <div class="logo-mark sm mb-4"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="7" y="3" width="10" height="18" rx="2" stroke="white" stroke-width="2"/><circle cx="12" cy="18" r="1" fill="white"/></svg></div>
+              <div class="font-medium mb-1">Mobile ready</div>
+              <p class="text-sm text-secondary">Works in any modern browser. Native apps are on the roadmap.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section id="how" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="max-w-2xl mb-12">
+            <div class="text-sm font-medium brand-text mb-2">How it works</div>
+            <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight">Three steps. About a minute.</h2>
+          </div>
+          <div class="grid md:grid-cols-3 gap-4 stagger">
+            <div class="card p-6">
+              <div class="text-xs font-mono text-muted mb-3">01</div>
+              <div class="font-medium mb-1">Connect</div>
+              <p class="text-sm text-secondary">Sign in with Google, then connect Spotify and YouTube Music with one click each.</p>
+            </div>
+            <div class="card p-6">
+              <div class="text-xs font-mono text-muted mb-3">02</div>
+              <div class="font-medium mb-1">Pick a playlist</div>
+              <p class="text-sm text-secondary">Choose the playlists you want to move or keep mirrored across platforms.</p>
+            </div>
+            <div class="card p-6">
+              <div class="text-xs font-mono text-muted mb-3">03</div>
+              <div class="font-medium mb-1">Sync</div>
+              <p class="text-sm text-secondary">We match, verify, and report — including any tracks needing manual review.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="faq" class="py-20">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6">
+          <div class="text-sm font-medium brand-text mb-2 text-center">FAQ</div>
+          <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight text-center mb-12">Frequently asked.</h2>
+          <div class="space-y-2" id="faq-list">
+            <details class="card p-5">
+              <summary class="font-medium cursor-pointer flex items-center justify-between">Which platforms do you support?<span class="text-muted">+</span></summary>
+              <p class="text-sm text-secondary mt-3">Spotify and YouTube Music today. Apple Music, Tidal and Deezer are on the roadmap.</p>
+            </details>
+            <details class="card p-5">
+              <summary class="font-medium cursor-pointer flex items-center justify-between">Is my data secure?<span class="text-muted">+</span></summary>
+              <p class="text-sm text-secondary mt-3">Yes. We use OAuth and never store your listening data. You can revoke access from your dashboard anytime.</p>
+            </details>
+            <details class="card p-5">
+              <summary class="font-medium cursor-pointer flex items-center justify-between">How accurate is matching?<span class="text-muted">+</span></summary>
+              <p class="text-sm text-secondary mt-3">Over 95%. The rest land in the Missing Tracks view, where you can confirm or skip.</p>
+            </details>
+            <details class="card p-5">
+              <summary class="font-medium cursor-pointer flex items-center justify-between">Can I sync both directions?<span class="text-muted">+</span></summary>
+              <p class="text-sm text-secondary mt-3">Yes. Pick any source and destination. Continuous two-way sync is opt-in per playlist.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="py-12 border-t" style="border-color: var(--border)">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <span class="logo-mark sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 18V6l10-2v12" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" fill="white"/><circle cx="16" cy="16" r="3" fill="white"/></svg></span>
+            <span class="text-sm text-secondary">© 2026 SyncIt</span>
+          </div>
+          <div class="flex items-center gap-5 text-sm text-muted">
+            <a class="hover:text-ink-900" href="#">Privacy</a>
+            <a class="hover:text-ink-900" href="#">Terms</a>
+            <a class="hover:text-ink-900" href="#">Contact</a>
+          </div>
+        </div>
+      </footer>
+    </section>
+
+    <!-- ===================== AUTH ===================== -->
+    <section id="page-auth" class="page">
+      <div class="min-h-[90vh] flex items-center justify-center relative px-4 py-16">
+        <span class="blob blob-a" style="top: 5%; right: -100px"></span>
+        <span class="blob blob-b" style="bottom: 5%; left: -100px"></span>
+        <div class="w-full max-w-md fade-in-up">
+          <button class="btn btn-ghost mb-4" onclick="goto('landing')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Back to home
+          </button>
+          <div class="card p-8 text-center">
+            <div class="flex justify-center mb-5">
+              <span class="logo-mark lg">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18V6l10-2v12" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" fill="white"/><circle cx="16" cy="16" r="3" fill="white"/></svg>
+              </span>
+            </div>
+            <h2 class="text-2xl font-semibold tracking-tight mb-2">Welcome to SyncIt</h2>
+            <p class="text-secondary text-sm mb-7">Sign in to sync your music across platforms.</p>
+            <button class="btn btn-outline w-full py-3 mb-3" onclick="goto('connect')">
+              <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.5-5.9 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35 26.8 36 24 36c-5.4 0-9.7-3.5-11.3-8L6.2 33C9.6 39.4 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4-4.1 5.3l6.2 5.2C41.7 35.6 44 30.2 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+              Continue with Google
+            </button>
+            <p class="text-xs text-muted mt-4">
+              By signing in, you agree to our
+              <a class="brand-text font-medium" href="#">Terms</a> and
+              <a class="brand-text font-medium" href="#">Privacy Policy</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CONNECT ===================== -->
+    <section id="page-connect" class="page">
+      <div class="min-h-[90vh] flex items-center justify-center relative px-4 py-16">
+        <span class="blob blob-a" style="top: 5%; right: -100px"></span>
+        <span class="blob blob-b" style="bottom: 5%; left: -100px"></span>
+        <div class="w-full max-w-md fade-in-up">
+          <button class="btn btn-ghost mb-4" onclick="goto('auth')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Back to sign in
+          </button>
+          <div class="card p-7">
+            <div class="text-center mb-6">
+              <div class="flex justify-center mb-4">
+                <span class="logo-mark lg">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M16 3l-8 8 8 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 3l8 8-8 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              </div>
+              <h2 class="text-2xl font-semibold tracking-tight mb-1.5">Connect your accounts</h2>
+              <p class="text-secondary text-sm">Link your streaming platforms to start syncing.</p>
+            </div>
+
+            <div class="space-y-3">
+              <div class="card p-4 row-hover flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-11 h-11 rounded-xl flex items-center justify-center text-white" style="background:#1db954">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/><path d="M7 14c3-1 7-1 10 1M7 11c4-1.5 9-1 12 1M8 8c3-1 8-.5 11 1.5" stroke="white" stroke-width="1.6" stroke-linecap="round"/></svg>
+                  </div>
+                  <div>
+                    <div class="font-medium">Spotify</div>
+                    <div class="text-xs text-secondary">Read playlists &amp; library</div>
+                  </div>
+                </div>
+                <button class="btn btn-outline" style="border-color:#1db95466;color:#0a8a3e">Connect</button>
+              </div>
+
+              <div class="card p-4 row-hover flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-11 h-11 rounded-xl flex items-center justify-center text-white" style="background:#ff3b3b">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="3" stroke="white" stroke-width="2"/><path d="M11 10v4l3-2-3-2z" fill="white"/></svg>
+                  </div>
+                  <div>
+                    <div class="font-medium">YouTube Music</div>
+                    <div class="text-xs text-secondary">Read playlists &amp; library</div>
+                  </div>
+                </div>
+                <span class="badge badge-success">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Connected
+                </span>
+              </div>
+            </div>
+
+            <button class="btn btn-primary w-full py-3 mt-6" onclick="goto('dashboard')">
+              Continue to dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== DASHBOARD ===================== -->
+    <section id="page-dashboard" class="page">
+      <!-- App header -->
+      <header class="border-b" style="border-color: var(--border); background: rgba(255,255,255,0.7); backdrop-filter: blur(10px);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <span class="logo-mark sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 18V6l10-2v12" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" fill="white"/><circle cx="16" cy="16" r="3" fill="white"/></svg></span>
+            <span class="font-semibold">Sync<span class="brand-text">It</span></span>
+          </div>
+          <nav class="hidden md:flex items-center gap-1">
+            <button class="nav-pill active">Dashboard</button>
+            <button class="nav-pill" onclick="goto('sync')">Sync</button>
+            <button class="nav-pill" onclick="goto('missing')">Missing tracks</button>
+            <button class="nav-pill" onclick="goto('settings')">Settings</button>
+          </nav>
+          <div class="flex items-center gap-3">
+            <button class="btn btn-ghost px-2.5">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 8a6 6 0 0112 0v5l2 3H4l2-3V8z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 19a2 2 0 004 0" stroke="currentColor" stroke-width="2"/></svg>
+            </button>
+            <button class="flex items-center gap-2 px-2 py-1 rounded-lg row-hover" onclick="goto('profile')">
+              <span class="w-8 h-8 rounded-full brand-grad flex items-center justify-center text-white text-sm font-medium">AJ</span>
+              <span class="hidden md:inline text-sm">Alex</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 fade-in-up">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-7">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight">Welcome back, Alex</h1>
+            <p class="text-secondary text-sm mt-1">2 platforms connected · last sync 12 min ago</p>
+          </div>
+          <button class="btn btn-primary px-5 py-2.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 4v16M4 12h16" stroke="white" stroke-width="2.2" stroke-linecap="round"/></svg>
+            New sync
+          </button>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-5 stagger">
+          <!-- Left col -->
+          <div class="lg:col-span-2 space-y-5">
+
+            <!-- Connected accounts -->
+            <div class="card p-5">
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="font-medium">Connected accounts</h2>
+                <button class="text-xs text-secondary hover:text-ink-900">Manage</button>
+              </div>
+              <div class="grid sm:grid-cols-2 gap-3">
+                <div class="card p-4 row-hover">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white" style="background:#1db954">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/><path d="M7 14c3-1 7-1 10 1M7 11c4-1.5 9-1 12 1M8 8c3-1 8-.5 11 1.5" stroke="white" stroke-width="1.6" stroke-linecap="round"/></svg>
+                      </div>
+                      <div>
+                        <div class="font-medium text-sm">Spotify</div>
+                        <div class="text-xs text-muted">142 playlists</div>
+                      </div>
+                    </div>
+                    <span class="badge badge-success">Active</span>
+                  </div>
+                </div>
+                <div class="card p-4 row-hover">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white" style="background:#ff3b3b">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="3" stroke="white" stroke-width="2"/><path d="M11 10v4l3-2-3-2z" fill="white"/></svg>
+                      </div>
+                      <div>
+                        <div class="font-medium text-sm">YouTube Music</div>
+                        <div class="text-xs text-muted">98 playlists</div>
+                      </div>
+                    </div>
+                    <span class="badge badge-success">Active</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Source / target picker -->
+            <div class="card p-5">
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="font-medium">Pick what to sync</h2>
+                <button class="text-xs text-secondary hover:text-ink-900">Reset</button>
+              </div>
+              <div class="grid sm:grid-cols-[1fr_auto_1fr] gap-3 items-center">
+                <div class="card p-3">
+                  <div class="text-[0.72rem] uppercase tracking-wide text-muted mb-1">From</div>
+                  <div class="platform-chip"><span class="platform-icon spotify">S</span> Spotify</div>
+                </div>
+                <div class="sync-link justify-center hidden sm:flex">
+                  <div class="sync-pulse"></div>
+                  <span class="sync-dot"></span>
+                </div>
+                <div class="sm:hidden flex justify-center"><span class="text-muted">↓</span></div>
+                <div class="card p-3">
+                  <div class="text-[0.72rem] uppercase tracking-wide text-muted mb-1">To</div>
+                  <div class="platform-chip"><span class="platform-icon youtube">Y</span> YouTube Music</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Playlist table -->
+            <div class="card overflow-hidden">
+              <div class="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 divider" style="border-bottom:1px solid var(--border)">
+                <div>
+                  <h2 class="font-medium">Your playlists</h2>
+                  <p class="text-xs text-secondary mt-0.5">Select playlists to migrate · 3 selected · 109 tracks</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="relative">
+                    <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    <input class="input pl-8 py-1.5 text-sm" placeholder="Search playlists" />
+                  </div>
+                </div>
+              </div>
+              <ul class="divide-y" style="border-color: var(--border)">
+                <li class="p-4 flex items-center gap-4 row-hover">
+                  <input type="checkbox" checked class="w-4 h-4 accent-brand-500" />
+                  <div class="w-10 h-10 rounded-lg brand-grad flex-shrink-0"></div>
+                  <div class="flex-1 min-w-0">
+                    <div class="font-medium truncate">My Favorites</div>
+                    <div class="text-xs text-muted">42 tracks · updated 2h ago</div>
+                  </div>
+                  <span class="badge badge-brand">Spotify</span>
+                  <button class="btn btn-ghost p-1.5">⋯</button>
+                </li>
+                <li class="p-4 flex items-center gap-4 row-hover">
+                  <input type="checkbox" checked class="w-4 h-4 accent-brand-500" />
+                  <div class="w-10 h-10 rounded-lg flex-shrink-0" style="background: linear-gradient(135deg,#ff8a3d,#ff3b3b)"></div>
+                  <div class="flex-1 min-w-0">
+                    <div class="font-medium truncate">Workout Mix</div>
+                    <div class="text-xs text-muted">28 tracks · updated yesterday</div>
+                  </div>
+                  <span class="badge badge-brand">Spotify</span>
+                  <button class="btn btn-ghost p-1.5">⋯</button>
+                </li>
+                <li class="p-4 flex items-center gap-4 row-hover">
+                  <input type="checkbox" checked class="w-4 h-4 accent-brand-500" />
+                  <div class="w-10 h-10 rounded-lg flex-shrink-0" style="background: linear-gradient(135deg,#7aa3ff,#3d76ff)"></div>
+                  <div class="flex-1 min-w-0">
+                    <div class="font-medium truncate">Chill Vibes</div>
+                    <div class="text-xs text-muted">39 tracks · updated 3 days ago</div>
+                  </div>
+                  <span class="badge badge-brand">Spotify</span>
+                  <button class="btn btn-ghost p-1.5">⋯</button>
+                </li>
+                <li class="p-4 flex items-center gap-4 row-hover">
+                  <input type="checkbox" class="w-4 h-4 accent-brand-500" />
+                  <div class="w-10 h-10 rounded-lg flex-shrink-0" style="background: linear-gradient(135deg,#22c55e,#118a3a)"></div>
+                  <div class="flex-1 min-w-0">
+                    <div class="font-medium truncate">Late Night Drive</div>
+                    <div class="text-xs text-muted">67 tracks · updated last week</div>
+                  </div>
+                  <span class="badge badge-brand">Spotify</span>
+                  <button class="btn btn-ghost p-1.5">⋯</button>
+                </li>
+                <li class="p-4 flex items-center gap-4 row-hover">
+                  <input type="checkbox" class="w-4 h-4 accent-brand-500" />
+                  <div class="w-10 h-10 rounded-lg flex-shrink-0" style="background: linear-gradient(135deg,#f1a4ff,#b14bff)"></div>
+                  <div class="flex-1 min-w-0">
+                    <div class="font-medium truncate">Indie Picks 2026</div>
+                    <div class="text-xs text-muted">23 tracks · updated 2 weeks ago</div>
+                  </div>
+                  <span class="badge badge-brand">Spotify</span>
+                  <button class="btn btn-ghost p-1.5">⋯</button>
+                </li>
+              </ul>
+            </div>
+
+            <!-- CTA -->
+            <div class="flex justify-end">
+              <button class="btn btn-primary px-6 py-2.5" onclick="goto('sync')">
+                Sync 3 playlists →
+              </button>
+            </div>
+          </div>
+
+          <!-- Right col -->
+          <div class="space-y-5">
+            <div class="card p-5">
+              <div class="flex items-center justify-between mb-3">
+                <h2 class="font-medium">Recent syncs</h2>
+                <button class="text-xs text-secondary hover:text-ink-900">View all</button>
+              </div>
+              <ul class="space-y-3 text-sm">
+                <li class="flex items-center justify-between">
+                  <div>
+                    <div class="font-medium">My Favorites</div>
+                    <div class="text-xs text-muted">2 hours ago · 42 tracks</div>
+                  </div>
+                  <span class="badge badge-success">Done</span>
+                </li>
+                <li class="flex items-center justify-between">
+                  <div>
+                    <div class="font-medium">Road Trip</div>
+                    <div class="text-xs text-muted">Yesterday · 67 tracks</div>
+                  </div>
+                  <span class="badge badge-warn">3 missing</span>
+                </li>
+                <li class="flex items-center justify-between">
+                  <div>
+                    <div class="font-medium">Workout Mix</div>
+                    <div class="text-xs text-muted">3 days ago · 28 tracks</div>
+                  </div>
+                  <span class="badge badge-success">Done</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="card p-5">
+              <h2 class="font-medium mb-4">Quick stats</h2>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="card p-3">
+                  <div class="text-xs text-muted">Total syncs</div>
+                  <div class="text-2xl font-semibold mt-0.5">24</div>
+                </div>
+                <div class="card p-3">
+                  <div class="text-xs text-muted">Tracks moved</div>
+                  <div class="text-2xl font-semibold mt-0.5">2,847</div>
+                </div>
+                <div class="card p-3">
+                  <div class="text-xs text-muted">Success rate</div>
+                  <div class="text-2xl font-semibold mt-0.5">95%</div>
+                </div>
+                <div class="card p-3">
+                  <div class="text-xs text-muted">Pending review</div>
+                  <div class="text-2xl font-semibold mt-0.5">3</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card p-5">
+              <div class="flex items-center gap-3">
+                <div class="sync-link">
+                  <span class="platform-icon spotify">S</span>
+                  <span class="sync-dot" style="position:relative;left:auto;top:auto;transform:none"></span>
+                  <span class="platform-icon youtube">Y</span>
+                </div>
+                <div class="text-sm">
+                  <div class="font-medium">Active sync</div>
+                  <div class="text-xs text-muted">Spotify → YouTube Music</div>
+                </div>
+              </div>
+              <div class="mt-3">
+                <div class="progress-track"><div class="progress-fill" style="width:64%"></div></div>
+                <div class="text-xs text-muted mt-2">27 / 42 tracks · ~30s remaining</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <!-- ===================== SYNC WIZARD ===================== -->
+    <section id="page-sync" class="page">
+      <header class="border-b" style="border-color: var(--border); background: rgba(255,255,255,0.7); backdrop-filter: blur(10px);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <span class="logo-mark sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 18V6l10-2v12" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" fill="white"/><circle cx="16" cy="16" r="3" fill="white"/></svg></span>
+            <span class="font-semibold">Sync<span class="brand-text">It</span></span>
+          </div>
+          <button class="btn btn-ghost" onclick="goto('dashboard')">Cancel</button>
+        </div>
+      </header>
+
+      <main class="max-w-3xl mx-auto px-4 sm:px-6 py-12 fade-in-up">
+        <!-- Stepper -->
+        <div class="flex items-center gap-3 mb-10">
+          <span class="step-dot done">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <div class="step-line done"></div>
+          <span class="step-dot active">2</span>
+          <div class="step-line"></div>
+          <span class="step-dot">3</span>
+          <div class="step-line"></div>
+          <span class="step-dot">4</span>
+        </div>
+
+        <div class="text-sm text-secondary mb-1">Step 2 of 4</div>
+        <h1 class="text-3xl font-semibold tracking-tight mb-2">Choose sync options</h1>
+        <p class="text-secondary mb-8">How would you like to handle these playlists going forward?</p>
+
+        <div class="space-y-3">
+          <label class="card card-hover p-5 flex gap-4 cursor-pointer">
+            <input type="radio" name="mode" checked class="mt-1 accent-brand-500" />
+            <div>
+              <div class="font-medium">One-time migrate</div>
+              <p class="text-sm text-secondary mt-1">Copy these playlists to the destination once. Future changes won't be reflected.</p>
+            </div>
+          </label>
+          <label class="card card-hover p-5 flex gap-4 cursor-pointer">
+            <input type="radio" name="mode" class="mt-1 accent-brand-500" />
+            <div>
+              <div class="font-medium flex items-center gap-2">Keep in sync <span class="badge badge-brand">Recommended</span></div>
+              <p class="text-sm text-secondary mt-1">Mirror changes both ways. Add a track on Spotify, it appears in YouTube Music too.</p>
+            </div>
+          </label>
+          <label class="card card-hover p-5 flex gap-4 cursor-pointer">
+            <input type="radio" name="mode" class="mt-1 accent-brand-500" />
+            <div>
+              <div class="font-medium">Mirror one-way</div>
+              <p class="text-sm text-secondary mt-1">Destination tracks the source. Changes on the destination get overwritten.</p>
+            </div>
+          </label>
+        </div>
+
+        <div class="flex justify-between mt-10">
+          <button class="btn btn-outline">Back</button>
+          <button class="btn btn-primary px-6">Continue</button>
+        </div>
+      </main>
+    </section>
+
+    <!-- ===================== MISSING TRACKS ===================== -->
+    <section id="page-missing" class="page">
+      <header class="border-b" style="border-color: var(--border); background: rgba(255,255,255,0.7); backdrop-filter: blur(10px);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <button class="btn btn-ghost" onclick="goto('dashboard')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Dashboard
+            </button>
+            <div class="hidden sm:flex items-center gap-2.5">
+              <span class="logo-mark sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 18V6l10-2v12" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" fill="white"/><circle cx="16" cy="16" r="3" fill="white"/></svg></span>
+              <span class="font-medium">Missing tracks</span>
+            </div>
+          </div>
+          <span class="badge badge-warn">3 remaining</span>
+        </div>
+      </header>
+
+      <main class="max-w-4xl mx-auto px-4 sm:px-6 py-10 fade-in-up">
+        <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-2">Tracks needing review</h1>
+        <p class="text-secondary mb-7">These couldn't be matched automatically. Confirm a suggestion, search for an alternative, or skip.</p>
+
+        <div class="space-y-3 stagger">
+          <div class="card p-5">
+            <div class="flex items-start justify-between gap-4 mb-4">
+              <div>
+                <div class="font-medium">Rare Song Title</div>
+                <div class="text-sm text-secondary">Obscure Artist</div>
+              </div>
+              <span class="badge badge-warn">Unmatched</span>
+            </div>
+            <div class="text-xs uppercase tracking-wide text-muted mb-2">Suggested matches</div>
+            <div class="space-y-2">
+              <div class="card p-3 flex items-center justify-between row-hover">
+                <div class="text-sm">Similar Song — Different Artist</div>
+                <button class="btn btn-outline">Use this</button>
+              </div>
+              <div class="card p-3 flex items-center justify-between row-hover">
+                <div class="text-sm">Rare Song — Cover Version</div>
+                <button class="btn btn-outline">Use this</button>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 mt-4">
+              <div class="flex-1 relative">
+                <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <input class="input pl-8 py-2 text-sm" placeholder="Search for alternative…" />
+              </div>
+              <button class="btn btn-ghost">Skip</button>
+            </div>
+          </div>
+
+          <div class="card p-5">
+            <div class="flex items-start justify-between gap-4 mb-4">
+              <div>
+                <div class="font-medium">Live Version Track</div>
+                <div class="text-sm text-secondary">Famous Band</div>
+              </div>
+              <span class="badge badge-warn">Unmatched</span>
+            </div>
+            <div class="text-xs uppercase tracking-wide text-muted mb-2">Suggested matches</div>
+            <div class="space-y-2">
+              <div class="card p-3 flex items-center justify-between row-hover">
+                <div class="text-sm">Studio Version — Famous Band</div>
+                <button class="btn btn-outline">Use this</button>
+              </div>
+              <div class="card p-3 flex items-center justify-between row-hover">
+                <div class="text-sm">Live Album Version — Famous Band</div>
+                <button class="btn btn-outline">Use this</button>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 mt-4">
+              <div class="flex-1 relative">
+                <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <input class="input pl-8 py-2 text-sm" placeholder="Search for alternative…" />
+              </div>
+              <button class="btn btn-ghost">Skip</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card p-5 mt-5">
+          <div class="font-medium mb-3">Resolved</div>
+          <div class="space-y-2 text-sm">
+            <div class="flex items-center justify-between row-hover p-1.5 rounded-md">
+              <div>Old Hit <span class="text-muted">by Big Star</span></div>
+              <span class="badge badge-success">Found</span>
+            </div>
+            <div class="flex items-center justify-between row-hover p-1.5 rounded-md">
+              <div>Obscure B-side <span class="text-muted">by Indie Act</span></div>
+              <span class="badge badge-muted">Skipped</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-center mt-8">
+          <button class="btn btn-primary px-6 py-2.5" onclick="goto('dashboard')">Complete sync</button>
+        </div>
+      </main>
+    </section>
+
+    <!-- ===================== SETTINGS ===================== -->
+    <section id="page-settings" class="page">
+      <header class="border-b" style="border-color: var(--border); background: rgba(255,255,255,0.7); backdrop-filter: blur(10px);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center gap-3">
+          <button class="btn btn-ghost" onclick="goto('dashboard')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Dashboard
+          </button>
+          <h1 class="font-semibold">Settings</h1>
+        </div>
+      </header>
+
+      <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10 space-y-5 fade-in-up">
+        <!-- Connected accounts -->
+        <div class="card p-6">
+          <h2 class="font-medium mb-1">Connected accounts</h2>
+          <p class="text-sm text-secondary mb-5">Manage which platforms SyncIt can access.</p>
+          <div class="space-y-3">
+            <div class="card p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white" style="background:#1db954">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/><path d="M7 14c3-1 7-1 10 1M7 11c4-1.5 9-1 12 1M8 8c3-1 8-.5 11 1.5" stroke="white" stroke-width="1.6" stroke-linecap="round"/></svg>
+                </div>
+                <div>
+                  <div class="font-medium text-sm">Spotify</div>
+                  <div class="text-xs text-muted">Connected 2 hours ago</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="badge badge-success">Active</span>
+                <button class="btn btn-outline">Refresh</button>
+                <button class="btn btn-danger-outline">Disconnect</button>
+              </div>
+            </div>
+            <div class="card p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white" style="background:#ff3b3b">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="3" stroke="white" stroke-width="2"/><path d="M11 10v4l3-2-3-2z" fill="white"/></svg>
+                </div>
+                <div>
+                  <div class="font-medium text-sm">YouTube Music</div>
+                  <div class="text-xs text-muted">Connected 2 hours ago</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="badge badge-success">Active</span>
+                <button class="btn btn-outline">Refresh</button>
+                <button class="btn btn-danger-outline">Disconnect</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sync preferences -->
+        <div class="card p-6">
+          <h2 class="font-medium mb-1">Sync preferences</h2>
+          <p class="text-sm text-secondary mb-5">Control how SyncIt operates across your library.</p>
+          <div class="divide-y" style="border-color: var(--border)">
+            <div class="py-4 flex items-center justify-between">
+              <div>
+                <div class="font-medium text-sm">Auto sync</div>
+                <div class="text-xs text-secondary">Automatically sync new playlists and changes.</div>
+              </div>
+              <button class="toggle" data-on="false" onclick="toggle(this)">
+                <span></span>
+              </button>
+            </div>
+            <div class="py-4 flex items-center justify-between">
+              <div>
+                <div class="font-medium text-sm">Push notifications</div>
+                <div class="text-xs text-secondary">Get notified when syncs complete.</div>
+              </div>
+              <button class="toggle" data-on="true" onclick="toggle(this)">
+                <span></span>
+              </button>
+            </div>
+            <div class="py-4 flex items-center justify-between">
+              <div>
+                <div class="font-medium text-sm">Email updates</div>
+                <div class="text-xs text-secondary">Weekly sync summary by email.</div>
+              </div>
+              <button class="toggle" data-on="false" onclick="toggle(this)">
+                <span></span>
+              </button>
+            </div>
+            <div class="py-4 flex items-center justify-between">
+              <div>
+                <div class="font-medium text-sm">Beta features</div>
+                <div class="text-xs text-secondary">Try experimental features early.</div>
+              </div>
+              <button class="toggle" data-on="false" onclick="toggle(this)">
+                <span></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notification preferences -->
+        <div class="card p-6">
+          <h2 class="font-medium mb-1">Notifications</h2>
+          <p class="text-sm text-secondary mb-5">Choose what to be notified about.</p>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <div class="card p-4">
+              <div class="font-medium text-sm">Sync completion</div>
+              <div class="text-xs text-secondary mb-3">When playlists finish syncing.</div>
+              <div class="flex gap-2"><span class="badge badge-info">Push</span><span class="badge badge-muted">Email</span></div>
+            </div>
+            <div class="card p-4">
+              <div class="font-medium text-sm">Sync errors</div>
+              <div class="text-xs text-secondary mb-3">When tracks can't be matched.</div>
+              <div class="flex gap-2"><span class="badge badge-info">Push</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danger zone -->
+        <div class="card p-6" style="border-color: #f3c5c1">
+          <h2 class="font-medium text-[#b42318] mb-1">Danger zone</h2>
+          <p class="text-sm text-secondary mb-5">These actions are permanent.</p>
+          <div class="space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-xl" style="background:#fef6f5;border:1px solid #f3c5c1">
+              <div>
+                <div class="font-medium text-sm">Clear sync history</div>
+                <div class="text-xs text-secondary">Remove all sync records and statistics.</div>
+              </div>
+              <button class="btn btn-danger-outline">Clear history</button>
+            </div>
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-xl" style="background:#fef6f5;border:1px solid #f3c5c1">
+              <div>
+                <div class="font-medium text-sm">Delete account</div>
+                <div class="text-xs text-secondary">Permanently delete your SyncIt account.</div>
+              </div>
+              <button class="btn btn-danger-outline">Delete account</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <!-- ===================== PROFILE ===================== -->
+    <section id="page-profile" class="page">
+      <header class="border-b" style="border-color: var(--border); background: rgba(255,255,255,0.7); backdrop-filter: blur(10px);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center gap-3">
+          <button class="btn btn-ghost" onclick="goto('dashboard')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Dashboard
+          </button>
+          <h1 class="font-semibold">Profile</h1>
+        </div>
+      </header>
+
+      <main class="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-5 fade-in-up">
+        <div class="card p-6 flex flex-col md:flex-row items-center md:items-start gap-5">
+          <div class="w-20 h-20 rounded-full brand-grad flex items-center justify-center text-white text-2xl font-semibold shadow-elev">AJ</div>
+          <div class="flex-1 text-center md:text-left">
+            <h2 class="text-xl font-semibold">Alex Johnson</h2>
+            <p class="text-secondary text-sm">alex.johnson@example.com</p>
+            <div class="flex flex-wrap gap-2 justify-center md:justify-start mt-3">
+              <span class="badge badge-brand">Free plan</span>
+              <span class="badge badge-success">Verified</span>
+              <span class="badge badge-info">Early adopter</span>
+            </div>
+          </div>
+          <button class="btn btn-primary px-5 py-2.5">Upgrade to Pro</button>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="card p-5">
+            <div class="text-xs text-muted">Total syncs</div>
+            <div class="text-2xl font-semibold mt-1">24</div>
+          </div>
+          <div class="card p-5">
+            <div class="text-xs text-muted">Tracks synced</div>
+            <div class="text-2xl font-semibold mt-1">2,847</div>
+          </div>
+          <div class="card p-5">
+            <div class="text-xs text-muted">Success rate</div>
+            <div class="text-2xl font-semibold mt-1">95%</div>
+          </div>
+          <div class="card p-5">
+            <div class="text-xs text-muted">Member since</div>
+            <div class="text-2xl font-semibold mt-1">Dec '24</div>
+          </div>
+        </div>
+
+        <div class="card p-6">
+          <h2 class="font-medium mb-4">Recent activity</h2>
+          <ul class="divide-y text-sm" style="border-color: var(--border)">
+            <li class="py-3 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-platform-spotify"></span>
+                <div>
+                  <div>Synced "My Favorites"</div>
+                  <div class="text-xs text-muted">2 hours ago</div>
+                </div>
+              </div>
+              <span class="badge badge-success">Success</span>
+            </li>
+            <li class="py-3 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-platform-youtube"></span>
+                <div>
+                  <div>Connected YouTube Music</div>
+                  <div class="text-xs text-muted">2 hours ago</div>
+                </div>
+              </div>
+              <span class="badge badge-success">Success</span>
+            </li>
+            <li class="py-3 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-platform-spotify"></span>
+                <div>
+                  <div>Connected Spotify</div>
+                  <div class="text-xs text-muted">2 hours ago</div>
+                </div>
+              </div>
+              <span class="badge badge-success">Success</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card p-6">
+          <h2 class="font-medium mb-4">Account</h2>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <button class="btn btn-outline">Download my data</button>
+            <button class="btn btn-outline">Export sync history</button>
+            <button class="btn btn-outline" onclick="goto('settings')">Account settings</button>
+            <button class="btn btn-danger-outline">Sign out</button>
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <!-- ===================== 404 ===================== -->
+    <section id="page-notfound" class="page">
+      <div class="min-h-[80vh] flex items-center justify-center relative px-4 py-16">
+        <span class="blob blob-a" style="top: 10%; right: -100px"></span>
+        <span class="blob blob-b" style="bottom: 10%; left: -100px"></span>
+        <div class="text-center fade-in-up max-w-md">
+          <div class="font-mono text-sm text-muted mb-3">404 · not found</div>
+          <h1 class="text-4xl font-semibold tracking-tight mb-3">This page wandered off.</h1>
+          <p class="text-secondary mb-6">The page you're looking for doesn't exist or was moved. Let's get you back to your music.</p>
+          <div class="flex justify-center gap-3">
+            <button class="btn btn-outline" onclick="goto('landing')">Go home</button>
+            <button class="btn btn-primary" onclick="goto('dashboard')">Open dashboard</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toggle styling (cannot use Tailwind only — inlined) -->
+    <style>
+      .toggle {
+        width: 38px;
+        height: 22px;
+        border-radius: 999px;
+        background: #d8d1ec;
+        position: relative;
+        transition: background-color 180ms ease-out;
+        flex-shrink: 0;
+      }
+      .toggle span {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
+        background: white;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .toggle[data-on="true"] {
+        background: var(--brand-grad);
+      }
+      .toggle[data-on="true"] span {
+        transform: translateX(16px);
+      }
+    </style>
+
+    <script>
+      // Page switcher
+      function goto(page) {
+        document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
+        const el = document.getElementById("page-" + page);
+        if (el) {
+          el.classList.add("active");
+          el.classList.remove("fade-in-up");
+          // re-trigger animation
+          void el.offsetWidth;
+          el.classList.add("fade-in-up");
+        }
+        document.querySelectorAll(".nav-pill[data-page]").forEach((b) =>
+          b.classList.toggle("active", b.dataset.page === page),
+        );
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      document.querySelectorAll(".nav-pill[data-page]").forEach((btn) => {
+        btn.addEventListener("click", () => goto(btn.dataset.page));
+      });
+
+      function toggle(btn) {
+        btn.dataset.on = btn.dataset.on === "true" ? "false" : "true";
+      }
+    </script>
+  </body>
+</html>

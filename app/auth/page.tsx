@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Music, Chrome, Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { backendUrl } from "@/utils/api";
 
 export default function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +17,7 @@ export default function AuthPage() {
 
     try {
       // Redirect to your backend Google OAuth endpoint
-      window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3002"}/google/login`;
+      window.location.href = backendUrl("/google/login");
     } catch (error) {
       console.error("Error initiating Google sign-in:", error);
       setIsLoading(false);

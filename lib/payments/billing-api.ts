@@ -14,9 +14,9 @@ import type {
   CreateCheckoutResponse,
   SubscriptionState,
 } from "./types";
+import { backendBaseUrl } from "@/utils/api";
 
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3002";
+const BACKEND_URL = backendBaseUrl;
 
 export class BillingError extends Error {
   readonly status: number;

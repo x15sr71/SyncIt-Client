@@ -9,6 +9,7 @@ import {
   ArrowLeftRight,
   PodcastIcon as SpotifyIcon,
 } from "lucide-react";
+import { backendUrl } from "@/utils/api";
 import { Header } from "@/components/sync/header";
 import { StepsProgress } from "@/components/sync/steps-progress";
 import { PlatformConnect } from "@/components/sync/platform-connect";
@@ -121,11 +122,11 @@ export default function SyncPage() {
 
     // Redirect to backend OAuth endpoint with redirect_after
     // so the callback returns back to /sync with the appropriate success param
-    const backendUrl =
-      process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3002";
     const successParam = `${platform}LoginSuccess=true`;
     const redirectAfter = encodeURIComponent(`/sync?${successParam}`);
-    window.location.href = `${backendUrl}/${platform}/login?redirect_after=${redirectAfter}`;
+    window.location.href = backendUrl(
+      `/${platform}/login?redirect_after=${redirectAfter}`,
+    );
   };
 
   const handleDisconnect = (platform: Platform) => {
