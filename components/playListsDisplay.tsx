@@ -4,6 +4,7 @@ import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { PlaylistPreview } from "@/components/playlist-preview";
 import { Loader2, AlertCircle, Music } from "lucide-react";
+import { backendUrl } from "@/utils/api";
 
 interface Song {
   id: string;
@@ -60,7 +61,12 @@ export default function PlaylistsDisplay({
   sourceError = null,
 }: PlaylistsDisplayProps) {
   const handleConnectSpotify = () => {
-    window.location.href = "/api/auth/spotify";
+    // Real backend OAuth entrypoint for whichever source errored —
+    // "/api/auth/spotify" never existed (audit contract table).
+    const redirectAfter = encodeURIComponent("/dashboard");
+    window.location.href = backendUrl(
+      `/${selectedSource}/login?redirect_after=${redirectAfter}`,
+    );
   };
 
   const handleRetryFetch = () => {

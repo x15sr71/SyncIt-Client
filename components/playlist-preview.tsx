@@ -222,6 +222,7 @@ export function PlaylistPreview({
                 onRename={onRename}
                 onEmpty={onEmpty}
                 onDelete={onDelete}
+                canDelete={playlist.platform !== "spotify"}
               />
             )}
             <Button
