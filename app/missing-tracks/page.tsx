@@ -1,54 +1,107 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Music, ArrowLeft, Search, X, Check } from "lucide-react";
+import { Music, ArrowLeft, Search, X, Check, Loader2 } from "lucide-react";
 import Link from "next/link";
+import apiClient from "@/utils/api";
 
 interface MissingTrack {
   id: string;
   originalTitle: string;
   artist: string;
+  destinationPlatform: "spotify" | "youtube";
+  playlistId: string | null;
   status: "pending" | "found" | "skipped";
   suggestions?: string[];
 }
 
+interface NotFoundEntry {
+  playlistId: string | null;
+  detail: string;
+  lastSyncAt: string | null;
+}
+
+/**
+ * Failure details are stored as human-readable strings:
+ *  - YT→SP: "Title: X\nChannel: Y\nDuration: Z\n"
+ *  - SP→YT: "Track N: title" / "Track: title (failed to add ...)"
+ */
+function parseDetail(detail: string): { title: string; artist: string } {
+  const titleMatch = detail.match(/^Title:\s*(.+)$/m);
+  const channelMatch = detail.match(/^Channel:\s*(.+)$/m);
+  if (titleMatch) {
+    return { title: titleMatch[1].trim(), artist: channelMatch?.[1]?.trim() ?? "" };
+  }
+  const trackMatch = detail.match(/^Track(?:\s*\d+)?:\s*(.+)$/m);
+  if (trackMatch) {
+    return { title: trackMatch[1].trim(), artist: "" };
+  }
+  return { title: detail.replace(/\s+/g, " ").trim(), artist: "" };
+}
+
 export default function MissingTracksPage() {
-  const [missingTracks, setMissingTracks] = useState<MissingTrack[]>([
-    {
-      id: "1",
-      originalTitle: "Rare Song Title",
-      artist: "Obscure Artist",
-      status: "pending",
-      suggestions: [
-        "Similar Song - Different Artist",
-        "Rare Song - Cover Version",
-      ],
-    },
-    {
-      id: "2",
-      originalTitle: "Live Version Track",
-      artist: "Famous Band",
-      status: "pending",
-      suggestions: [
-        "Studio Version - Famous Band",
-        "Live Album Version - Famous Band",
-      ],
-    },
-    {
-      id: "3",
-      originalTitle: "Remix Track",
-      artist: "DJ Producer",
-      status: "pending",
-      suggestions: [
-        "Original Version - Original Artist",
-        "Different Remix - Another DJ",
-      ],
-    },
-  ]);
+  const [missingTracks, setMissingTracks] = useState<MissingTrack[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    async function load() {
+      setLoading(true);
+      setLoadError(null);
+      try {
+        const [spotifyRes, youtubeRes] = await Promise.all([
+          apiClient.get<{ success: boolean; data: { spotify: NotFoundEntry[] } }>(
+            "/getNotFoundTracks",
+            { params: { platform: "spotify" } },
+          ),
+          apiClient.get<{ success: boolean; data: { youtube: NotFoundEntry[] } }>(
+            "/getNotFoundTracks",
+            { params: { platform: "youtube" } },
+          ),
+        ]);
+        if (!active) return;
+
+        const toTracks = (
+          entries: NotFoundEntry[] | undefined,
+          destinationPlatform: "spotify" | "youtube",
+        ): MissingTrack[] =>
+          (entries ?? []).map((entry, index) => {
+            const parsed = parseDetail(entry.detail ?? String(entry));
+            return {
+              id: `${destinationPlatform}-${index}-${entry.playlistId ?? "legacy"}`,
+              originalTitle: parsed.title,
+              artist: parsed.artist,
+              destinationPlatform,
+              playlistId: entry.playlistId,
+              status: "pending",
+            };
+          });
+
+        setMissingTracks([
+          ...toTracks(spotifyRes.data?.data?.spotify, "spotify"),
+          ...toTracks(youtubeRes.data?.data?.youtube, "youtube"),
+        ]);
+      } catch (err: any) {
+        if (!active) return;
+        setLoadError(
+          err?.response?.data?.message || err?.message || "Failed to load missing tracks",
+        );
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+
+    load();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleTrackAction = (trackId: string, action: "found" | "skipped") => {
     setMissingTracks((prev) =>
@@ -105,6 +158,19 @@ export default function MissingTracksPage() {
           </p>
         </div>
 
+        {loading && (
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Loader2 className="w-4 h-4 animate-spin" /> Loading missing tracks…
+          </div>
+        )}
+        {loadError && (
+          <Card>
+            <CardContent className="py-6 text-center text-sm text-red-600">
+              {loadError}
+            </CardContent>
+          </Card>
+        )}
+
         <div className="space-y-3 stagger">
           {pendingTracks.map((track) => (
             <Card key={track.id}>
@@ -123,7 +189,7 @@ export default function MissingTracksPage() {
                       variant="outline"
                       className="border-amber-200 bg-amber-50 text-amber-700"
                     >
-                      Unmatched
+                      Missing on {track.destinationPlatform === "spotify" ? "Spotify" : "YouTube"}
                     </Badge>
                   </div>
 
