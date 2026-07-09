@@ -57,7 +57,10 @@ export default function AuthPage() {
                 className="flex items-center justify-center mb-4"
                 aria-hidden="true"
               >
-                <div className="logo-icon" style={{ width: 56, height: 56, borderRadius: 14 }}>
+                <div
+                  className="logo-icon"
+                  style={{ width: 56, height: 56, borderRadius: 14 }}
+                >
                   <Music className="w-6 h-6 text-white" />
                 </div>
               </div>

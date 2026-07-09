@@ -140,7 +140,7 @@ npm run build && npm run start
 
 `next.config.mjs` rewrites `/api/backend/:path*` to the deployed backend
 (`BACKEND_INTERNAL_URL`, falling back to `NEXT_PUBLIC_BACKEND_URL`). All
-browser traffic — API calls *and* the OAuth login/callback navigations — is
+browser traffic — API calls _and_ the OAuth login/callback navigations — is
 same-origin, so the backend's `sameSite: 'lax'` session cookie works without
 third-party-cookie tricks. OAuth provider redirect URIs must therefore point
 at `https://<client-domain>/api/backend/{google,spotify,youtube}/callback`.

@@ -15,20 +15,29 @@ interface ConnectedAccountsProps {
 function statusBadge(status?: ConnectionStatus) {
   if (!status || !status.connected) {
     return (
-      <Badge variant="outline" className="border-border bg-muted text-muted-foreground">
+      <Badge
+        variant="outline"
+        className="border-border bg-muted text-muted-foreground"
+      >
         Not connected
       </Badge>
     );
   }
   if (status.needsReconnect) {
     return (
-      <Badge variant="outline" className="border-amber-200 bg-amber-50 text-amber-700">
+      <Badge
+        variant="outline"
+        className="border-amber-200 bg-amber-50 text-amber-700"
+      >
         Reconnect
       </Badge>
     );
   }
   return (
-    <Badge variant="outline" className="border-green-200 bg-green-50 text-green-700">
+    <Badge
+      variant="outline"
+      className="border-green-200 bg-green-50 text-green-700"
+    >
       Active
     </Badge>
   );

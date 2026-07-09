@@ -1,4 +1,13 @@
-import { Music, Settings, User, Sun, Moon, Menu, X, LogOut } from "lucide-react";
+import {
+  Music,
+  Settings,
+  User,
+  Sun,
+  Moon,
+  Menu,
+  X,
+  LogOut,
+} from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -119,9 +128,7 @@ export default function DashboardHeader({
                   <Switch
                     checked={darkMode}
                     onCheckedChange={setDarkMode}
-                    aria-label={`Switch to ${
-                      darkMode ? "light" : "dark"
-                    } mode`}
+                    aria-label={`Switch to ${darkMode ? "light" : "dark"} mode`}
                   />
                   <Moon
                     className="w-3.5 h-3.5 text-muted-foreground"
@@ -129,19 +136,13 @@ export default function DashboardHeader({
                   />
                 </div>
               </div>
-              <Link
-                href="/settings"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
+              <Link href="/settings" onClick={() => setIsMobileMenuOpen(false)}>
                 <Button variant="ghost" className="w-full justify-start">
                   <Settings className="w-4 h-4" />
                   Settings
                 </Button>
               </Link>
-              <Link
-                href="/profile"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
+              <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)}>
                 <Button variant="ghost" className="w-full justify-start">
                   <User className="w-4 h-4" />
                   Profile

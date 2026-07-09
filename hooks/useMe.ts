@@ -62,7 +62,11 @@ export default function useMe() {
         setUnauthenticated(true);
         setMe(null);
       } else {
-        setError(err?.response?.data?.message || err?.message || "Failed to load account");
+        setError(
+          err?.response?.data?.message ||
+            err?.message ||
+            "Failed to load account",
+        );
       }
     } finally {
       setLoading(false);

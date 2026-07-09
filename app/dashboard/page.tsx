@@ -310,9 +310,10 @@ export default function DashboardPage() {
             <RecentSyncs
               syncs={me?.recentSyncs}
               resolvePlaylistName={(playlistId) =>
-                [...transformedSpotifyPlaylists, ...transformedYoutubePlaylists].find(
-                  (p) => p.id === playlistId,
-                )?.name
+                [
+                  ...transformedSpotifyPlaylists,
+                  ...transformedYoutubePlaylists,
+                ].find((p) => p.id === playlistId)?.name
               }
             />
             <QuickStats
@@ -379,7 +380,10 @@ export default function DashboardPage() {
           const playlistId = dashboard.selectedPlaylistForMigration;
           const intervalMinutes = FREQUENCY_TO_MINUTES[frequency] ?? 60;
           if (!playlistId) {
-            showToast("Could not determine which playlist to keep in sync", "error");
+            showToast(
+              "Could not determine which playlist to keep in sync",
+              "error",
+            );
             return;
           }
           try {

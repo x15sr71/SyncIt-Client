@@ -8,7 +8,9 @@ interface RecentSyncsProps {
   resolvePlaylistName?: (playlistId: string) => string | undefined;
 }
 
-function toDisplayStatus(status: string | null): "success" | "in-progress" | "failed" {
+function toDisplayStatus(
+  status: string | null,
+): "success" | "in-progress" | "failed" {
   if (status === "SUCCESS" || status === "PARTIAL") return "success";
   if (status === "RUNNING") return "in-progress";
   return "failed";
@@ -26,7 +28,10 @@ function relativeTime(iso: string | null): string {
   return `${days} day${days === 1 ? "" : "s"} ago`;
 }
 
-export default function RecentSyncs({ syncs, resolvePlaylistName }: RecentSyncsProps) {
+export default function RecentSyncs({
+  syncs,
+  resolvePlaylistName,
+}: RecentSyncsProps) {
   return (
     <Card
       className="hover-lift min-w-0"
@@ -51,7 +56,8 @@ export default function RecentSyncs({ syncs, resolvePlaylistName }: RecentSyncsP
             <SyncStatus
               key={sync.id}
               playlistName={
-                resolvePlaylistName?.(sync.sourcePlaylistId) ?? sync.sourcePlaylistId
+                resolvePlaylistName?.(sync.sourcePlaylistId) ??
+                sync.sourcePlaylistId
               }
               status={toDisplayStatus(sync.status)}
               timestamp={

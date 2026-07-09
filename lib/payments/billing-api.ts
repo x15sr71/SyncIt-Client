@@ -48,7 +48,10 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     } catch {
       // non-JSON error body — keep statusText
     }
-    throw new BillingError(detail || `Request failed (${res.status})`, res.status);
+    throw new BillingError(
+      detail || `Request failed (${res.status})`,
+      res.status,
+    );
   }
 
   return (await res.json()) as T;
@@ -70,7 +73,9 @@ export function getSubscription(): Promise<SubscriptionState> {
 }
 
 /** POST /billing/portal */
-export function createPortalSession(returnUrl: string): Promise<{ url: string }> {
+export function createPortalSession(
+  returnUrl: string,
+): Promise<{ url: string }> {
   return request<{ url: string }>("/billing/portal", {
     method: "POST",
     body: JSON.stringify({ returnUrl }),

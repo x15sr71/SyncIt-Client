@@ -34,7 +34,10 @@ function parseDetail(detail: string): { title: string; artist: string } {
   const titleMatch = detail.match(/^Title:\s*(.+)$/m);
   const channelMatch = detail.match(/^Channel:\s*(.+)$/m);
   if (titleMatch) {
-    return { title: titleMatch[1].trim(), artist: channelMatch?.[1]?.trim() ?? "" };
+    return {
+      title: titleMatch[1].trim(),
+      artist: channelMatch?.[1]?.trim() ?? "",
+    };
   }
   const trackMatch = detail.match(/^Track(?:\s*\d+)?:\s*(.+)$/m);
   if (trackMatch) {
@@ -56,14 +59,14 @@ export default function MissingTracksPage() {
       setLoadError(null);
       try {
         const [spotifyRes, youtubeRes] = await Promise.all([
-          apiClient.get<{ success: boolean; data: { spotify: NotFoundEntry[] } }>(
-            "/getNotFoundTracks",
-            { params: { platform: "spotify" } },
-          ),
-          apiClient.get<{ success: boolean; data: { youtube: NotFoundEntry[] } }>(
-            "/getNotFoundTracks",
-            { params: { platform: "youtube" } },
-          ),
+          apiClient.get<{
+            success: boolean;
+            data: { spotify: NotFoundEntry[] };
+          }>("/getNotFoundTracks", { params: { platform: "spotify" } }),
+          apiClient.get<{
+            success: boolean;
+            data: { youtube: NotFoundEntry[] };
+          }>("/getNotFoundTracks", { params: { platform: "youtube" } }),
         ]);
         if (!active) return;
 
@@ -90,7 +93,9 @@ export default function MissingTracksPage() {
       } catch (err: any) {
         if (!active) return;
         setLoadError(
-          err?.response?.data?.message || err?.message || "Failed to load missing tracks",
+          err?.response?.data?.message ||
+            err?.message ||
+            "Failed to load missing tracks",
         );
       } finally {
         if (active) setLoading(false);
@@ -189,7 +194,10 @@ export default function MissingTracksPage() {
                       variant="outline"
                       className="border-amber-200 bg-amber-50 text-amber-700"
                     >
-                      Missing on {track.destinationPlatform === "spotify" ? "Spotify" : "YouTube"}
+                      Missing on{" "}
+                      {track.destinationPlatform === "spotify"
+                        ? "Spotify"
+                        : "YouTube"}
                     </Badge>
                   </div>
 

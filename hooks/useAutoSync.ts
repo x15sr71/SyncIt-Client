@@ -36,7 +36,9 @@ export default function useAutoSync() {
       return response.data;
     } catch (err: any) {
       const message =
-        err?.response?.data?.message || err?.message || "Failed to enable auto-sync";
+        err?.response?.data?.message ||
+        err?.message ||
+        "Failed to enable auto-sync";
       setError(message);
       throw new Error(message);
     } finally {
@@ -44,7 +46,9 @@ export default function useAutoSync() {
     }
   };
 
-  const disableAutoSync = async (params: Omit<EnableAutoSyncParams, "intervalMinutes">) => {
+  const disableAutoSync = async (
+    params: Omit<EnableAutoSyncParams, "intervalMinutes">,
+  ) => {
     setLoading(true);
     setError(null);
     try {
@@ -56,7 +60,9 @@ export default function useAutoSync() {
       return response.data;
     } catch (err: any) {
       const message =
-        err?.response?.data?.message || err?.message || "Failed to disable auto-sync";
+        err?.response?.data?.message ||
+        err?.message ||
+        "Failed to disable auto-sync";
       setError(message);
       throw new Error(message);
     } finally {

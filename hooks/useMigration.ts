@@ -78,7 +78,10 @@ export const useMigration = () => {
       if (err?.response?.status === 409) {
         userFriendlyMessage =
           "Another sync is already running for your account. Please wait for it to finish.";
-      } else if (err?.code === "ERR_NETWORK" || err?.message?.includes("Network Error")) {
+      } else if (
+        err?.code === "ERR_NETWORK" ||
+        err?.message?.includes("Network Error")
+      ) {
         userFriendlyMessage =
           "Cannot connect to the migration server. Please check if the server is running.";
       }

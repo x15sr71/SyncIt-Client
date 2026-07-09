@@ -27,8 +27,12 @@ export default function ConnectPage() {
   useEffect(() => {
     if (me) {
       setConnections({
-        spotify: me.connections.spotify.connected && !me.connections.spotify.needsReconnect,
-        youtube: me.connections.youtube.connected && !me.connections.youtube.needsReconnect,
+        spotify:
+          me.connections.spotify.connected &&
+          !me.connections.spotify.needsReconnect,
+        youtube:
+          me.connections.youtube.connected &&
+          !me.connections.youtube.needsReconnect,
       });
     }
   }, [me]);
@@ -67,11 +71,7 @@ export default function ConnectPage() {
         <div className="w-full max-w-md fade-in-up">
           <div className="mb-4">
             <Link href="/auth">
-              <Button
-                variant="ghost"
-                size="sm"
-                aria-label="Go back to sign in"
-              >
+              <Button variant="ghost" size="sm" aria-label="Go back to sign in">
                 <ArrowLeft className="w-4 h-4" />
                 Back to Sign In
               </Button>
@@ -84,7 +84,10 @@ export default function ConnectPage() {
                 className="flex items-center justify-center mb-4"
                 aria-hidden="true"
               >
-                <div className="logo-icon" style={{ width: 56, height: 56, borderRadius: 14 }}>
+                <div
+                  className="logo-icon"
+                  style={{ width: 56, height: 56, borderRadius: 14 }}
+                >
                   <Music className="w-6 h-6 text-white" />
                 </div>
               </div>

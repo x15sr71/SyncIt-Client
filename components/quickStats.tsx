@@ -18,7 +18,10 @@ export default function QuickStats({
     { label: "Tracks moved", value: tracksMigrated?.toLocaleString() ?? "—" },
     {
       label: "Success rate",
-      value: successRate === null || successRate === undefined ? "—" : `${successRate}%`,
+      value:
+        successRate === null || successRate === undefined
+          ? "—"
+          : `${successRate}%`,
     },
     { label: "Auto-syncs on", value: activeAutoSyncs?.toLocaleString() ?? "—" },
   ];
