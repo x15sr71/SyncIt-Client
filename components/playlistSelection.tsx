@@ -23,16 +23,16 @@ export default function PlaylistSelection({
   return (
     <>
       <Card
-        className="glass-card border-white/40 hover-lift min-w-0"
+        className="hover-lift min-w-0"
         role="region"
         aria-labelledby="platform-selection-heading"
       >
-        <CardHeader>
+        <CardHeader className="pb-3">
           <CardTitle
             id="platform-selection-heading"
-            className="text-primary-dark"
+            className="text-foreground text-base font-semibold"
           >
-            Select Migration Platforms
+            Select migration platforms
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -40,22 +40,18 @@ export default function PlaylistSelection({
             <div className="flex flex-col sm:grid sm:grid-cols-[1fr_auto_1fr] sm:place-items-center items-center justify-center gap-y-2 sm:gap-x-6 sm:gap-y-10">
               {/* From Platform */}
               <div className="w-[160px] flex flex-col items-center text-center">
-                <p className="text-muted-foreground text-sm mb-1">From</p>
-                <div
-                  className={`inline-flex items-center gap-2 px-3 py-1 rounded-full font-medium text-sm capitalize
-            ${
-              selectedSource === "spotify"
-                ? "bg-green-100 text-green-800"
-                : "bg-red-100 text-red-800"
-            }`}
-                >
+                <p className="text-xs uppercase tracking-wide text-muted-foreground mb-1.5">
+                  From
+                </p>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-card font-medium text-sm capitalize">
                   {selectedSource === "spotify" ? (
                     <>
-                      <SiSpotify className="w-4 h-4" /> Spotify
+                      <SiSpotify className="w-4 h-4 text-[#1db954]" /> Spotify
                     </>
                   ) : (
                     <>
-                      <SiYoutubemusic className="w-4 h-4" /> YouTube Music
+                      <SiYoutubemusic className="w-4 h-4 text-[#ff3b3b]" />{" "}
+                      YouTube Music
                     </>
                   )}
                 </div>
@@ -64,9 +60,9 @@ export default function PlaylistSelection({
               {/* Swap Button */}
               <div className="flex-shrink-0 self-center sm:-mt-2 lg:mt-4">
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="icon"
-                  className="group h-9 w-9 rounded-lg backdrop-blur-sm bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/30 shadow-md hover:shadow-xl transition-all"
+                  className="group h-9 w-9"
                   aria-label="Swap platforms"
                   onClick={() => {
                     const temp = selectedSource;
@@ -74,28 +70,24 @@ export default function PlaylistSelection({
                     setSelectedTarget(temp);
                   }}
                 >
-                  <ArrowLeftRight className="h-4 w-4 sm:rotate-0 rotate-90 text-white/90 drop-shadow-sm group-hover:text-white transition-colors" />
+                  <ArrowLeftRight className="h-4 w-4 sm:rotate-0 rotate-90 text-muted-foreground group-hover:text-foreground transition-colors" />
                 </Button>
               </div>
 
               {/* To Platform */}
               <div className="w-[160px] flex flex-col items-center text-center">
-                <p className="text-muted-foreground text-sm mb-1">To</p>
-                <div
-                  className={`inline-flex items-center gap-2 px-3 py-1 rounded-full font-medium text-sm capitalize
-            ${
-              selectedTarget === "spotify"
-                ? "bg-green-100 text-green-800"
-                : "bg-red-100 text-red-800"
-            }`}
-                >
+                <p className="text-xs uppercase tracking-wide text-muted-foreground mb-1.5">
+                  To
+                </p>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-card font-medium text-sm capitalize">
                   {selectedTarget === "spotify" ? (
                     <>
-                      <SiSpotify className="w-4 h-4" /> Spotify
+                      <SiSpotify className="w-4 h-4 text-[#1db954]" /> Spotify
                     </>
                   ) : (
                     <>
-                      <SiYoutubemusic className="w-4 h-4" /> YouTube Music
+                      <SiYoutubemusic className="w-4 h-4 text-[#ff3b3b]" />{" "}
+                      YouTube Music
                     </>
                   )}
                 </div>
@@ -105,16 +97,16 @@ export default function PlaylistSelection({
 
           {/* YouTube Music API Limitation Notice */}
           {selectedTarget === "youtube" && (
-            <div className="mt-4 p-3 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/20 rounded-xl shadow min-w-0">
-              <div className="flex items-start gap-2 min-w-0">
-                <div className="w-6 h-6 bg-yellow-500/30 rounded-md flex items-center justify-center flex-shrink-0 shadow">
-                  <AlertTriangle className="w-4 h-4 text-yellow-700" />
+            <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg min-w-0">
+              <div className="flex items-start gap-2.5 min-w-0">
+                <div className="w-6 h-6 bg-amber-100 rounded-md flex items-center justify-center flex-shrink-0">
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-yellow-800 font-medium text-sm mb-1 break-words">
-                    YouTube Music API Limitation
+                  <h4 className="text-amber-800 font-medium text-sm mb-0.5 break-words">
+                    YouTube Music API limitation
                   </h4>
-                  <p className="text-yellow-900 text-xs leading-snug break-words">
+                  <p className="text-amber-700 text-xs leading-snug break-words">
                     YouTube Music allows only{" "}
                     <span className="font-semibold">100 tracks per day</span>{" "}
                     via API. Large playlists will be migrated over multiple days

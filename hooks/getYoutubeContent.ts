@@ -30,7 +30,7 @@ export default function useGetYoutubePlaylistContent() {
 
     try {
       const response = await apiClient.post<GetYoutubePlaylistContentResponse>(
-        "/youtubeplaylistcontent",
+        "/youtubePlaylistContent",
         { playlistIds },
       );
 

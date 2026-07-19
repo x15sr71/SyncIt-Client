@@ -62,25 +62,25 @@ export function MigrationResultCard({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <Card className="w-full max-w-2xl bg-white/15 backdrop-blur-20 border border-white/30 rounded-3xl shadow-2xl max-h-[90vh] overflow-hidden">
-        <CardHeader className="pb-6 border-b border-white/20">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-900/40 backdrop-blur-sm fade-in-up">
+      <Card className="w-full max-w-2xl shadow-elev max-h-[90vh] overflow-hidden">
+        <CardHeader className="pb-5 border-b border-border">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               {hasFailures ? (
-                <div className="w-16 h-16 bg-yellow-500/20 border-2 border-yellow-500/40 rounded-2xl flex items-center justify-center animate-pulse-glow shadow-xl">
-                  <AlertTriangle className="w-8 h-8 text-yellow-600" />
+                <div className="w-12 h-12 bg-amber-50 border border-amber-200 rounded-xl2 flex items-center justify-center">
+                  <AlertTriangle className="w-6 h-6 text-amber-600" />
                 </div>
               ) : (
-                <div className="w-16 h-16 bg-green-500/20 border-2 border-green-500/40 rounded-2xl flex items-center justify-center animate-pulse-glow shadow-xl">
-                  <CheckCircle className="w-8 h-8 text-green-600" />
+                <div className="w-12 h-12 bg-green-50 border border-green-200 rounded-xl2 flex items-center justify-center">
+                  <CheckCircle className="w-6 h-6 text-green-600" />
                 </div>
               )}
               <div>
-                <CardTitle className="text-primary-dark text-2xl font-bold">
+                <CardTitle className="text-foreground text-xl font-semibold">
                   Migration {hasFailures ? "Partially Complete" : "Complete"}
                 </CardTitle>
-                <p className="text-secondary-dark text-sm mt-1">
+                <p className="text-muted-foreground text-sm mt-0.5">
                   {successRate}% success rate • {successCount} of {totalTracks}{" "}
                   tracks migrated
                 </p>
@@ -88,9 +88,9 @@ export function MigrationResultCard({
             </div>
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               onClick={onClose}
-              className="text-secondary-dark hover:text-primary-dark hover:bg-white/20 rounded-xl transition-all"
+              className="h-8 w-8 text-muted-foreground hover:text-foreground"
               aria-label="Close migration results"
             >
               <X className="w-4 h-4" />
@@ -98,30 +98,28 @@ export function MigrationResultCard({
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-5 overflow-y-auto max-h-[65vh] pt-6">
           {/* Summary Stats */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center p-6 glass-effect rounded-2xl border border-green-500/30 hover-lift">
-              <div className="text-3xl font-bold text-green-600 mb-2">
+          <div className="grid grid-cols-3 gap-3">
+            <div className="text-center p-4 rounded-lg border border-green-200 bg-green-50/50">
+              <div className="text-2xl font-semibold text-green-600 mb-0.5">
                 {successCount}
               </div>
-              <div className="text-sm text-green-700 font-medium">Migrated</div>
+              <div className="text-xs text-green-700 font-medium">Migrated</div>
             </div>
             {hasFailures && (
-              <div className="text-center p-6 glass-effect rounded-2xl border border-yellow-500/30 hover-lift">
-                <div className="text-3xl font-bold text-yellow-600 mb-2">
+              <div className="text-center p-4 rounded-lg border border-amber-200 bg-amber-50/50">
+                <div className="text-2xl font-semibold text-amber-600 mb-0.5">
                   {failedTracks.length}
                 </div>
-                <div className="text-sm text-yellow-700 font-medium">
-                  Failed
-                </div>
+                <div className="text-xs text-amber-700 font-medium">Failed</div>
               </div>
             )}
-            <div className="text-center p-6 glass-effect rounded-2xl border border-white/30 hover-lift">
-              <div className="text-3xl font-bold text-primary-dark mb-2">
+            <div className="text-center p-4 rounded-lg border border-border bg-muted/40">
+              <div className="text-2xl font-semibold text-foreground mb-0.5">
                 {totalTracks}
               </div>
-              <div className="text-sm text-secondary-dark font-medium">
+              <div className="text-xs text-muted-foreground font-medium">
                 Total
               </div>
             </div>
@@ -129,23 +127,23 @@ export function MigrationResultCard({
 
           {/* Success Message */}
           {!hasFailures && (
-            <div className="text-center p-8 glass-effect rounded-2xl border border-green-500/30">
-              <div className="w-20 h-20 bg-green-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 animate-pulse-glow shadow-xl">
-                <CheckCircle className="w-12 h-12 text-green-600" />
+            <div className="text-center p-6 rounded-lg border border-green-200 bg-green-50/40">
+              <div className="w-16 h-16 bg-green-50 border border-green-200 rounded-xl2 flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="w-9 h-9 text-green-600" />
               </div>
-              <h3 className="text-primary-dark font-bold text-2xl mb-3">
+              <h3 className="text-foreground font-semibold text-lg mb-2">
                 Migration Successful!
               </h3>
-              <p className="text-secondary-dark mb-6 max-w-md mx-auto">
+              <p className="text-sm text-muted-foreground mb-5 max-w-md mx-auto">
                 All {successCount} tracks from "{playlistName}" have been
                 successfully migrated.
               </p>
               <div className="flex justify-center">
                 <Button
                   onClick={onKeepInSync}
-                  className="bg-green-500/20 hover:bg-green-500/30 text-green-700 border border-green-500/30 rounded-2xl px-6 py-3 font-semibold shadow-lg transition-all hover:scale-105"
+                  className="bg-green-600 hover:bg-green-700 text-white"
                 >
-                  <Sync className="w-4 h-4 mr-2" />
+                  <Sync className="w-4 h-4" />
                   Keep Playlists in Sync
                 </Button>
               </div>
@@ -154,44 +152,44 @@ export function MigrationResultCard({
 
           {/* Failed Tracks */}
           {hasFailures && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="text-primary-dark font-bold text-lg flex items-center gap-3">
-                  <div className="w-8 h-8 bg-yellow-500/20 rounded-xl flex items-center justify-center">
-                    <AlertTriangle className="w-4 h-4 text-yellow-600" />
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-foreground font-medium text-sm flex items-center gap-2">
+                  <div className="w-7 h-7 bg-amber-50 border border-amber-200 rounded-lg flex items-center justify-center">
+                    <AlertTriangle className="w-4 h-4 text-amber-600" />
                   </div>
                   Tracks That Couldn't Be Migrated
                 </h4>
                 <Badge
-                  variant="secondary"
-                  className="bg-yellow-500/20 text-yellow-700 rounded-xl px-3 py-1 font-semibold"
+                  variant="outline"
+                  className="border-amber-200 bg-amber-50 text-amber-700"
                 >
                   {failedTracks.length} failed
                 </Badge>
               </div>
 
-              <div className="max-h-64 overflow-y-auto space-y-3 pr-2">
+              <div className="max-h-64 overflow-y-auto space-y-2 pr-2">
                 {failedTracks.map((track, index) => (
                   <Card
                     key={`failed-track-${track.id || index}`}
-                    className="glass-effect border-white/30 hover:bg-white/20 transition-all hover-lift"
+                    className="hover-lift"
                   >
-                    <CardContent className="p-5">
+                    <CardContent className="p-4">
                       <div className="flex items-start justify-between gap-4">
-                        <div className="flex items-start gap-4 flex-1">
-                          <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mt-1 shadow-lg">
-                            <Music className="w-6 h-6 text-secondary-dark" />
+                        <div className="flex items-start gap-3 flex-1 min-w-0">
+                          <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center mt-0.5 shrink-0">
+                            <Music className="w-5 h-5 text-muted-foreground" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h5 className="text-primary-dark font-semibold truncate text-lg">
+                            <h5 className="text-foreground font-medium truncate">
                               {track.title}
                             </h5>
-                            <p className="text-secondary-dark text-sm truncate mb-2">
+                            <p className="text-muted-foreground text-sm truncate mb-1.5">
                               {track.artist}
                             </p>
-                            <div className="inline-flex items-center gap-2 bg-yellow-500/20 px-3 py-1 rounded-xl">
-                              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                              <span className="text-yellow-700 text-xs font-medium">
+                            <div className="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md">
+                              <div className="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+                              <span className="text-amber-700 text-xs font-medium">
                                 {track.reason}
                               </span>
                             </div>
@@ -199,11 +197,11 @@ export function MigrationResultCard({
                         </div>
                         <div className="flex gap-2 flex-shrink-0">
                           <Button
-                            size="sm"
+                            size="icon"
                             variant="outline"
                             onClick={() => handleRetryTrack(track.id)}
                             disabled={retryingTrackId === track.id}
-                            className="border-white/30 text-secondary-dark hover:bg-white/20 hover:text-primary-dark bg-transparent rounded-xl shadow-lg transition-all hover:scale-105"
+                            className="h-9 w-9"
                           >
                             {retryingTrackId === track.id ? (
                               <RefreshCw className="w-4 h-4 animate-spin" />
@@ -219,34 +217,27 @@ export function MigrationResultCard({
               </div>
 
               {/* Post-Migration Actions */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-white/20">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-border">
                 <Button
                   onClick={onRetryFailed}
-                  className="bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-700 border border-yellow-500/30 rounded-2xl py-3 font-semibold shadow-lg transition-all hover:scale-105"
+                  className="bg-amber-500 hover:bg-amber-600 text-white"
                 >
-                  <RefreshCw className="w-4 h-4 mr-2" />
+                  <RefreshCw className="w-4 h-4" />
                   Retry All Failed
                 </Button>
-                <Button
-                  onClick={onRevertMigration}
-                  variant="outline"
-                  className="border-red-500/50 text-red-600 hover:bg-red-500/10 hover:text-red-700 bg-transparent rounded-2xl py-3 font-semibold shadow-lg transition-all hover:scale-105"
-                >
-                  <Undo2 className="w-4 h-4 mr-2" />
+                <Button onClick={onRevertMigration} variant="outline">
+                  <Undo2 className="w-4 h-4" />
                   Revert Migration
                 </Button>
               </div>
 
               {/* Keep in Sync Option */}
-              <div className="text-center p-6 glass-effect border border-white/30 rounded-2xl">
-                <p className="text-secondary-dark text-sm mb-4">
+              <div className="text-center p-5 rounded-lg border border-border bg-muted/40">
+                <p className="text-muted-foreground text-sm mb-3">
                   Want to keep the successfully migrated tracks in sync?
                 </p>
-                <Button
-                  onClick={onKeepInSync}
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-2xl font-semibold px-6 py-3 shadow-xl transition-all hover:scale-105"
-                >
-                  <Sync className="w-4 h-4 mr-2" />
+                <Button onClick={onKeepInSync}>
+                  <Sync className="w-4 h-4" />
                   Keep Playlists in Sync
                 </Button>
               </div>
@@ -254,19 +245,12 @@ export function MigrationResultCard({
           )}
 
           {/* Action Buttons */}
-          <div className="flex gap-4 pt-6 border-t border-white/20">
-            <Button
-              onClick={onClose}
-              variant="outline"
-              className="flex-1 border-white/30 text-secondary-dark hover:bg-white/10 hover:text-primary-dark bg-transparent rounded-2xl py-3 font-semibold shadow-lg transition-all hover:scale-105"
-            >
+          <div className="flex gap-3 pt-4 border-t border-border">
+            <Button onClick={onClose} variant="outline" className="flex-1">
               Close
             </Button>
             {!hasFailures && (
-              <Button
-                onClick={onClose}
-                className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-2xl font-semibold shadow-xl py-3 transition-all hover:scale-105"
-              >
+              <Button onClick={onClose} className="flex-1">
                 Done
               </Button>
             )}

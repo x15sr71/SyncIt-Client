@@ -29,8 +29,13 @@ export default function useGetSpotifyPlaylistContent() {
     setError(null);
 
     try {
-      const response = await apiClient.post<GetPlaylistContentResponse>(
-        "/spotifyplaylistcontent",
+      const response = await apiClient.post<{
+        success: boolean;
+        data?: SpotifyTrack[];
+        message?: string;
+        error?: string;
+      }>(
+        "/spotifyPlaylistContent",
         { playlistIds },
       );
 
@@ -42,8 +47,9 @@ export default function useGetSpotifyPlaylistContent() {
         throw new Error(msg);
       }
 
-      setPlaylistContent(data);
-      return { success: true, data }; // ✅ return structured result
+      const normalized = { [playlistIds[0]]: data };
+      setPlaylistContent(normalized);
+      return { success: true, data: normalized };
     } catch (err: any) {
       console.error("Error fetching Spotify playlist content:", err);
       const errorMessage =

@@ -21,7 +21,7 @@ export function SyncStatus({
       case "success":
         return <CheckCircle className="w-4 h-4 text-green-600" />;
       case "in-progress":
-        return <Clock className="w-4 h-4 text-yellow-600 animate-spin" />;
+        return <Clock className="w-4 h-4 text-blue-600 animate-spin" />;
       case "failed":
         return <XCircle className="w-4 h-4 text-red-600" />;
     }
@@ -32,8 +32,8 @@ export function SyncStatus({
       case "success":
         return (
           <Badge
-            variant="secondary"
-            className="bg-green-500/20 text-green-700 rounded-xl"
+            variant="outline"
+            className="border-green-200 bg-green-50 text-green-700"
           >
             Success
           </Badge>
@@ -41,8 +41,8 @@ export function SyncStatus({
       case "in-progress":
         return (
           <Badge
-            variant="secondary"
-            className="bg-yellow-500/20 text-yellow-700 rounded-xl"
+            variant="outline"
+            className="border-blue-200 bg-blue-50 text-blue-700"
           >
             In Progress
           </Badge>
@@ -50,8 +50,8 @@ export function SyncStatus({
       case "failed":
         return (
           <Badge
-            variant="secondary"
-            className="bg-red-500/20 text-red-700 rounded-xl"
+            variant="outline"
+            className="border-red-200 bg-red-50 text-red-700"
           >
             Failed
           </Badge>
@@ -60,14 +60,14 @@ export function SyncStatus({
   };
 
   return (
-    <div className="flex items-center justify-between p-3 rounded-xl bg-white/10 hover:bg-white/15 transition-colors">
-      <div className="flex items-center space-x-3">
+    <div className="flex items-center justify-between p-2.5 rounded-lg hover:bg-accent/50 transition-colors">
+      <div className="flex items-center space-x-3 min-w-0">
         {getStatusIcon()}
-        <div>
-          <p className="text-sm font-medium text-primary-dark">
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-foreground truncate">
             {playlistName}
           </p>
-          <div className="flex items-center space-x-2 text-xs text-secondary-dark">
+          <div className="flex items-center space-x-2 text-xs text-muted-foreground">
             <Music className="w-3 h-3" />
             <span>{tracksCount} tracks</span>
             <span>•</span>

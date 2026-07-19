@@ -52,46 +52,40 @@ export default function MigrationAction({
     try {
       onMigrationStart?.();
 
-      const firstPlaylistId = selectedPlaylistIds[0];
-      const playlist = sourcePlaylists.find((p) => p.id === firstPlaylistId);
+      const playlists = selectedPlaylistIds
+        .map((id) => sourcePlaylists.find((p) => p.id === id))
+        .filter((p): p is NonNullable<typeof p> => !!p);
 
-      if (!playlist) {
-        console.warn(
-          "MigrationAction: Playlist not found in sourcePlaylists",
-          firstPlaylistId,
-        );
-        onMigrationError?.("Selected playlist not found.");
+      if (playlists.length === 0) {
+        onMigrationError?.("Selected playlists not found.");
         return;
       }
 
-      console.log("Migrating playlist", {
-        playlistId: playlist.id,
-        name: playlist.name,
-        from: sourcePlatform,
-        to: targetPlatform,
-      });
-
-      // For Spotify to YouTube, we might need a target playlist
-      // For now, we'll let the backend handle playlist creation
-      let targetPlaylistId: string | undefined;
-
-      // You can extend this logic to allow user selection of target playlist
-      // or create new playlists as needed
-      if (sourcePlatform === "spotify" && targetPlatform === "youtube") {
-        // Backend will handle YouTube playlist creation or use a default one
-        // You could add UI here to let users select existing YouTube playlists
-        targetPlaylistId = undefined; // Let backend create new playlist
+      // Migrate every selected playlist sequentially — the button said
+      // "(N selected)" but only the first was migrated (audit P2-11).
+      // Sequential also cooperates with the backend's per-user sync mutex.
+      let successCount = 0;
+      const failedTracks: any[] = [];
+      for (const playlist of playlists) {
+        const result = await startMigration({
+          playlistId: playlist.id,
+          playlistName: playlist.name,
+          sourcePlatform,
+          targetPlatform,
+          targetPlaylistId: undefined, // let the backend find/create the target
+        });
+        successCount += result.successCount ?? 0;
+        failedTracks.push(...(result.failedTracks ?? []));
       }
 
-      const result = await startMigration({
-        playlistId: playlist.id,
-        playlistName: playlist.name,
-        sourcePlatform,
-        targetPlatform,
-        targetPlaylistId,
+      onMigrationComplete?.({
+        successCount,
+        failedTracks,
+        playlistName:
+          playlists.length === 1
+            ? playlists[0].name
+            : `${playlists[0].name} +${playlists.length - 1} more`,
       });
-
-      onMigrationComplete?.(result);
     } catch (err: any) {
       const message =
         err?.message || (typeof err === "string" ? err : "Migration failed");
@@ -115,9 +109,9 @@ export default function MigrationAction({
         size="lg"
         onClick={handleStartMigration}
         disabled={selectedPlaylistIds.length === 0 || isLoading}
-        className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-2xl px-8 py-4 focus-visible:outline-2 focus-visible:outline-purple-400 focus-visible:outline-offset-2 transition-all hover:scale-105 shadow-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+        className="px-6"
       >
-        <ArrowRight className="w-5 h-5 mr-2" />
+        <ArrowRight className="w-4 h-4" />
         {isLoading
           ? "Migrating..."
           : `${getMigrationText()} (${selectedPlaylistIds.length} selected)`}

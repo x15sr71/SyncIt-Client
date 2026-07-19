@@ -17,17 +17,17 @@ const platforms = [
     id: "spotify" as const,
     name: "Spotify",
     icon: Music2,
-    color: "text-green-600",
-    bgColor: "bg-green-500/20",
-    borderColor: "border-green-500/30",
+    color: "text-[#1db954]",
+    bgColor: "bg-green-50",
+    borderColor: "border-green-200",
   },
   {
     id: "youtube" as const,
     name: "YouTube Music",
     icon: Youtube,
-    color: "text-red-600",
-    bgColor: "bg-red-500/20",
-    borderColor: "border-red-500/30",
+    color: "text-[#ff3b3b]",
+    bgColor: "bg-red-50",
+    borderColor: "border-red-200",
   },
 ];
 
@@ -42,7 +42,7 @@ export function PlatformDropdown({
 
   return (
     <div className="relative">
-      <p className="text-secondary-dark mb-2 font-medium text-center">
+      <p className="text-xs uppercase tracking-wide text-muted-foreground mb-1.5 font-medium text-center">
         {label}
       </p>
       <div className="relative">
@@ -50,7 +50,7 @@ export function PlatformDropdown({
           variant="outline"
           onClick={() => !disabled && setIsOpen(!isOpen)}
           disabled={disabled}
-          className={`w-40 justify-between rounded-2xl border-2 ${selectedPlatformData?.borderColor} ${selectedPlatformData?.bgColor} hover:bg-opacity-30 focus-visible:outline-2 focus-visible:outline-gray-800 focus-visible:outline-offset-2 shadow-lg`}
+          className={`w-40 justify-between ${selectedPlatformData?.borderColor} ${selectedPlatformData?.bgColor}`}
           aria-expanded={isOpen}
           aria-haspopup="listbox"
           role="combobox"
@@ -61,20 +61,20 @@ export function PlatformDropdown({
                 <selectedPlatformData.icon
                   className={`w-4 h-4 ${selectedPlatformData.color}`}
                 />
-                <span className="text-primary-dark font-medium">
+                <span className="text-foreground font-medium">
                   {selectedPlatformData.name}
                 </span>
               </>
             )}
           </div>
           <ChevronDown
-            className={`w-4 h-4 text-secondary-dark transition-transform ${isOpen ? "rotate-180" : ""}`}
+            className={`w-4 h-4 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`}
           />
         </Button>
 
         {isOpen && (
-          <Card className="absolute top-full left-0 right-0 mt-2 z-50 glass-card border-white/40 shadow-xl">
-            <CardContent className="p-2">
+          <Card className="absolute top-full left-0 right-0 mt-2 z-50 shadow-elev">
+            <CardContent className="p-1.5">
               <div
                 role="listbox"
                 aria-label={`Select ${label.toLowerCase()} platform`}
@@ -87,8 +87,8 @@ export function PlatformDropdown({
                       onPlatformChange(platform.id);
                       setIsOpen(false);
                     }}
-                    className={`w-full justify-start rounded-xl mb-1 last:mb-0 hover:bg-white/20 ${
-                      selectedPlatform === platform.id ? "bg-white/10" : ""
+                    className={`w-full justify-start mb-0.5 last:mb-0 ${
+                      selectedPlatform === platform.id ? "bg-accent" : ""
                     }`}
                     role="option"
                     aria-selected={selectedPlatform === platform.id}
@@ -96,7 +96,7 @@ export function PlatformDropdown({
                     <platform.icon
                       className={`w-4 h-4 mr-2 ${platform.color}`}
                     />
-                    <span className="text-primary-dark">{platform.name}</span>
+                    <span className="text-foreground">{platform.name}</span>
                   </Button>
                 ))}
               </div>

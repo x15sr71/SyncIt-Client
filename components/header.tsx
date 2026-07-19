@@ -2,94 +2,117 @@
 import { Button } from "@/components/ui/button";
 import { Music, Menu, X } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useState, type MouseEvent, type ReactNode } from "react";
+
+/**
+ * Anchor nav item. On the home page it smooth-scrolls to the target section
+ * (identical to the previous behavior, no URL change); on any other route it
+ * navigates to `/#<id>` so the link still works cross-page (e.g. from /pricing).
+ */
+function SectionLink({
+  targetId,
+  className,
+  onNavigate,
+  children,
+}: {
+  targetId: string;
+  className?: string;
+  onNavigate?: () => void;
+  children: ReactNode;
+}) {
+  const pathname = usePathname();
+
+  function handleClick(e: MouseEvent<HTMLAnchorElement>) {
+    if (pathname === "/") {
+      e.preventDefault();
+      document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
+    }
+    onNavigate?.();
+  }
+
+  return (
+    <Link href={`/#${targetId}`} className={className} onClick={handleClick}>
+      {children}
+    </Link>
+  );
+}
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <header
-      className="fixed top-0 left-0 w-full z-50 py-4 backdrop-blur-lg border-b border-white/10"
+      className="fixed top-0 left-0 w-full z-50 py-3 border-b border-border bg-background/80 backdrop-blur-md"
       role="banner"
-      style={{ background: "transparent" }}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <Link
             href="/"
-            className="flex items-center gap-3 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded-xl p-2"
+            className="flex items-center gap-2.5 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-lg p-1.5"
             aria-label="SyncIt - Home"
           >
-            <div className="logo-icon animate-pulse-glow" aria-hidden="true">
-              <Music className="h-6 w-6 text-white absolute inset-0 m-auto" />
+            <div className="logo-icon" aria-hidden="true">
+              <Music className="h-4 w-4 text-white" />
             </div>
-            <span className="text-xl sm:text-2xl font-bold logo-gradient">
-              SyncIt
+            <span className="text-lg sm:text-xl font-semibold tracking-tight text-foreground">
+              Sync<span className="logo-gradient">It</span>
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav
-            className="hidden md:flex items-center gap-8"
+            className="hidden md:flex items-center gap-1"
             role="navigation"
             aria-label="Main navigation"
           >
-            <button
-              onClick={() =>
-                document
-                  .getElementById("features")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-              className="text-white/90 hover:text-white transition-all duration-300 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded-lg px-3 py-2 hover:bg-white/10"
+            <SectionLink
+              targetId="features"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-md px-3 py-1.5 hover:bg-accent"
             >
               Features
-            </button>
-            <button
-              onClick={() =>
-                document
-                  .getElementById("how-it-works")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-              className="text-white/90 hover:text-white transition-all duration-300 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded-lg px-3 py-2 hover:bg-white/10"
+            </SectionLink>
+            <SectionLink
+              targetId="how-it-works"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-md px-3 py-1.5 hover:bg-accent"
             >
               How it works
-            </button>
-            <button
-              onClick={() =>
-                document
-                  .getElementById("faq")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-              className="text-white/90 hover:text-white transition-all duration-300 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded-lg px-3 py-2 hover:bg-white/10"
+            </SectionLink>
+            <SectionLink
+              targetId="faq"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-md px-3 py-1.5 hover:bg-accent"
             >
               FAQ
-            </button>
+            </SectionLink>
+            <Link
+              href="/pricing"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-md px-3 py-1.5 hover:bg-accent"
+            >
+              Pricing
+            </Link>
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <Link href="/dashboard">
-              <Button
-                className="px-4 sm:px-6 py-2 rounded-full bg-white text-purple-600 font-semibold hover:bg-white/90 transition-all hover:scale-105 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 shadow-lg"
-                aria-label="Get started with SyncIt"
-              >
+              <Button size="sm" aria-label="Get started with SyncIt">
                 Get Started
               </Button>
             </Link>
 
-            {/* Mobile Menu Button */}
             <Button
               variant="ghost"
-              size="sm"
-              className="md:hidden text-white hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded-xl"
+              size="icon"
+              className="md:hidden"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             >
               {isMenuOpen ? (
-                <X className="h-6 w-6" />
+                <X className="h-5 w-5" />
               ) : (
-                <Menu className="h-6 w-6" />
+                <Menu className="h-5 w-5" />
               )}
             </Button>
           </div>
@@ -99,44 +122,39 @@ export function Header() {
         {isMenuOpen && (
           <nav
             id="mobile-menu"
-            className="md:hidden mt-4 pb-4 border-t border-white/20 pt-4 glass-effect"
+            className="md:hidden mt-3 pb-2 pt-3 border-t border-border mobile-menu-enter"
             role="navigation"
             aria-label="Mobile navigation"
           >
-            <div className="flex flex-col space-y-4 p-4">
-              <button
-                onClick={() => {
-                  document
-                    .getElementById("features")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                  setIsMenuOpen(false);
-                }}
-                className="text-white/90 hover:text-white transition-all duration-300 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded-lg px-3 py-2 hover:bg-white/10 text-left"
+            <div className="flex flex-col space-y-1 p-2">
+              <SectionLink
+                targetId="features"
+                onNavigate={() => setIsMenuOpen(false)}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md px-3 py-2 hover:bg-accent text-left"
               >
                 Features
-              </button>
-              <button
-                onClick={() => {
-                  document
-                    .getElementById("how-it-works")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                  setIsMenuOpen(false);
-                }}
-                className="text-white/90 hover:text-white transition-all duration-300 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded-lg px-3 py-2 hover:bg-white/10 text-left"
+              </SectionLink>
+              <SectionLink
+                targetId="how-it-works"
+                onNavigate={() => setIsMenuOpen(false)}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md px-3 py-2 hover:bg-accent text-left"
               >
                 How it works
-              </button>
-              <button
-                onClick={() => {
-                  document
-                    .getElementById("faq")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                  setIsMenuOpen(false);
-                }}
-                className="text-white/90 hover:text-white transition-all duration-300 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 rounded-lg px-3 py-2 hover:bg-white/10 text-left"
+              </SectionLink>
+              <SectionLink
+                targetId="faq"
+                onNavigate={() => setIsMenuOpen(false)}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md px-3 py-2 hover:bg-accent text-left"
               >
                 FAQ
-              </button>
+              </SectionLink>
+              <Link
+                href="/pricing"
+                onClick={() => setIsMenuOpen(false)}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md px-3 py-2 hover:bg-accent text-left"
+              >
+                Pricing
+              </Link>
             </div>
           </nav>
         )}

@@ -4,6 +4,7 @@ import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { PlaylistPreview } from "@/components/playlist-preview";
 import { Loader2, AlertCircle, Music } from "lucide-react";
+import { backendUrl } from "@/utils/api";
 
 interface Song {
   id: string;
@@ -60,7 +61,12 @@ export default function PlaylistsDisplay({
   sourceError = null,
 }: PlaylistsDisplayProps) {
   const handleConnectSpotify = () => {
-    window.location.href = "/api/auth/spotify";
+    // Real backend OAuth entrypoint for whichever source errored —
+    // "/api/auth/spotify" never existed (audit contract table).
+    const redirectAfter = encodeURIComponent("/dashboard");
+    window.location.href = backendUrl(
+      `/${selectedSource}/login?redirect_after=${redirectAfter}`,
+    );
   };
 
   const handleRetryFetch = () => {
@@ -68,16 +74,13 @@ export default function PlaylistsDisplay({
   };
 
   const renderPlaylistContent = (playlists: Playlist[], isSource: boolean) => (
-    <div className="relative max-h-96 overflow-hidden rounded-b-xl">
-      {/* Top fade overlay */}
-      <div className="pointer-events-none absolute top-0 left-0 w-full h-6 z-10 bg-gradient-to-b from-[#ffffff0a] to-transparent" />
-
-      <CardContent className="space-y-4 max-h-96 overflow-y-auto min-w-0 break-words pr-2 bg-white/5 backdrop-blur-md rounded-b-xl scroll-fade-container">
+    <div className="relative max-h-96 overflow-hidden rounded-b-xl2">
+      <CardContent className="space-y-3 max-h-96 overflow-y-auto min-w-0 break-words pr-2 rounded-b-xl2 scroll-fade-container">
         {isSource && isLoadingSource ? (
           <div className="flex flex-col items-center justify-center py-12 space-y-3">
-            <Loader2 className="h-8 w-8 animate-spin text-primary-dark" />
-            <div className="text-secondary-dark text-center">
-              <p className="font-medium">
+            <Loader2 className="h-7 w-7 animate-spin text-brand-500" />
+            <div className="text-muted-foreground text-center">
+              <p className="font-medium text-foreground">
                 Loading {selectedSource} playlists...
               </p>
               <p className="text-sm mt-1">This may take a moment</p>
@@ -85,12 +88,12 @@ export default function PlaylistsDisplay({
           </div>
         ) : isSource && sourceError ? (
           <div className="flex flex-col items-center justify-center py-12 space-y-4">
-            <AlertCircle className="h-12 w-12 text-red-500" />
+            <AlertCircle className="h-10 w-10 text-red-500" />
             <div className="text-center space-y-3">
               <p className="text-red-600 font-medium">
                 Failed to load playlists
               </p>
-              <p className="text-sm text-secondary-dark max-w-xs">
+              <p className="text-sm text-muted-foreground max-w-xs">
                 {sourceError}
               </p>
               <div className="flex flex-col sm:flex-row gap-2 justify-center">
@@ -117,12 +120,10 @@ export default function PlaylistsDisplay({
           </div>
         ) : playlists.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 space-y-3">
-            <Music className="h-12 w-12 text-secondary-dark/50" />
+            <Music className="h-10 w-10 text-muted-foreground/40" />
             <div className="text-center">
-              <p className="text-secondary-dark font-medium">
-                No playlists found
-              </p>
-              <p className="text-sm text-secondary-dark/70 mt-1">
+              <p className="text-foreground font-medium">No playlists found</p>
+              <p className="text-sm text-muted-foreground mt-1">
                 {isSource
                   ? `Create some playlists on ${selectedSource} to get started`
                   : "Your migrated playlists will appear here"}
@@ -156,46 +157,40 @@ export default function PlaylistsDisplay({
     <div className="grid md:grid-cols-2 gap-6 w-full min-w-0">
       {/* Source */}
       <Card
-        className="glass-card border-white/40 hover-lift min-w-0 bg-white/5 backdrop-blur-md"
+        className="hover-lift min-w-0"
         role="region"
         aria-labelledby="source-playlists-heading"
       >
-        <CardHeader className="relative rounded-t-xl pt-4 pb-2 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none rounded-t-xl bg-gradient-to-b from-white/0 via-white/10 to-transparent backdrop-blur-sm" />
-          <div className="relative z-10 pb-2">
-            <CardTitle
-              id="source-playlists-heading"
-              className="text-primary-dark capitalize truncate"
-            >
-              {selectedSource} Playlists
-            </CardTitle>
-            <p className="text-sm text-secondary-dark">
-              Select playlists to migrate
-            </p>
-          </div>
+        <CardHeader className="pt-4 pb-3">
+          <CardTitle
+            id="source-playlists-heading"
+            className="text-foreground text-base font-semibold capitalize truncate"
+          >
+            {selectedSource} playlists
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Select playlists to migrate
+          </p>
         </CardHeader>
         {renderPlaylistContent(sourcePlaylists, true)}
       </Card>
 
       {/* Target */}
       <Card
-        className="glass-card border-white/40 hover-lift min-w-0 bg-white/5 backdrop-blur-md"
+        className="hover-lift min-w-0"
         role="region"
         aria-labelledby="target-playlists-heading"
       >
-        <CardHeader className="relative rounded-t-xl pt-4 pb-2 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none rounded-t-xl bg-gradient-to-b from-white/0 via-white/10 to-transparent backdrop-blur-sm" />
-          <div className="relative z-10 pb-2">
-            <CardTitle
-              id="target-playlists-heading"
-              className="text-primary-dark capitalize truncate"
-            >
-              {selectedTarget} Playlists
-            </CardTitle>
-            <p className="text-sm text-secondary-dark">
-              Your existing playlists
-            </p>
-          </div>
+        <CardHeader className="pt-4 pb-3">
+          <CardTitle
+            id="target-playlists-heading"
+            className="text-foreground text-base font-semibold capitalize truncate"
+          >
+            {selectedTarget} playlists
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Your existing playlists
+          </p>
         </CardHeader>
         {renderPlaylistContent(targetPlaylists, false)}
       </Card>

@@ -17,37 +17,37 @@ interface HeaderProps {
 
 export function Header({ currentUser }: HeaderProps) {
   return (
-    <header className="fixed top-0 left-0 w-full backdrop-blur-lg z-50 shadow-sm py-4 bg-black/20">
+    <header className="fixed top-0 left-0 w-full backdrop-blur-md z-50 border-b border-border py-3 bg-background/80">
       <div className="container mx-auto px-4 flex justify-between items-center">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Link href="/">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-white hover:bg-white/10"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
+            <Button variant="ghost" size="sm">
+              <ArrowLeft className="w-4 h-4" />
               Back
             </Button>
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             <div className="logo-icon">
-              <Music className="h-6 w-6 text-white absolute inset-0 m-auto" />
+              <Music className="h-4 w-4 text-white" />
             </div>
-            <span className="text-2xl font-bold logo-gradient">SyncIt</span>
+            <span className="text-lg font-semibold tracking-tight text-foreground">
+              Sync<span className="logo-gradient">It</span>
+            </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">
-            <p className="text-white font-medium">{currentUser.name}</p>
+            <p className="text-foreground font-medium text-sm">
+              {currentUser.name}
+            </p>
             {currentUser.premium && (
-              <p className="text-xs text-yellow-400 font-semibold">Premium</p>
+              <p className="text-xs text-brand-600 font-semibold">Premium</p>
             )}
           </div>
           <Avatar>
             <AvatarImage src={currentUser.avatar || "/placeholder.svg"} />
-            <AvatarFallback className="bg-gradient-to-r from-purple-400 to-pink-400 text-white">
+            <AvatarFallback className="bg-gradient-to-br from-brand-gradStart to-brand-gradEnd text-white">
               {currentUser.name
                 .split(" ")
                 .map((n) => n[0])

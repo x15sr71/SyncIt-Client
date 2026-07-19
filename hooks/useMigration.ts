@@ -1,4 +1,5 @@
 import { useState } from "react";
+import apiClient from "../utils/api";
 
 type Platform = "spotify" | "youtube";
 
@@ -35,15 +36,17 @@ export const useMigration = () => {
     setError(null);
 
     try {
-      // Determine the correct endpoint based on migration direction
+      // Determine the correct endpoint based on migration direction.
+      // Paths are relative: the shared axios client owns the base URL
+      // (dev: direct backend, prod: same-origin /api/backend proxy).
       let endpoint = "";
       let requestBody: any = { playlistId, playlistName };
 
       if (sourcePlatform === "youtube" && targetPlatform === "spotify") {
-        endpoint = "http://localhost:3002/youtube-to-spotify";
+        endpoint = "/youtube-to-spotify";
         // YouTube to Spotify uses existing structure
       } else if (sourcePlatform === "spotify" && targetPlatform === "youtube") {
-        endpoint = "http://localhost:3002/spotify-to-youtube";
+        endpoint = "/spotify-to-youtube";
         // Add target YouTube playlist ID if provided
         if (targetPlaylistId) {
           requestBody.youtubePlaylistId = targetPlaylistId;
@@ -56,51 +59,31 @@ export const useMigration = () => {
         throw new Error("Unsupported migration direction");
       }
 
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-        credentials: "include",
-      });
+      const response = await apiClient.post<Record<string, any>>(
+        endpoint,
+        requestBody,
+      );
 
-      if (!response.ok) {
-        let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData?.message || errorMessage;
-          console.error("useMigration: Backend error response", { errorData });
-        } catch (jsonErr) {
-          try {
-            const errorText = await response.text();
-            errorMessage = errorText || errorMessage;
-            console.error("useMigration: Fallback text error response", {
-              errorText,
-            });
-          } catch (textErr) {
-            console.error("useMigration: Failed to parse error", { textErr });
-          }
-        }
-
-        throw new Error(errorMessage);
-      }
-
-      const data = await response.json();
-      return data;
+      const data = response.data;
+      return {
+        ...data,
+        successCount: data.successCount ?? data.numberOfTracksAdded ?? 0,
+        failedTracks: data.failedTracks ?? data.failedTrackDetails ?? [],
+        playlistName: data.playlistName ?? params.playlistName,
+      };
     } catch (err: any) {
-      let userFriendlyMessage = err?.message || "Migration failed";
+      let userFriendlyMessage =
+        err?.response?.data?.message || err?.message || "Migration failed";
 
-      if (err.name === "TypeError" && err.message.includes("fetch")) {
+      if (err?.response?.status === 409) {
         userFriendlyMessage =
-          "Cannot connect to the migration server. Please check if the server is running on port 3002.";
-      } else if (err.message.includes("ECONNREFUSED")) {
+          "Another sync is already running for your account. Please wait for it to finish.";
+      } else if (
+        err?.code === "ERR_NETWORK" ||
+        err?.message?.includes("Network Error")
+      ) {
         userFriendlyMessage =
-          "Connection refused. Please check if the migration server is running.";
-      } else if (err.message.includes("CORS")) {
-        userFriendlyMessage =
-          "CORS error. Please check server CORS configuration.";
+          "Cannot connect to the migration server. Please check if the server is running.";
       }
 
       setError(userFriendlyMessage);

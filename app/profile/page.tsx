@@ -40,30 +40,25 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen gradient-background-subdued">
       <header
-        className="border-b border-white/20 backdrop-blur-lg"
+        className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-40"
         role="banner"
-        style={{ background: "transparent" }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center space-x-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+          <div className="flex items-center gap-3">
             <Link href="/dashboard">
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-primary-dark hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-gray-800 focus-visible:outline-offset-2 rounded-xl backdrop-blur-sm"
                 aria-label="Go back to dashboard"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
+                <ArrowLeft className="w-4 h-4" />
+                Dashboard
               </Button>
             </Link>
-            <div
-              className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-2xl animate-pulse-glow shadow-xl"
-              aria-hidden="true"
-            >
-              <Music className="w-6 h-6 text-white" />
+            <div className="logo-icon" aria-hidden="true">
+              <Music className="w-4 h-4 text-white" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-primary-dark">
+            <h1 className="text-base sm:text-lg font-semibold text-foreground">
               Profile
             </h1>
           </div>
@@ -73,15 +68,15 @@ export default function ProfilePage() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {/* Profile Info */}
         <Card
-          className="glass-card border-white/40 hover-lift"
+          className="hover-lift"
           role="region"
           aria-labelledby="profile-info-heading"
         >
           <CardContent className="p-8">
             <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
-              <Avatar className="w-24 h-24 border-4 border-white/30 shadow-xl">
+              <Avatar className="w-20 h-20 border border-border shadow-elev">
                 <AvatarImage src="/placeholder.svg?height=96&width=96" />
-                <AvatarFallback className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-2xl font-bold">
+                <AvatarFallback className="bg-gradient-to-br from-brand-gradStart to-brand-gradEnd text-white text-xl font-semibold">
                   JD
                 </AvatarFallback>
               </Avatar>
@@ -107,9 +102,7 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-2xl px-6 py-3 font-semibold shadow-xl hover:scale-105 transition-all">
-                Upgrade to Pro
-              </Button>
+              <Button className="px-5 py-2.5">Upgrade to Pro</Button>
             </div>
           </CardContent>
         </Card>
@@ -119,11 +112,11 @@ export default function ProfilePage() {
           {stats.map((stat, index) => (
             <Card
               key={index}
-              className="glass-card border-white/40 hover-lift"
+              className="hover-lift"
               role="region"
             >
               <CardContent className="p-6 text-center">
-                <stat.icon className="w-8 h-8 text-purple-500 mx-auto mb-3" />
+                <stat.icon className="w-6 h-6 text-brand-500 mx-auto mb-3" />
                 <p className="text-2xl font-bold text-primary-dark mb-1">
                   {stat.value}
                 </p>
@@ -135,7 +128,7 @@ export default function ProfilePage() {
 
         {/* Recent Activity */}
         <Card
-          className="glass-card border-white/40 hover-lift"
+          className="hover-lift"
           role="region"
           aria-labelledby="recent-activity-heading"
         >
@@ -174,7 +167,7 @@ export default function ProfilePage() {
 
         {/* Account Actions */}
         <Card
-          className="glass-card border-white/40 hover-lift"
+          className="hover-lift"
           role="region"
           aria-labelledby="account-management-heading"
         >
@@ -190,20 +183,20 @@ export default function ProfilePage() {
             <div className="grid sm:grid-cols-2 gap-4">
               <Button
                 variant="outline"
-                className="border-white/30 text-primary-dark hover:bg-white/20 bg-transparent rounded-xl focus-visible:outline-2 focus-visible:outline-gray-800 focus-visible:outline-offset-2"
+                className="focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
               >
                 Download My Data
               </Button>
               <Button
                 variant="outline"
-                className="border-white/30 text-primary-dark hover:bg-white/20 bg-transparent rounded-xl focus-visible:outline-2 focus-visible:outline-gray-800 focus-visible:outline-offset-2"
+                className="focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
               >
                 Export Sync History
               </Button>
               <Link href="/settings">
                 <Button
                   variant="outline"
-                  className="w-full border-white/30 text-primary-dark hover:bg-white/20 bg-transparent rounded-xl focus-visible:outline-2 focus-visible:outline-gray-800 focus-visible:outline-offset-2"
+                  className="w-full focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
                 >
                   Account Settings
                 </Button>

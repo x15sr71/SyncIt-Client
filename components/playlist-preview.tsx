@@ -172,32 +172,32 @@ export function PlaylistPreview({
 
   return (
     <Card
-      className={`glass-card border-white/40 hover-lift transition-all duration-300 ${
-        isSelected ? "ring-2 ring-purple-500/50" : ""
+      className={`hover-lift transition-all duration-200 ${
+        isSelected ? "ring-2 ring-brand-300 border-brand-300" : ""
       }`}
     >
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 min-w-0">
             {showCheckbox && (
               <input
                 type="checkbox"
                 checked={isSelected}
                 onChange={() => onToggle(playlist.id)}
-                className="w-4 h-4 text-purple-600 bg-white/20 border-white/30 rounded focus:ring-purple-500 focus:ring-2"
+                className="w-4 h-4 accent-brand-500 rounded border-input"
                 aria-label={`Select ${playlist.name} playlist`}
               />
             )}
             <img
               src={playlist.imageUrl || "/placeholder.svg"}
               alt={`${playlist.name} playlist cover`}
-              className="w-12 h-12 rounded-xl object-cover shadow-md"
+              className="w-11 h-11 rounded-lg object-cover border border-border"
             />
             <div className="flex-1 min-w-0">
-              <CardTitle className="text-primary-dark text-base font-semibold">
+              <CardTitle className="text-foreground text-sm font-semibold truncate">
                 {playlist.name}
               </CardTitle>
-              <div className="flex items-center gap-2 text-sm text-secondary-dark">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Music className="w-3 h-3" />
                 <span>
                   {hasLoadedContent ? loadedSongs.length : playlist.songCount}{" "}
@@ -214,7 +214,7 @@ export function PlaylistPreview({
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             {onRename && onEmpty && onDelete && (
               <PlaylistActionMenu
                 playlistId={playlist.id}
@@ -222,14 +222,15 @@ export function PlaylistPreview({
                 onRename={onRename}
                 onEmpty={onEmpty}
                 onDelete={onDelete}
+                canDelete={playlist.platform !== "spotify"}
               />
             )}
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               onClick={handleExpand}
               disabled={loading}
-              className="text-secondary-dark hover:text-primary-dark hover:bg-white/20 rounded-xl"
+              className="h-8 w-8 text-muted-foreground hover:text-foreground"
               aria-expanded={isExpanded}
               aria-label={`${isExpanded ? "Collapse" : "Expand"} ${playlist.name}`}
             >
@@ -247,14 +248,14 @@ export function PlaylistPreview({
 
       {isExpanded && (
         <CardContent className="pt-0">
-          <div className="border-t border-white/20 pt-3">
-            <h4 className="text-sm font-medium text-primary-dark mb-3 flex items-center gap-2">
+          <div className="border-t border-border pt-3">
+            <h4 className="text-sm font-medium text-foreground mb-3 flex items-center gap-2">
               <Music className="w-4 h-4" />
               Songs in this playlist
             </h4>
 
             {error && (
-              <div className="text-red-500 text-sm mb-3 p-2 bg-red-500/10 rounded-lg">
+              <div className="text-red-600 text-sm mb-3 p-2 bg-red-50 border border-red-200 rounded-lg">
                 Failed to load playlist content. Showing cached songs.
               </div>
             )}
@@ -269,9 +270,9 @@ export function PlaylistPreview({
                   return (
                     <div
                       key={uniqueKey} // 🆕 Use unique key instead of just song.id
-                      className={`flex items-center justify-between p-2 rounded-lg hover:bg-white/10 transition-all duration-300 group ${
+                      className={`flex items-center justify-between p-2 rounded-lg hover:bg-accent/50 transition-all duration-300 group ${
                         isRemoving
-                          ? "animate-pulse bg-red-500/20 border border-red-500/50 transform"
+                          ? "animate-pulse bg-red-50 border border-red-200 transform"
                           : ""
                       }`}
                       style={{
@@ -304,15 +305,15 @@ export function PlaylistPreview({
                         )}
                         <div className="min-w-0">
                           <p
-                            className={`text-sm font-medium text-primary-dark truncate transition-all duration-300 ${
-                              isRemoving ? "text-red-400 line-through" : ""
+                            className={`text-sm font-medium text-foreground truncate transition-all duration-300 ${
+                              isRemoving ? "text-red-500 line-through" : ""
                             }`}
                           >
                             {song.title}
                           </p>
                           <p
-                            className={`text-xs text-secondary-dark truncate transition-all duration-300 ${
-                              isRemoving ? "text-red-300/70 line-through" : ""
+                            className={`text-xs text-muted-foreground truncate transition-all duration-300 ${
+                              isRemoving ? "text-red-400 line-through" : ""
                             }`}
                           >
                             {song.artist}
@@ -322,8 +323,8 @@ export function PlaylistPreview({
 
                       <div className="flex items-center gap-2">
                         <span
-                          className={`text-xs text-muted-dark transition-all duration-300 ${
-                            isRemoving ? "text-red-300/70 line-through" : ""
+                          className={`text-xs text-muted-foreground transition-all duration-300 ${
+                            isRemoving ? "text-red-400 line-through" : ""
                           }`}
                         >
                           {song.duration}
@@ -337,9 +338,9 @@ export function PlaylistPreview({
                               handleRemoveSong(song.id, song.title);
                             }}
                             disabled={isRemoving}
-                            className={`opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-600 hover:bg-red-500/10 rounded-lg p-1 transition-all ${
+                            className={`opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg p-1 transition-all ${
                               isRemoving
-                                ? "opacity-100 bg-red-500/20 text-red-400 cursor-not-allowed animate-spin"
+                                ? "opacity-100 bg-red-50 text-red-400 cursor-not-allowed animate-spin"
                                 : ""
                             }`}
                             aria-label={`Remove ${song.title} from playlist`}
@@ -352,8 +353,8 @@ export function PlaylistPreview({
                   );
                 })
               ) : (
-                <div className="text-center text-muted-dark py-4">
-                  <Music className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                <div className="text-center text-muted-foreground py-4">
+                  <Music className="w-8 h-8 mx-auto mb-2 opacity-40" />
                   <p className="text-sm">No songs in this playlist</p>
                 </div>
               )}

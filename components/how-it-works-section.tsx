@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, Music2, Link2, CheckCircle } from "lucide-react";
+import { Music2, Link2, CheckCircle } from "lucide-react";
 
 const steps = [
   {
@@ -32,67 +32,53 @@ export function HowItWorksSection() {
       aria-labelledby="how-it-works-heading"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="max-w-2xl mb-12">
+          <div className="text-sm font-medium logo-gradient inline-block mb-2">
+            How it works
+          </div>
           <h2
             id="how-it-works-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6"
+            className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground mb-4"
           >
-            How It <span className="logo-gradient">Works</span>
+            Three steps. About a minute.
           </h2>
-          <p className="text-lg text-white/80 max-w-3xl mx-auto">
+          <p className="text-lg text-muted-foreground">
             Get started in just three simple steps and enjoy your music
-            everywhere
+            everywhere.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
+        <div className="grid md:grid-cols-3 gap-4 stagger">
           {steps.map((step, index) => (
-            <div
+            <Card
               key={index}
-              className="relative"
+              className="hover-lift"
               role="article"
               aria-labelledby={`step-${index}-title`}
             >
-              <Card className="glass-effect border-white/20 hover-lift text-center h-full">
-                <CardContent className="p-8">
-                  {/* Step Number */}
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                      {index + 1}
-                    </div>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="text-xs font-mono text-muted-foreground tracking-wide">
+                    {String(index + 1).padStart(2, "0")}
                   </div>
-
-                  {/* Icon */}
-                  <div className="mx-auto w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-6 mt-4">
+                  <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-brand-gradStart to-brand-gradEnd flex items-center justify-center shadow-soft">
                     <step.icon
-                      className="w-8 h-8 text-white"
+                      className="w-4 h-4 text-white"
                       aria-hidden="true"
                     />
                   </div>
-
-                  {/* Content */}
-                  <h3
-                    id={`step-${index}-title`}
-                    className="text-white text-xl font-semibold mb-4"
-                  >
-                    {step.title}
-                  </h3>
-                  <p className="text-white/80 leading-relaxed">
-                    {step.description}
-                  </p>
-                </CardContent>
-              </Card>
-
-              {/* Arrow between steps */}
-              {index < steps.length - 1 && (
-                <div
-                  className="hidden md:block absolute top-1/2 -right-6 lg:-right-8 transform -translate-y-1/2"
-                  aria-hidden="true"
-                >
-                  <ArrowRight className="w-6 h-6 text-white/40" />
                 </div>
-              )}
-            </div>
+                <h3
+                  id={`step-${index}-title`}
+                  className="text-foreground text-base font-semibold mb-1.5"
+                >
+                  {step.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {step.description}
+                </p>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>
