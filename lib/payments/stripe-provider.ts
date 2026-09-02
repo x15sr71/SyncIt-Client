@@ -7,7 +7,11 @@
  * pure URL redirect, and no secrets ever reach the client.
  */
 
-import { BillingError, createCheckoutSession, createPortalSession } from "./billing-api";
+import {
+  BillingError,
+  createCheckoutSession,
+  createPortalSession,
+} from "./billing-api";
 import type { CreateCheckoutInput, PaymentProvider } from "./types";
 
 function redirectToLogin(): void {
@@ -19,7 +23,9 @@ function redirectToLogin(): void {
 export class StripeProvider implements PaymentProvider {
   readonly id = "stripe" as const;
 
-  async startSubscriptionCheckout({ planKey }: CreateCheckoutInput): Promise<void> {
+  async startSubscriptionCheckout({
+    planKey,
+  }: CreateCheckoutInput): Promise<void> {
     const origin = window.location.origin;
     try {
       const res = await createCheckoutSession({

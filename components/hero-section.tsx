@@ -106,7 +106,10 @@ export function HeroSection() {
           </div>
 
           {/* Right Column - Animated Phones */}
-          <div className="relative fade-in-up" style={{ animationDelay: "120ms" }}>
+          <div
+            className="relative fade-in-up"
+            style={{ animationDelay: "120ms" }}
+          >
             <AnimatedPhones />
           </div>
         </div>

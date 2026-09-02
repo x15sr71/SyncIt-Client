@@ -40,7 +40,9 @@ export function useSubscription(): UseSubscriptionResult {
       .catch((err: unknown) => {
         if (active) {
           setError(
-            err instanceof Error ? err : new Error("Failed to load subscription"),
+            err instanceof Error
+              ? err
+              : new Error("Failed to load subscription"),
           );
         }
       })

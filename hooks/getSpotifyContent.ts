@@ -34,10 +34,7 @@ export default function useGetSpotifyPlaylistContent() {
         data?: SpotifyTrack[];
         message?: string;
         error?: string;
-      }>(
-        "/spotifyPlaylistContent",
-        { playlistIds },
-      );
+      }>("/spotifyPlaylistContent", { playlistIds });
 
       const { success, data, message, error: apiError } = response.data;
 
