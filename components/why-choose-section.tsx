@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Zap, Users, Heart, Clock, Smartphone } from "lucide-react";
 
 const features = [
@@ -46,54 +45,48 @@ export function WhyChooseSection() {
   return (
     <section
       id="features"
-      className="py-20 relative scroll-mt-20"
+      className="py-28 sm:py-36 relative scroll-mt-24"
       role="region"
       aria-labelledby="features-heading"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl mb-12">
-          <div className="text-sm font-medium logo-gradient inline-block mb-2">
+        <div className="max-w-2xl mx-auto text-center mb-20">
+          <div className="text-[0.7rem] font-medium uppercase tracking-[0.2em] text-muted-foreground mb-4">
             Why SyncIt
           </div>
           <h2
             id="features-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground mb-4"
+            className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-[-0.03em] text-foreground mb-5 leading-[1.05]"
           >
             Built for people with too many playlists.
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-muted-foreground leading-relaxed">
             Six things we focused on so switching platforms feels effortless.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 stagger">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-14 max-w-5xl mx-auto stagger">
           {features.map((feature, index) => (
-            <Card
+            <div
               key={index}
-              className="hover-lift group"
+              className="group"
               role="article"
               aria-labelledby={`feature-${index}-title`}
             >
-              <CardHeader className="pb-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-brand-gradStart to-brand-gradEnd flex items-center justify-center mb-3 shadow-soft">
-                  <feature.icon
-                    className="w-5 h-5 text-white"
-                    aria-hidden="true"
-                  />
-                </div>
-                <CardTitle
-                  id={`feature-${index}-title`}
-                  className="text-foreground text-base font-semibold"
-                >
-                  {feature.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {feature.description}
-                </p>
-              </CardContent>
-            </Card>
+              <feature.icon
+                className="w-5 h-5 text-brand-500 mb-5 transition-transform duration-500 ease-out group-hover:-translate-y-0.5 motion-reduce:transition-none"
+                aria-hidden="true"
+              />
+              <h3
+                id={`feature-${index}-title`}
+                className="text-foreground text-[0.95rem] font-semibold tracking-tight mb-2"
+              >
+                {feature.title}
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {feature.description}
+              </p>
+            </div>
           ))}
         </div>
       </div>

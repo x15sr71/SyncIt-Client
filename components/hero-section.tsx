@@ -8,7 +8,7 @@ import { AnimatedPhones } from "./animated-phones";
 export function HeroSection() {
   return (
     <section
-      className="pt-32 pb-20 relative overflow-hidden"
+      className="pt-36 pb-28 sm:pt-44 sm:pb-36 relative overflow-hidden"
       role="main"
       aria-labelledby="hero-heading"
     >
@@ -29,33 +29,30 @@ export function HeroSection() {
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Left Column */}
-          <div className="text-center lg:text-left space-y-7 fade-in-up">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-card border border-border text-[0.78rem] font-medium text-muted-foreground">
-              <Sparkles
-                className="w-3.5 h-3.5 text-brand-500"
-                aria-hidden="true"
-              />
-              <span>Sync your music across all platforms</span>
+          <div className="text-center lg:text-left space-y-8 fade-in-up">
+            <div className="inline-flex items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+              <Sparkles className="w-3 h-3 text-brand-500" aria-hidden="true" />
+              <span>Sync across every platform</span>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
               <h1
                 id="hero-heading"
-                className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-semibold tracking-tight text-foreground leading-[1.05]"
+                className="text-[2.75rem] sm:text-6xl lg:text-7xl font-semibold tracking-[-0.035em] text-foreground leading-[0.95]"
               >
                 Sync Your Music
                 <br />
                 <span className="logo-gradient">Everywhere</span>
               </h1>
-              <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+              <p className="text-lg sm:text-xl text-muted-foreground max-w-lg mx-auto lg:mx-0 leading-relaxed">
                 Seamlessly transfer and sync your playlists between Spotify,
                 YouTube Music, and more. Never lose your favorite tracks again.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-1">
               <Link href="/dashboard">
                 <Button
                   size="lg"
@@ -81,26 +78,30 @@ export function HeroSection() {
               </Button>
             </div>
 
-            <div className="grid grid-cols-3 gap-6 pt-8 border-t border-border">
+            <div className="grid grid-cols-3 gap-8 pt-12">
               <div className="text-center lg:text-left">
-                <div className="text-2xl sm:text-3xl font-semibold text-foreground">
+                <div className="text-3xl sm:text-4xl font-semibold tracking-tight text-foreground">
                   50K+
                 </div>
-                <div className="text-sm text-muted-foreground">Users</div>
+                <div className="mt-1 text-[0.7rem] uppercase tracking-[0.14em] text-muted-foreground">
+                  Users
+                </div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-2xl sm:text-3xl font-semibold text-foreground">
+                <div className="text-3xl sm:text-4xl font-semibold tracking-tight text-foreground">
                   1M+
                 </div>
-                <div className="text-sm text-muted-foreground">
-                  Songs Synced
+                <div className="mt-1 text-[0.7rem] uppercase tracking-[0.14em] text-muted-foreground">
+                  Songs synced
                 </div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-2xl sm:text-3xl font-semibold text-foreground">
+                <div className="text-3xl sm:text-4xl font-semibold tracking-tight text-foreground">
                   99.9%
                 </div>
-                <div className="text-sm text-muted-foreground">Uptime</div>
+                <div className="mt-1 text-[0.7rem] uppercase tracking-[0.14em] text-muted-foreground">
+                  Uptime
+                </div>
               </div>
             </div>
           </div>

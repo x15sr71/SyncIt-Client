@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Music2, Link2, CheckCircle } from "lucide-react";
 
 const steps = [
@@ -27,58 +26,56 @@ export function HowItWorksSection() {
   return (
     <section
       id="how-it-works"
-      className="py-20 relative scroll-mt-20"
+      className="py-28 sm:py-36 relative scroll-mt-24"
       role="region"
       aria-labelledby="how-it-works-heading"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl mb-12">
-          <div className="text-sm font-medium logo-gradient inline-block mb-2">
+        <div className="max-w-2xl mx-auto text-center mb-20">
+          <div className="text-[0.7rem] font-medium uppercase tracking-[0.2em] text-muted-foreground mb-4">
             How it works
           </div>
           <h2
             id="how-it-works-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground mb-4"
+            className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-[-0.03em] text-foreground mb-5 leading-[1.05]"
           >
             Three steps. About a minute.
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-muted-foreground leading-relaxed">
             Get started in just three simple steps and enjoy your music
             everywhere.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-4 stagger">
+        {/* Hairline dividers instead of cards — the columns already group
+            the content, so borders on every side are redundant. */}
+        <div className="grid md:grid-cols-3 gap-x-12 gap-y-14 max-w-5xl mx-auto stagger">
           {steps.map((step, index) => (
-            <Card
+            <div
               key={index}
-              className="hover-lift"
+              className="md:border-l md:border-border md:pl-8 first:md:border-l-0 first:md:pl-0"
               role="article"
               aria-labelledby={`step-${index}-title`}
             >
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="text-xs font-mono text-muted-foreground tracking-wide">
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
-                  <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-brand-gradStart to-brand-gradEnd flex items-center justify-center shadow-soft">
-                    <step.icon
-                      className="w-4 h-4 text-white"
-                      aria-hidden="true"
-                    />
-                  </div>
-                </div>
-                <h3
-                  id={`step-${index}-title`}
-                  className="text-foreground text-base font-semibold mb-1.5"
-                >
-                  {step.title}
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {step.description}
-                </p>
-              </CardContent>
-            </Card>
+              <div className="flex items-baseline gap-3 mb-5">
+                <span className="text-4xl font-semibold tracking-tight text-border select-none">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <step.icon
+                  className="w-4 h-4 text-brand-500 shrink-0"
+                  aria-hidden="true"
+                />
+              </div>
+              <h3
+                id={`step-${index}-title`}
+                className="text-foreground text-[0.95rem] font-semibold tracking-tight mb-2"
+              >
+                {step.title}
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {step.description}
+              </p>
+            </div>
           ))}
         </div>
       </div>
