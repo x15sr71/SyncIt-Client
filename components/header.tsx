@@ -95,7 +95,7 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <ThemeToggle className="hidden sm:flex items-center gap-2 px-2 py-1 rounded-md border border-border bg-card" />
+            <ThemeToggle className="hidden sm:inline-flex" />
 
             <Link href="/dashboard">
               <Button size="sm" aria-label="Get started with SyncIt">

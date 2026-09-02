@@ -31,13 +31,11 @@ html {
             class. tailwind.config.ts is darkMode: ["class"] and globals.css
             already defines the full .dark palette; only this was missing.
             suppressHydrationWarning: next-themes sets the class on <html>
-            before React hydrates. */}
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
+            before React hydrates.
+            No disableTransitionOnChange: it injects a global
+            `transition: none !important` for the duration of the switch,
+            which would also kill the toggle's own sun/moon morph. */}
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {children}
         </ThemeProvider>
       </body>
