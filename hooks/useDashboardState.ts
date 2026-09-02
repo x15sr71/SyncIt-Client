@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 export function useDashboardState() {
-  const [darkMode, setDarkMode] = useState(true);
   const [selectedSource, setSelectedSource] = useState<"spotify" | "youtube">(
     "spotify",
   );
@@ -88,8 +87,6 @@ export function useDashboardState() {
   } | null>(null);
 
   return {
-    darkMode,
-    setDarkMode,
     selectedSource,
     setSelectedSource,
     selectedTarget,

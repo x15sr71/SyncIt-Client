@@ -41,6 +41,7 @@ export function useDashboardHandlers(params: {
     renameYouTubePlaylist,
     deleteSpotifyPlaylist,
     deleteYouTubePlaylist,
+    emptyYouTubePlaylist,
     deleteSpotifySong,
     deleteYouTubeSong,
     fetchPlaylists,
@@ -82,23 +83,6 @@ export function useDashboardHandlers(params: {
       setIsMigrating(true);
     },
     [setShowMigrationDialog, setIsMigrating],
-  );
-
-  // FIXED: Explicit type for results
-  const handleMigrationComplete = useCallback(
-    (results: MigrationResult[]) => {
-      const result = results[0];
-      if (result) {
-        setIsMigrating(false);
-        setMigrationResults({
-          successCount: result.successCount,
-          failedTracks: result.failedTracks,
-          playlistName: result.playlistName,
-        });
-        setShowMigrationResult(true);
-      }
-    },
-    [setIsMigrating, setMigrationResults, setShowMigrationResult],
   );
 
   const handleKeepInSync = useCallback(() => {
@@ -165,11 +149,27 @@ export function useDashboardHandlers(params: {
   );
 
   const handleEmptyConfirm = useCallback(
-    async (_playlistId: string) => {
+    async (playlistId: string) => {
       setEmptyDialog((prev: any) => ({ ...prev, isOpen: false }));
-      showToast("Empty playlist functionality not yet implemented", "error");
+
+      // Spotify exposes no bulk playlist-clear endpoint, so only YouTube can
+      // be emptied. The dialog is hidden for Spotify rather than offering an
+      // action that cannot work.
+      if (emptyDialog.platform !== "youtube") {
+        showToast(
+          "Emptying playlists is only supported for YouTube Music.",
+          "error",
+        );
+        return;
+      }
+
+      try {
+        await emptyYouTubePlaylist(playlistId);
+      } catch {
+        // emptyPlaylist already surfaced the error via showToast
+      }
     },
-    [setEmptyDialog, showToast],
+    [emptyDialog, setEmptyDialog, emptyYouTubePlaylist, showToast],
   );
 
   const handleDeletePlaylist = useCallback(
@@ -311,7 +311,6 @@ export function useDashboardHandlers(params: {
     togglePlaylist,
     handleStartMigration,
     handleMigrationConfirm,
-    handleMigrationComplete,
     handleKeepInSync,
     handleSyncPreferencesConfirm,
     handleRenamePlaylist,

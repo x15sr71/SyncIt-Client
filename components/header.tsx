@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Music, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { useState, type MouseEvent, type ReactNode } from "react";
 
 /**
@@ -94,6 +95,8 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle className="hidden sm:flex items-center gap-2 px-2 py-1 rounded-md border border-border bg-card" />
+
             <Link href="/dashboard">
               <Button size="sm" aria-label="Get started with SyncIt">
                 Get Started
@@ -155,6 +158,12 @@ export function Header() {
               >
                 Pricing
               </Link>
+
+              {/* sm:hidden — above that breakpoint the toggle is in the bar. */}
+              <div className="sm:hidden flex items-center justify-between px-3 py-2">
+                <span className="text-sm text-muted-foreground">Theme</span>
+                <ThemeToggle />
+              </div>
             </div>
           </nav>
         )}

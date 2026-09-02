@@ -71,6 +71,36 @@ export default function useYouTubeActions(props?: UseYouTubeActionsProps) {
     }
   };
 
+  /** DELETE /emptyYouTubePlaylist — removes every item, keeps the playlist. */
+  const emptyPlaylist = async (playlistId: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await apiClient.delete<{
+        success: boolean;
+        message?: string;
+      }>("/emptyYouTubePlaylist", { data: { playlistId } });
+
+      if (!res.data.success) {
+        throw new Error(res.data.message || "Failed to empty playlist.");
+      }
+
+      await props?.refreshPlaylists?.();
+      props?.showToast?.("Playlist emptied successfully!", "success");
+      return res.data;
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to empty playlist.";
+      setError(errorMessage);
+      props?.showToast?.(errorMessage, "error");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const deleteSongFromPlaylist = async (
     playlistId: string,
     videoId: string,
@@ -100,6 +130,7 @@ export default function useYouTubeActions(props?: UseYouTubeActionsProps) {
   return {
     renamePlaylist,
     deletePlaylist,
+    emptyPlaylist,
     deleteSongFromPlaylist,
     loading,
     error,

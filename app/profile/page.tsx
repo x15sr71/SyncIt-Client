@@ -1,41 +1,70 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Music,
-  ArrowLeft,
-  Calendar,
-  TrendingUp,
-  Award,
-  Clock,
-} from "lucide-react";
+import { Music, ArrowLeft, TrendingUp, Award, Clock, Zap } from "lucide-react";
 import Link from "next/link";
+import useMe from "@/hooks/useMe";
+import apiClient from "@/utils/api";
 
+/**
+ * Everything here comes from GET /me. The page previously rendered hardcoded
+ * values ("John Doe", 24 syncs, 2,847 tracks, 95%) that looked real.
+ *
+ * Fields /me does not provide are not displayed rather than invented — that
+ * is why there is no "Member since" tile (no createdAt in the contract) and
+ * no plan/verification badges (no plan model exists on the backend at all).
+ */
 export default function ProfilePage() {
+  const { me, loading, error, unauthenticated } = useMe();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (unauthenticated) router.push("/auth");
+  }, [unauthenticated, router]);
+
+  const handleSignOut = async () => {
+    try {
+      await apiClient.post("/auth/logout");
+    } catch {
+      // best-effort — clear the client either way
+    }
+    router.push("/auth");
+  };
+
   const stats = [
-    { label: "Total Syncs", value: "24", icon: TrendingUp },
-    { label: "Tracks Synced", value: "2,847", icon: Music },
-    { label: "Success Rate", value: "95%", icon: Award },
-    { label: "Member Since", value: "Dec 2024", icon: Calendar },
+    {
+      label: "Total syncs",
+      value: me?.stats.totalSyncs?.toLocaleString() ?? "—",
+      icon: TrendingUp,
+    },
+    {
+      label: "Tracks moved",
+      value: me?.stats.tracksMigrated?.toLocaleString() ?? "—",
+      icon: Music,
+    },
+    {
+      label: "Success rate",
+      value:
+        me?.stats.successRate === null || me?.stats.successRate === undefined
+          ? "—"
+          : `${Math.round(me.stats.successRate)}%`,
+      icon: Award,
+    },
+    {
+      label: "Auto-syncs on",
+      value: me?.stats.activeAutoSyncs?.toLocaleString() ?? "—",
+      icon: Zap,
+    },
   ];
 
-  const recentActivity = [
-    {
-      action: "Synced 'My Favorites' playlist",
-      time: "2 hours ago",
-      status: "success",
-    },
-    {
-      action: "Connected YouTube Music",
-      time: "2 hours ago",
-      status: "success",
-    },
-    { action: "Connected Spotify", time: "2 hours ago", status: "success" },
-    { action: "Created account", time: "2 hours ago", status: "success" },
-  ];
+  const initials = (me?.user.username || me?.user.email || "?")
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
     <div className="min-h-screen gradient-background-subdued">
@@ -66,6 +95,14 @@ export default function ProfilePage() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        {error && (
+          <Card>
+            <CardContent className="py-6 text-center text-sm text-red-600">
+              {error}
+            </CardContent>
+          </Card>
+        )}
+
         {/* Profile Info */}
         <Card
           className="hover-lift"
@@ -75,58 +112,73 @@ export default function ProfilePage() {
           <CardContent className="p-8">
             <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
               <Avatar className="w-20 h-20 border border-border shadow-elev">
-                <AvatarImage src="/placeholder.svg?height=96&width=96" />
+                {me?.user.profilePicture && (
+                  <AvatarImage src={me.user.profilePicture} />
+                )}
                 <AvatarFallback className="bg-gradient-to-br from-brand-gradStart to-brand-gradEnd text-white text-xl font-semibold">
-                  JD
+                  {initials}
                 </AvatarFallback>
               </Avatar>
 
-              <div className="text-center md:text-left flex-1">
+              <div className="text-center md:text-left flex-1 min-w-0">
                 <h2
                   id="profile-info-heading"
-                  className="text-2xl font-bold text-primary-dark mb-2"
+                  className="text-2xl font-bold text-foreground mb-2 truncate"
                 >
-                  John Doe
+                  {loading ? "Loading…" : (me?.user.username ?? "—")}
                 </h2>
-                <p className="text-secondary-dark mb-4">john.doe@example.com</p>
+                <p className="text-muted-foreground mb-4 truncate">
+                  {me?.user.email ?? ""}
+                </p>
                 <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                  <Badge className="bg-purple-500/20 text-purple-700 rounded-xl">
-                    Free Plan
+                  <Badge
+                    variant="outline"
+                    className={
+                      me?.connections.spotify.connected
+                        ? "border-green-200 bg-green-50 text-green-700"
+                        : "bg-muted text-muted-foreground"
+                    }
+                  >
+                    Spotify{" "}
+                    {me?.connections.spotify.connected
+                      ? "connected"
+                      : "not connected"}
                   </Badge>
-                  <Badge className="bg-green-500/20 text-green-700 rounded-xl">
-                    Verified
-                  </Badge>
-                  <Badge className="bg-blue-500/20 text-blue-700 rounded-xl">
-                    Early Adopter
+                  <Badge
+                    variant="outline"
+                    className={
+                      me?.connections.youtube.connected
+                        ? "border-green-200 bg-green-50 text-green-700"
+                        : "bg-muted text-muted-foreground"
+                    }
+                  >
+                    YouTube{" "}
+                    {me?.connections.youtube.connected
+                      ? "connected"
+                      : "not connected"}
                   </Badge>
                 </div>
               </div>
-
-              <Button className="px-5 py-2.5">Upgrade to Pro</Button>
             </div>
           </CardContent>
         </Card>
 
         {/* Stats Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {stats.map((stat, index) => (
-            <Card
-              key={index}
-              className="hover-lift"
-              role="region"
-            >
+          {stats.map((stat) => (
+            <Card key={stat.label} className="hover-lift" role="region">
               <CardContent className="p-6 text-center">
                 <stat.icon className="w-6 h-6 text-brand-500 mx-auto mb-3" />
-                <p className="text-2xl font-bold text-primary-dark mb-1">
+                <p className="text-2xl font-bold text-foreground mb-1">
                   {stat.value}
                 </p>
-                <p className="text-secondary-dark text-sm">{stat.label}</p>
+                <p className="text-muted-foreground text-sm">{stat.label}</p>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {/* Recent Activity */}
+        {/* Recent Activity — real sync history from /me */}
         <Card
           className="hover-lift"
           role="region"
@@ -135,37 +187,51 @@ export default function ProfilePage() {
           <CardHeader>
             <CardTitle
               id="recent-activity-heading"
-              className="text-primary-dark flex items-center"
+              className="text-foreground flex items-center"
             >
               <Clock className="w-5 h-5 mr-2" />
-              Recent Activity
+              Recent activity
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {recentActivity.map((activity, index) => (
-              <div
-                key={index}
-                className="flex items-center space-x-3 p-4 glass-effect rounded-2xl hover:bg-white/20 transition-all"
-              >
+            {!me?.recentSyncs?.length ? (
+              <p className="text-muted-foreground text-sm">
+                No syncs yet — migrate a playlist to see it here.
+              </p>
+            ) : (
+              me.recentSyncs.map((sync) => (
                 <div
-                  className="w-2 h-2 bg-green-500 rounded-full"
-                  aria-hidden="true"
-                ></div>
-                <div className="flex-1">
-                  <p className="text-primary-dark text-sm font-medium">
-                    {activity.action}
-                  </p>
-                  <p className="text-secondary-dark text-xs">{activity.time}</p>
+                  key={sync.id}
+                  className="flex items-center gap-3 p-4 rounded-lg border border-border"
+                >
+                  <div className="flex-1 min-w-0">
+                    <p className="text-foreground text-sm font-medium truncate">
+                      {sync.sourcePlatform.toLowerCase()} →{" "}
+                      {sync.destinationPlatform.toLowerCase()} ·{" "}
+                      {sync.trackCount} tracks
+                    </p>
+                    <p className="text-muted-foreground text-xs">
+                      {sync.lastSyncAt
+                        ? new Date(sync.lastSyncAt).toLocaleString()
+                        : "Not run yet"}
+                    </p>
+                  </div>
+                  {sync.autoSyncEnabled && (
+                    <Badge
+                      variant="outline"
+                      className="border-brand-200 bg-brand-50 text-brand-700 shrink-0"
+                    >
+                      Auto-sync on
+                    </Badge>
+                  )}
                 </div>
-                <Badge className="bg-green-500/20 text-green-700 rounded-xl">
-                  Success
-                </Badge>
-              </div>
-            ))}
+              ))
+            )}
           </CardContent>
         </Card>
 
-        {/* Account Actions */}
+        {/* Account Actions — only actions that actually exist. "Download my
+            data" and "Export sync history" were removed: no such endpoints. */}
         <Card
           className="hover-lift"
           role="region"
@@ -174,38 +240,24 @@ export default function ProfilePage() {
           <CardHeader>
             <CardTitle
               id="account-management-heading"
-              className="text-primary-dark"
+              className="text-foreground"
             >
-              Account Management
+              Account
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent>
             <div className="grid sm:grid-cols-2 gap-4">
-              <Button
-                variant="outline"
-                className="focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
-              >
-                Download My Data
-              </Button>
-              <Button
-                variant="outline"
-                className="focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
-              >
-                Export Sync History
-              </Button>
               <Link href="/settings">
-                <Button
-                  variant="outline"
-                  className="w-full focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2"
-                >
-                  Account Settings
+                <Button variant="outline" className="w-full">
+                  Account settings
                 </Button>
               </Link>
               <Button
                 variant="outline"
-                className="border-red-500/50 text-red-600 hover:bg-red-500/10 bg-transparent rounded-xl focus-visible:outline-2 focus-visible:outline-red-400 focus-visible:outline-offset-2"
+                onClick={handleSignOut}
+                className="border-red-500/50 text-red-600 hover:bg-red-500/10 bg-transparent"
               >
-                Sign Out
+                Sign out
               </Button>
             </div>
           </CardContent>
