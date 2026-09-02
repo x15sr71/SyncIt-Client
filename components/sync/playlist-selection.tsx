@@ -73,7 +73,10 @@ export function PlaylistSelection({
             Select All Playlists
           </span>
         </div>
-        <Badge variant="outline" className="bg-brand-50 text-brand-700 border-brand-200">
+        <Badge
+          variant="outline"
+          className="bg-brand-50 text-brand-700 border-brand-200"
+        >
           {selectedCount} selected
         </Badge>
       </div>

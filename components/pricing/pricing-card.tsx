@@ -73,7 +73,12 @@ export function PricingCard({
 
         <div className="mt-6 pt-2">
           {plan.cta.kind === "link" ? (
-            <Button asChild variant={buttonVariant} size="lg" className="w-full">
+            <Button
+              asChild
+              variant={buttonVariant}
+              size="lg"
+              className="w-full"
+            >
               <Link href={plan.cta.href ?? "/dashboard"}>{plan.cta.label}</Link>
             </Button>
           ) : (

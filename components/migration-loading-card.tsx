@@ -1,10 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Music, ArrowRight, Loader2, CheckCircle } from "lucide-react";
+import { Music, Loader2 } from "lucide-react";
 
+/**
+ * Purely presentational "migration in progress" overlay.
+ *
+ * This card used to run a setInterval that walked the playlist list on a 4s
+ * timer and then invented a result — successCount = totalTracks * 0.9 plus a
+ * hardcoded failed track — and handed it to the dashboard as if it were the
+ * backend's answer. Because it usually finished before the real request, the
+ * fabricated numbers were what users actually saw; it once reported success
+ * for a migration that added zero tracks.
+ *
+ * The real result now comes solely from the migration response
+ * (see `handleMigrationComplete` in app/dashboard/page.tsx).
+ *
+ * The backend exposes no per-track progress, so this deliberately shows an
+ * indeterminate state rather than a number it cannot know.
+ */
 interface MigrationLoadingCardProps {
   isVisible: boolean;
   sourcePlatform: string;
@@ -13,94 +27,41 @@ interface MigrationLoadingCardProps {
     id: string;
     name: string;
     totalTracks: number;
-    status: "pending" | "in-progress" | "completed" | "failed";
-    progress: number;
-    currentStep: string;
-    processedTracks: number;
   }>;
-  onComplete: (
-    results: Array<{
-      playlistId: string;
-      playlistName: string;
-      successCount: number;
-      failedTracks: FailedTrack[];
-    }>,
-  ) => void;
-}
-
-interface FailedTrack {
-  id: string;
-  title: string;
-  artist: string;
-  reason: string;
 }
 
 export function MigrationLoadingCard({
   isVisible,
   sourcePlatform,
   targetPlatform,
-  playlists = [], // Default to empty array
-  onComplete,
+  playlists = [],
 }: MigrationLoadingCardProps) {
-  const [currentPlaylistIndex, setCurrentPlaylistIndex] = useState(0);
-
-  useEffect(() => {
-    if (!isVisible || playlists.length === 0) return;
-
-    // Simulate sequential migration
-    const interval = setInterval(() => {
-      setCurrentPlaylistIndex((prevIndex) => {
-        if (prevIndex + 1 >= playlists.length) {
-          clearInterval(interval);
-          setTimeout(() => {
-            const results = playlists.map((playlist) => ({
-              playlistId: playlist.id,
-              playlistName: playlist.name,
-              successCount: Math.floor(playlist.totalTracks * 0.9),
-              failedTracks: [
-                {
-                  id: "1",
-                  title: "Rare Live Version",
-                  artist: "Indie Artist",
-                  reason: "Song not available on target platform",
-                },
-              ],
-            }));
-            console.log("Calling onComplete with results", results);
-            onComplete(results);
-          }, 500);
-          return prevIndex; // Don't increment past the last item
-        }
-
-        return prevIndex + 1;
-      });
-    }, 4000); // 4 seconds per playlist
-
-    return () => clearInterval(interval);
-  }, [isVisible, playlists, onComplete]);
-
   if (!isVisible || playlists.length === 0) return null;
 
-  const currentPlaylist = playlists[currentPlaylistIndex];
-  const completedPlaylists = playlists.slice(
+  const totalTracks = playlists.reduce(
+    (sum, playlist) => sum + (playlist.totalTracks || 0),
     0,
-    Math.min(currentPlaylistIndex + 1, playlists.length),
   );
-  const totalPlaylists = playlists.length;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-900/40 backdrop-blur-sm fade-in-up">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-900/40 backdrop-blur-sm fade-in-up"
+      role="status"
+      aria-live="polite"
+    >
       <Card className="w-full max-w-2xl shadow-elev">
         <CardHeader className="text-center pb-5 border-b border-border">
           <div className="mx-auto w-14 h-14 bg-gradient-to-br from-brand-gradStart to-brand-gradEnd rounded-xl2 flex items-center justify-center mb-3 shadow-soft">
             <Loader2 className="w-7 h-7 text-white animate-spin" />
           </div>
           <CardTitle className="text-foreground text-xl font-semibold">
-            Migrating Playlists
+            Migrating {playlists.length === 1 ? "playlist" : "playlists"}
           </CardTitle>
           <p className="text-muted-foreground text-sm">
-            {currentPlaylistIndex + 1} of {totalPlaylists} playlists • Please
-            wait while we sync your music
+            {playlists.length}{" "}
+            {playlists.length === 1 ? "playlist" : "playlists"} • {totalTracks}{" "}
+            tracks — matching songs across platforms. This can take a few
+            minutes; please keep this tab open.
           </p>
         </CardHeader>
 
@@ -137,63 +98,30 @@ export function MigrationLoadingCard({
             </div>
           </div>
 
-          {/* Current Playlist */}
-          {currentPlaylist && currentPlaylistIndex < playlists.length && (
-            <div className="text-center p-5 rounded-lg border border-brand-200 bg-brand-50/50">
-              <h3 className="text-foreground font-semibold text-base mb-1">
-                Currently Migrating
-              </h3>
-              <h4 className="text-foreground font-medium mb-0.5">
-                {currentPlaylist.name}
-              </h4>
-              <p className="text-muted-foreground text-sm mb-4">
-                {currentPlaylist.totalTracks} tracks total
-              </p>
-
-              {/* Progress Bar */}
-              <div className="space-y-2 mb-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Progress</span>
-                  <span className="text-foreground font-medium">75%</span>
+          {/* Queued playlists — no per-playlist status: the backend reports
+              results only once the whole migration finishes. */}
+          <div className="space-y-2">
+            <h4 className="text-foreground font-medium text-sm">
+              In this migration
+            </h4>
+            <div className="space-y-2 max-h-40 overflow-y-auto">
+              {playlists.map((playlist) => (
+                <div
+                  key={playlist.id}
+                  className="flex items-center justify-between gap-3 p-3 rounded-lg border border-border"
+                >
+                  <span className="text-foreground font-medium text-sm truncate">
+                    {playlist.name}
+                  </span>
+                  <span className="text-muted-foreground text-sm shrink-0">
+                    {playlist.totalTracks} tracks
+                  </span>
                 </div>
-                <Progress value={75} className="h-2" />
-              </div>
-
-              <p className="text-muted-foreground text-sm">
-                Matching songs across platforms...
-              </p>
+              ))}
             </div>
-          )}
+          </div>
 
-          {/* Completed Playlists */}
-          {completedPlaylists.length > 0 && currentPlaylistIndex >= 0 && (
-            <div className="space-y-2">
-              <h4 className="text-foreground font-medium text-sm flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-600" />
-                Completed Playlists
-              </h4>
-              <div className="space-y-2 max-h-32 overflow-y-auto">
-                {completedPlaylists.map((playlist) => (
-                  <div
-                    key={playlist.id}
-                    className="flex items-center justify-between p-3 rounded-lg border border-border"
-                  >
-                    <div className="flex items-center gap-3">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
-                      <span className="text-foreground font-medium text-sm">
-                        {playlist.name}
-                      </span>
-                    </div>
-                    <span className="text-muted-foreground text-sm">
-                      {playlist.totalTracks} tracks
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Loading Animation */}
+          {/* Indeterminate activity indicator */}
           <div className="flex justify-center">
             <div className="flex space-x-1.5">
               {[0, 1, 2].map((i) => (

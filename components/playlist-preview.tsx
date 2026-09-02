@@ -223,6 +223,7 @@ export function PlaylistPreview({
                 onEmpty={onEmpty}
                 onDelete={onDelete}
                 canDelete={playlist.platform !== "spotify"}
+                canEmpty={playlist.platform !== "spotify"}
               />
             )}
             <Button

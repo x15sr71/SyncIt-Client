@@ -119,6 +119,7 @@ export default function DashboardPage() {
   const {
     renamePlaylist: renameYouTubePlaylist,
     deletePlaylist: deleteYouTubePlaylist,
+    emptyPlaylist: emptyYouTubePlaylist,
     deleteSongFromPlaylist: deleteYouTubeSong,
   } = useYouTubeActions({
     onPlaylistRenamed: (playlistId, newName) => {
@@ -182,6 +183,7 @@ export default function DashboardPage() {
     renameYouTubePlaylist,
     deleteSpotifyPlaylist,
     deleteYouTubePlaylist,
+    emptyYouTubePlaylist,
     deleteSpotifySong,
     deleteYouTubeSong,
     fetchPlaylists,
@@ -191,28 +193,57 @@ export default function DashboardPage() {
 
   // Migration callback handlers
   const handleMigrationStart = () => {
-    console.log("Dashboard: Migration started");
+    // Record which playlist this run is for. `selectedPlaylistForMigration`
+    // had exactly one writer — `handlers.handleStartMigration`, which nothing
+    // ever calls, because MigrationAction drives the migration directly. That
+    // left the id empty forever, so "Keep in Sync" could only ever report
+    // "Could not determine which playlist to keep in sync" and auto-sync was
+    // unreachable from the UI despite being fully built on both sides.
+    const firstSelectedId = Object.keys(dashboard.selectedPlaylists).find(
+      (id) => dashboard.selectedPlaylists[id],
+    );
+    if (firstSelectedId) {
+      dashboard.setSelectedPlaylistForMigration(firstSelectedId);
+    }
+
     dashboard.setIsMigrating(true);
     showToast("Migration started...", "success");
   };
 
   const handleMigrationComplete = (results: any) => {
-    console.log("Dashboard: Migration completed", results);
+    const successCount = results.successCount || 0;
+    const failedTracks = results.failedTracks || [];
 
-    // Update migration results in dashboard state
     dashboard.setMigrationResults({
-      successCount: results.successCount || 0,
-      failedTracks: results.failedTracks || [],
+      successCount,
+      failedTracks,
       playlistName: results.playlistName || "Unknown Playlist",
     });
 
-    // Stop migration loading state
     dashboard.setIsMigrating(false);
 
-    // Show success toast
-    showToast("Migration completed successfully!", "success");
+    // The request can return 200 having added nothing (e.g. every track failed
+    // to match upstream). Reporting that as success is what previously told a
+    // user their playlist had migrated when zero tracks reached Spotify.
+    // Deliberately generic: the cause is upstream/internal detail and is
+    // recorded in the backend logs, not surfaced to the user.
+    if (successCount === 0) {
+      showToast(
+        "Migration failed — no tracks could be added. Please try again later.",
+        "error",
+      );
+    } else if (failedTracks.length > 0) {
+      showToast(
+        `Migration finished with issues — ${successCount} added, ${failedTracks.length} could not be matched.`,
+        "error",
+      );
+    } else {
+      showToast(
+        `Migration complete — ${successCount} tracks added.`,
+        "success",
+      );
+    }
 
-    // Show migration results dialog
     dashboard.setShowMigrationResult(true);
 
     // Refresh /me so stats and recent syncs reflect the new run
@@ -238,10 +269,6 @@ export default function DashboardPage() {
             id: playlist.id,
             name: playlist.name,
             totalTracks: playlist.songCount,
-            status: "pending" as const,
-            progress: 0,
-            currentStep: "Initializing",
-            processedTracks: 0,
           }
         : null;
     })
@@ -250,8 +277,6 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen w-full gradient-background-subdued overflow-x-hidden">
       <DashboardHeader
-        darkMode={dashboard.darkMode}
-        setDarkMode={dashboard.setDarkMode}
         isMobileMenuOpen={dashboard.isMobileMenuOpen}
         setIsMobileMenuOpen={dashboard.setIsMobileMenuOpen}
         onLogout={handleLogout}
@@ -349,7 +374,6 @@ export default function DashboardPage() {
         sourcePlatform={dashboard.selectedSource}
         targetPlatform={dashboard.selectedTarget}
         playlists={migrationPlaylists}
-        onComplete={handlers.handleMigrationComplete}
       />
       <MigrationResultCard
         isVisible={dashboard.showMigrationResult}

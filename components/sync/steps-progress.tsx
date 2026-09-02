@@ -27,7 +27,10 @@ export function StepsProgress({
         {steps.map((step, index) => {
           const status = getStepStatus(index);
           return (
-            <div key={index} className="flex items-center flex-1 last:flex-none">
+            <div
+              key={index}
+              className="flex items-center flex-1 last:flex-none"
+            >
               <div className="flex flex-col items-center">
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm transition-all duration-300 ${
