@@ -38,7 +38,7 @@ export default function DashboardHeader({
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1 min-w-0">
-            <ThemeToggle className="flex items-center gap-2 mr-2 px-2 py-1 rounded-md border border-border bg-card" />
+            <ThemeToggle className="mr-1" />
 
             <Link href="/settings">
               <Button variant="ghost" size="sm">
@@ -93,7 +93,7 @@ export default function DashboardHeader({
                 <span className="text-sm font-medium text-foreground">
                   Theme
                 </span>
-                <ThemeToggle className="flex items-center gap-2" />
+                <ThemeToggle />
               </div>
               <Link href="/settings" onClick={() => setIsMobileMenuOpen(false)}>
                 <Button variant="ghost" className="w-full justify-start">
