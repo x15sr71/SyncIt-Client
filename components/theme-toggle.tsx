@@ -6,15 +6,24 @@ import { Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * Sun/Moon theme toggle, shared by the marketing header and the dashboard
- * header so the hydration guard lives in exactly one place.
+ * Single-button theme toggle, shared by the marketing header and the
+ * dashboard header.
  *
- * `mounted` matters: the server cannot know the visitor's persisted theme, so
- * rendering the real state on the server would produce a hydration mismatch.
- * Until mount it renders the light-mode face.
+ * The sun and moon are stacked and cross-faded with rotation and scale, so
+ * one glyph turns into the other rather than swapping. Both are always in the
+ * DOM; only transform and opacity differ.
  *
- * The two icons are stacked and cross-faded on a rotate+scale arc, which reads
- * as one mark morphing rather than two icons swapping.
+ * Visibility is driven from React rather than Tailwind `dark:` variants. The
+ * variants did not win against the base utilities here, so the icon stayed on
+ * the light state while the page was dark. Deriving it from `resolvedTheme`
+ * removes the dependency on selector precedence entirely.
+ *
+ * `mounted` keeps the first paint deterministic: the server cannot know the
+ * stored theme, so both renders start from the light state and the correct
+ * one animates in after hydration.
+ *
+ * The morph depends on ThemeProvider running without
+ * `disableTransitionOnChange` — see the note in app/layout.tsx.
  */
 export function ThemeToggle({ className }: { className?: string }) {
   const { resolvedTheme, setTheme } = useTheme();
@@ -29,6 +38,7 @@ export function ThemeToggle({ className }: { className?: string }) {
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+      title={`Switch to ${isDark ? "light" : "dark"} mode`}
       className={cn(
         "relative grid h-9 w-9 place-items-center overflow-hidden rounded-full",
         "border border-border/70 bg-card/50 text-foreground",

@@ -38,7 +38,7 @@ export default function DashboardHeader({
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1 min-w-0">
-            <ThemeToggle className="mr-2" />
+            <ThemeToggle className="mr-1" />
 
             <Link href="/settings">
               <Button variant="ghost" size="sm">
