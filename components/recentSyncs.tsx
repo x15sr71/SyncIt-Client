@@ -10,8 +10,11 @@ interface RecentSyncsProps {
 
 function toDisplayStatus(
   status: string | null,
-): "success" | "in-progress" | "failed" {
-  if (status === "SUCCESS" || status === "PARTIAL") return "success";
+): "success" | "partial" | "in-progress" | "failed" {
+  // PARTIAL used to map to "success", so a run that added nothing and failed
+  // every track showed a green Success badge.
+  if (status === "SUCCESS") return "success";
+  if (status === "PARTIAL") return "partial";
   if (status === "RUNNING") return "in-progress";
   return "failed";
 }
