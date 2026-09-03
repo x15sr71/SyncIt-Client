@@ -90,7 +90,7 @@ export default function PlaylistsDisplay({
           <div className="flex flex-col items-center justify-center py-12 space-y-4">
             <AlertCircle className="h-10 w-10 text-red-500" />
             <div className="text-center space-y-3">
-              <p className="text-red-600 font-medium">
+              <p className="text-red-600 dark:text-red-400 font-medium">
                 Failed to load playlists
               </p>
               <p className="text-sm text-muted-foreground max-w-xs">

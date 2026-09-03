@@ -35,7 +35,7 @@ export default function QuickStats({
       <CardHeader className="pb-3">
         <CardTitle
           id="quick-stats-heading"
-          className="text-foreground text-base font-semibold"
+          className="text-foreground text-base font-medium"
         >
           Quick stats
         </CardTitle>
@@ -45,10 +45,12 @@ export default function QuickStats({
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="rounded-lg border border-border bg-card p-3"
+              className="rounded-xl border border-border/60 p-3 min-w-0"
             >
-              <div className="text-xs text-muted-foreground">{stat.label}</div>
-              <div className="text-2xl font-semibold text-foreground mt-0.5">
+              <div className="text-[0.7rem] text-muted-foreground truncate">
+                {stat.label}
+              </div>
+              <div className="text-2xl font-medium tracking-tight tabular-nums text-foreground mt-0.5">
                 {stat.value}
               </div>
             </div>

@@ -41,7 +41,7 @@ export default function RecentSyncs({
       <CardHeader className="pb-3">
         <CardTitle
           id="recent-syncs-heading"
-          className="text-foreground text-base font-semibold truncate"
+          className="text-foreground text-base font-medium truncate"
         >
           Recent syncs
         </CardTitle>

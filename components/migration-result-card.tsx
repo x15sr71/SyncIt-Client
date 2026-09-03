@@ -68,12 +68,12 @@ export function MigrationResultCard({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {hasFailures ? (
-                <div className="w-12 h-12 bg-amber-50 border border-amber-200 rounded-xl2 flex items-center justify-center">
-                  <AlertTriangle className="w-6 h-6 text-amber-600" />
+                <div className="w-12 h-12 bg-amber-500/10 border border-amber-500/25 rounded-2xl flex items-center justify-center">
+                  <AlertTriangle className="w-6 h-6 text-amber-600 dark:text-amber-400" />
                 </div>
               ) : (
-                <div className="w-12 h-12 bg-green-50 border border-green-200 rounded-xl2 flex items-center justify-center">
-                  <CheckCircle className="w-6 h-6 text-green-600" />
+                <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/25 rounded-2xl flex items-center justify-center">
+                  <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                 </div>
               )}
               <div>
@@ -100,19 +100,23 @@ export function MigrationResultCard({
 
         <CardContent className="space-y-5 overflow-y-auto max-h-[65vh] pt-6">
           {/* Summary Stats */}
-          <div className="grid grid-cols-3 gap-3">
-            <div className="text-center p-4 rounded-lg border border-green-200 bg-green-50/50">
-              <div className="text-2xl font-semibold text-green-600 mb-0.5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div className="text-center p-4 rounded-lg border border-emerald-500/25 bg-emerald-500/10">
+              <div className="text-2xl font-semibold text-emerald-600 dark:text-emerald-400 mb-0.5">
                 {successCount}
               </div>
-              <div className="text-xs text-green-700 font-medium">Migrated</div>
+              <div className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                Migrated
+              </div>
             </div>
             {hasFailures && (
-              <div className="text-center p-4 rounded-lg border border-amber-200 bg-amber-50/50">
-                <div className="text-2xl font-semibold text-amber-600 mb-0.5">
+              <div className="text-center p-4 rounded-lg border border-amber-500/25 bg-amber-500/10">
+                <div className="text-2xl font-semibold text-amber-600 dark:text-amber-400 mb-0.5">
                   {failedTracks.length}
                 </div>
-                <div className="text-xs text-amber-700 font-medium">Failed</div>
+                <div className="text-xs text-amber-600 dark:text-amber-400 font-medium">
+                  Failed
+                </div>
               </div>
             )}
             <div className="text-center p-4 rounded-lg border border-border bg-muted/40">
@@ -127,9 +131,9 @@ export function MigrationResultCard({
 
           {/* Success Message */}
           {!hasFailures && (
-            <div className="text-center p-6 rounded-lg border border-green-200 bg-green-50/40">
-              <div className="w-16 h-16 bg-green-50 border border-green-200 rounded-xl2 flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-9 h-9 text-green-600" />
+            <div className="text-center p-6 rounded-lg border border-emerald-500/25 bg-emerald-500/10">
+              <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/25 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="w-9 h-9 text-emerald-600 dark:text-emerald-400" />
               </div>
               <h3 className="text-foreground font-semibold text-lg mb-2">
                 Migration Successful!
@@ -155,14 +159,14 @@ export function MigrationResultCard({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="text-foreground font-medium text-sm flex items-center gap-2">
-                  <div className="w-7 h-7 bg-amber-50 border border-amber-200 rounded-lg flex items-center justify-center">
-                    <AlertTriangle className="w-4 h-4 text-amber-600" />
+                  <div className="w-7 h-7 bg-amber-500/10 border border-amber-500/25 rounded-lg flex items-center justify-center">
+                    <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                   </div>
                   Tracks That Couldn't Be Migrated
                 </h4>
                 <Badge
                   variant="outline"
-                  className="border-amber-200 bg-amber-50 text-amber-700"
+                  className="border-amber-500/25 bg-amber-500/10 text-amber-600 dark:text-amber-400"
                 >
                   {failedTracks.length} failed
                 </Badge>
@@ -187,9 +191,9 @@ export function MigrationResultCard({
                             <p className="text-muted-foreground text-sm truncate mb-1.5">
                               {track.artist}
                             </p>
-                            <div className="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md">
+                            <div className="inline-flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/25 px-2 py-0.5 rounded-md">
                               <div className="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
-                              <span className="text-amber-700 text-xs font-medium">
+                              <span className="text-amber-600 dark:text-amber-400 text-xs font-medium">
                                 {track.reason}
                               </span>
                             </div>

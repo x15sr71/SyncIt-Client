@@ -127,7 +127,7 @@ export function PlaylistActionMenu({
                 <Button
                   variant="ghost"
                   onClick={() => handleAction(() => onDelete(playlistId))}
-                  className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700"
+                  className="w-full justify-start text-red-600 dark:text-red-400 hover:bg-red-500/10 hover:text-red-600 dark:text-red-400"
                   role="menuitem"
                 >
                   <Trash2 className="w-4 h-4 mr-2" />

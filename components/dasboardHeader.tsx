@@ -16,7 +16,7 @@ export default function DashboardHeader({
 }: DashboardHeaderProps) {
   return (
     <header
-      className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-40"
+      className="border-b border-border/60 bg-background/70 backdrop-blur-xl backdrop-saturate-150 sticky top-0 z-40"
       role="banner"
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 min-w-0">

@@ -275,7 +275,7 @@ export default function DashboardPage() {
     .filter((p): p is NonNullable<typeof p> => !!p);
 
   return (
-    <div className="min-h-screen w-full gradient-background-subdued overflow-x-hidden">
+    <div className="min-h-screen w-full bg-background overflow-x-hidden">
       <DashboardHeader
         isMobileMenuOpen={dashboard.isMobileMenuOpen}
         setIsMobileMenuOpen={dashboard.setIsMobileMenuOpen}

@@ -67,9 +67,9 @@ export default function ProfilePage() {
     .toUpperCase();
 
   return (
-    <div className="min-h-screen gradient-background-subdued">
+    <div className="min-h-screen bg-background">
       <header
-        className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-40"
+        className="border-b border-border/60 bg-background/70 backdrop-blur-xl backdrop-saturate-150 sticky top-0 z-40"
         role="banner"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
@@ -78,6 +78,7 @@ export default function ProfilePage() {
               <Button
                 variant="ghost"
                 size="sm"
+                className="rounded-full text-muted-foreground hover:text-foreground"
                 aria-label="Go back to dashboard"
               >
                 <ArrowLeft className="w-4 h-4" />
@@ -97,7 +98,7 @@ export default function ProfilePage() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {error && (
           <Card>
-            <CardContent className="py-6 text-center text-sm text-red-600">
+            <CardContent className="py-6 text-center text-sm text-red-600 dark:text-red-400">
               {error}
             </CardContent>
           </Card>
@@ -111,7 +112,7 @@ export default function ProfilePage() {
         >
           <CardContent className="p-8">
             <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
-              <Avatar className="w-20 h-20 border border-border shadow-elev">
+              <Avatar className="w-20 h-20 border border-border/60">
                 {me?.user.profilePicture && (
                   <AvatarImage src={me.user.profilePicture} />
                 )}
@@ -123,11 +124,11 @@ export default function ProfilePage() {
               <div className="text-center md:text-left flex-1 min-w-0">
                 <h2
                   id="profile-info-heading"
-                  className="text-2xl font-bold text-foreground mb-2 truncate"
+                  className="text-2xl sm:text-[1.75rem] font-semibold tracking-[-0.02em] text-foreground mb-1.5 truncate"
                 >
                   {loading ? "Loading…" : (me?.user.username ?? "—")}
                 </h2>
-                <p className="text-muted-foreground mb-4 truncate">
+                <p className="text-sm text-muted-foreground mb-4 truncate">
                   {me?.user.email ?? ""}
                 </p>
                 <div className="flex flex-wrap gap-2 justify-center md:justify-start">
@@ -135,8 +136,8 @@ export default function ProfilePage() {
                     variant="outline"
                     className={
                       me?.connections.spotify.connected
-                        ? "border-green-200 bg-green-50 text-green-700"
-                        : "bg-muted text-muted-foreground"
+                        ? "rounded-full border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                        : "rounded-full bg-muted text-muted-foreground"
                     }
                   >
                     Spotify{" "}
@@ -148,8 +149,8 @@ export default function ProfilePage() {
                     variant="outline"
                     className={
                       me?.connections.youtube.connected
-                        ? "border-green-200 bg-green-50 text-green-700"
-                        : "bg-muted text-muted-foreground"
+                        ? "rounded-full border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                        : "rounded-full bg-muted text-muted-foreground"
                     }
                   >
                     YouTube{" "}
@@ -164,15 +165,17 @@ export default function ProfilePage() {
         </Card>
 
         {/* Stats Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {stats.map((stat) => (
             <Card key={stat.label} className="hover-lift" role="region">
               <CardContent className="p-6 text-center">
-                <stat.icon className="w-6 h-6 text-brand-500 mx-auto mb-3" />
-                <p className="text-2xl font-bold text-foreground mb-1">
+                <stat.icon className="w-[1.15rem] h-[1.15rem] text-muted-foreground mx-auto mb-3" />
+                <p className="text-[1.75rem] font-medium tracking-tight tabular-nums text-foreground mb-1">
                   {stat.value}
                 </p>
-                <p className="text-muted-foreground text-sm">{stat.label}</p>
+                <p className="text-[0.8rem] text-muted-foreground">
+                  {stat.label}
+                </p>
               </CardContent>
             </Card>
           ))}
@@ -189,7 +192,7 @@ export default function ProfilePage() {
               id="recent-activity-heading"
               className="text-foreground flex items-center"
             >
-              <Clock className="w-5 h-5 mr-2" />
+              <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
               Recent activity
             </CardTitle>
           </CardHeader>
@@ -255,7 +258,7 @@ export default function ProfilePage() {
               <Button
                 variant="outline"
                 onClick={handleSignOut}
-                className="border-red-500/50 text-red-600 hover:bg-red-500/10 bg-transparent"
+                className="border-red-500/50 text-red-600 dark:text-red-400 hover:bg-red-500/10 bg-transparent"
               >
                 Sign out
               </Button>

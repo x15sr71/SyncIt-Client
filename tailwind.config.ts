@@ -96,6 +96,9 @@ const config: Config = {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
+      transitionTimingFunction: {
+        spring: "cubic-bezier(0.22, 1, 0.36, 1)",
+      },
       borderRadius: {
         xl2: "14px",
         lg: "var(--radius)",

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronDown } from "lucide-react";
 
 const faqs = [
@@ -47,80 +46,63 @@ export function FAQSection() {
   return (
     <section
       id="faq"
-      className="py-20 relative scroll-mt-20"
+      className="py-24 sm:py-32 scroll-mt-20 border-t border-border/50"
       role="region"
       aria-labelledby="faq-heading"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto text-center mb-12">
-          <div className="text-sm font-medium logo-gradient inline-block mb-2">
+        <div className="max-w-2xl mx-auto text-center mb-14 sm:mb-16">
+          <p className="text-sm text-muted-foreground tracking-wide mb-3">
             FAQ
-          </div>
+          </p>
           <h2
             id="faq-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground mb-4"
+            className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-[-0.03em] text-foreground"
           >
             Frequently asked.
           </h2>
-          <p className="text-lg text-muted-foreground">
-            Everything you need to know about SyncIt.
-          </p>
         </div>
 
-        <div className="max-w-3xl mx-auto space-y-2">
-          {faqs.map((faq, index) => (
-            <Card
-              key={index}
-              className="overflow-hidden transition-colors hover:border-input"
-              role="article"
-            >
-              <CardHeader
-                className="cursor-pointer transition-colors duration-150 hover:bg-accent/40 p-5"
-                onClick={() => toggleFAQ(index)}
-                role="button"
-                tabIndex={0}
-                aria-expanded={openIndex === index}
-                aria-controls={`faq-content-${index}`}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    toggleFAQ(index);
-                  }
-                }}
-              >
-                <CardTitle className="flex justify-between items-center text-foreground text-base font-medium">
-                  <span>{faq.question}</span>
+        <div className="max-w-2xl mx-auto divide-y divide-border/60 border-y border-border/60">
+          {faqs.map((faq, index) => {
+            const isOpen = openIndex === index;
+            return (
+              <div key={index}>
+                <button
+                  type="button"
+                  onClick={() => toggleFAQ(index)}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-content-${index}`}
+                  className="w-full flex items-center justify-between gap-6 py-5 text-left group focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-lg"
+                >
+                  <span className="text-[0.98rem] font-medium text-foreground group-hover:text-muted-foreground transition-colors duration-200">
+                    {faq.question}
+                  </span>
                   <ChevronDown
-                    className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${
-                      openIndex === index ? "rotate-180" : ""
+                    className={`w-4 h-4 shrink-0 text-muted-foreground transition-transform duration-300 ease-spring motion-reduce:transition-none ${
+                      isOpen ? "rotate-180" : ""
                     }`}
                     aria-hidden="true"
                   />
-                </CardTitle>
-              </CardHeader>
+                </button>
 
-              <div
-                className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                  openIndex === index
-                    ? "max-h-96 opacity-100"
-                    : "max-h-0 opacity-0"
-                }`}
-              >
-                <CardContent
+                <div
                   id={`faq-content-${index}`}
-                  className="pt-0 pb-5 px-5"
-                  role="region"
-                  aria-labelledby={`faq-question-${index}`}
+                  className={`grid transition-all duration-300 ease-spring motion-reduce:transition-none ${
+                    isOpen
+                      ? "grid-rows-[1fr] opacity-100"
+                      : "grid-rows-[0fr] opacity-0"
+                  }`}
                 >
-                  <div className="border-t border-border pt-4">
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                  <div className="overflow-hidden">
+                    <p className="pb-6 pr-10 text-sm text-muted-foreground leading-relaxed">
                       {faq.answer}
                     </p>
                   </div>
-                </CardContent>
+                </div>
               </div>
-            </Card>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
