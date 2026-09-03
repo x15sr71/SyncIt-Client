@@ -1,22 +1,16 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Music2, Link2, CheckCircle } from "lucide-react";
-
 const steps = [
   {
-    icon: Music2,
     title: "Connect Your Accounts",
     description:
       "Link your Spotify, YouTube Music, and other streaming accounts securely",
   },
   {
-    icon: Link2,
     title: "Select Playlists",
     description: "Choose which playlists you want to sync across platforms",
   },
   {
-    icon: CheckCircle,
     title: "Enjoy Synced Music",
     description:
       "Your music is now available everywhere, automatically updated",
@@ -27,60 +21,44 @@ export function HowItWorksSection() {
   return (
     <section
       id="how-it-works"
-      className="py-20 relative scroll-mt-20"
+      className="py-24 sm:py-32 scroll-mt-20 border-t border-border/50"
       role="region"
       aria-labelledby="how-it-works-heading"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl mb-12">
-          <div className="text-sm font-medium logo-gradient inline-block mb-2">
+        <div className="max-w-2xl mx-auto text-center mb-16 sm:mb-20">
+          <p className="text-sm text-muted-foreground tracking-wide mb-3">
             How it works
-          </div>
+          </p>
           <h2
             id="how-it-works-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground mb-4"
+            className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-[-0.03em] text-foreground text-balance"
           >
             Three steps. About a minute.
           </h2>
-          <p className="text-lg text-muted-foreground">
-            Get started in just three simple steps and enjoy your music
-            everywhere.
+          <p className="mt-4 text-lg text-muted-foreground text-pretty">
+            Connect your accounts, pick what moves, and let it run.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-4 stagger">
+        <ol className="grid md:grid-cols-3 gap-12 md:gap-8 max-w-5xl mx-auto stagger">
           {steps.map((step, index) => (
-            <Card
+            <li
               key={index}
-              className="hover-lift"
-              role="article"
-              aria-labelledby={`step-${index}-title`}
+              className="md:pl-6 md:border-l md:border-border/60 first:md:border-l-0 first:md:pl-0"
             >
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="text-xs font-mono text-muted-foreground tracking-wide">
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
-                  <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-brand-gradStart to-brand-gradEnd flex items-center justify-center shadow-soft">
-                    <step.icon
-                      className="w-4 h-4 text-white"
-                      aria-hidden="true"
-                    />
-                  </div>
-                </div>
-                <h3
-                  id={`step-${index}-title`}
-                  className="text-foreground text-base font-semibold mb-1.5"
-                >
-                  {step.title}
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {step.description}
-                </p>
-              </CardContent>
-            </Card>
+              <div className="text-5xl font-semibold tracking-tight text-muted-foreground/25 tabular-nums mb-5">
+                {String(index + 1).padStart(2, "0")}
+              </div>
+              <h3 className="text-foreground text-[0.98rem] font-medium mb-2">
+                {step.title}
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
+                {step.description}
+              </p>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );
