@@ -58,7 +58,7 @@ export function HowItWorksSection() {
               aria-labelledby={`step-${index}-title`}
             >
               <div className="flex items-baseline gap-3 mb-5">
-                <span className="text-4xl font-semibold tracking-tight text-border select-none">
+                <span className="text-4xl font-semibold tracking-tight text-muted-foreground/60 select-none">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <step.icon
