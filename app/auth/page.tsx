@@ -25,24 +25,15 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen gradient-background-subdued relative overflow-hidden">
-      <span
-        className="blob blob-a"
-        style={{ top: "5%", right: "-100px" }}
-        aria-hidden="true"
-      />
-      <span
-        className="blob blob-b"
-        style={{ bottom: "5%", left: "-100px" }}
-        aria-hidden="true"
-      />
-      <main className="flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8 py-16 relative">
+    <div className="min-h-screen bg-background">
+      <main className="flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8 py-16">
         <div className="w-full max-w-md fade-in-up">
-          <div className="mb-4">
+          <div className="mb-6">
             <Link href="/">
               <Button
                 variant="ghost"
                 size="sm"
+                className="rounded-full -ml-2 text-muted-foreground hover:text-foreground"
                 aria-label="Go back to home page"
               >
                 <ArrowLeft className="w-4 h-4" />
@@ -51,22 +42,26 @@ export default function AuthPage() {
             </Link>
           </div>
 
-          <Card role="main" aria-labelledby="auth-title">
-            <CardHeader className="text-center pb-4">
+          <Card
+            role="main"
+            aria-labelledby="auth-title"
+            className="shadow-none border-border/60"
+          >
+            <CardHeader className="text-center pb-5 pt-8 px-6 sm:px-8">
               <div
                 className="flex items-center justify-center mb-4"
                 aria-hidden="true"
               >
                 <div
                   className="logo-icon"
-                  style={{ width: 56, height: 56, borderRadius: 14 }}
+                  style={{ width: 52, height: 52, borderRadius: 16 }}
                 >
                   <Music className="w-6 h-6 text-white" />
                 </div>
               </div>
               <CardTitle
                 id="auth-title"
-                className="text-2xl font-semibold tracking-tight text-foreground mb-1.5"
+                className="text-2xl sm:text-[1.75rem] font-semibold tracking-[-0.02em] text-foreground mb-2"
               >
                 Welcome to SyncIt
               </CardTitle>
@@ -75,12 +70,12 @@ export default function AuthPage() {
               </p>
             </CardHeader>
 
-            <CardContent className="space-y-5">
+            <CardContent className="space-y-5 px-6 sm:px-8 pb-8">
               <Button
                 onClick={handleGoogleSignIn}
                 disabled={isLoading}
                 variant="outline"
-                className="w-full py-6 text-sm"
+                className="w-full h-12 rounded-full text-sm"
                 aria-describedby="signin-description"
               >
                 {isLoading ? (

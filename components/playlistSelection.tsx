@@ -97,16 +97,16 @@ export default function PlaylistSelection({
 
           {/* YouTube Music API Limitation Notice */}
           {selectedTarget === "youtube" && (
-            <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg min-w-0">
+            <div className="mt-4 p-3 bg-amber-500/10 border border-amber-500/25 rounded-lg min-w-0">
               <div className="flex items-start gap-2.5 min-w-0">
                 <div className="w-6 h-6 bg-amber-100 rounded-md flex items-center justify-center flex-shrink-0">
-                  <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div className="min-w-0">
                   <h4 className="text-amber-800 font-medium text-sm mb-0.5 break-words">
                     YouTube Music API limitation
                   </h4>
-                  <p className="text-amber-700 text-xs leading-snug break-words">
+                  <p className="text-amber-600 dark:text-amber-400 text-xs leading-snug break-words">
                     YouTube Music allows only{" "}
                     <span className="font-semibold">100 tracks per day</span>{" "}
                     via API. Large playlists will be migrated over multiple days

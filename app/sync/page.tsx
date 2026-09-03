@@ -190,7 +190,7 @@ export default function SyncPage() {
   };
 
   return (
-    <div className="min-h-screen gradient-background">
+    <div className="min-h-screen bg-background">
       <Header currentUser={currentUser} />
 
       <section className="pt-28 pb-20 relative overflow-hidden">
@@ -201,7 +201,7 @@ export default function SyncPage() {
             getStepStatus={getStepStatus}
           />
 
-          <div className="max-w-4xl mx-auto glass-effect rounded-xl2 p-8 md:p-10">
+          <div className="max-w-4xl mx-auto glass-effect rounded-2xl p-8 md:p-10">
             {currentStep === 0 && (
               <PlatformConnect
                 platform="youtube"

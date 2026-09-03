@@ -120,7 +120,9 @@ export default function MigrationAction({
           : `${getMigrationText()} (${selectedPlaylistIds.length} selected)`}
       </Button>
       {error && (
-        <p className="text-red-500 text-sm text-center">Error: {error}</p>
+        <p className="text-red-600 dark:text-red-400 text-sm text-center">
+          Error: {error}
+        </p>
       )}
     </div>
   );

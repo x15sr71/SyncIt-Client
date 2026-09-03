@@ -51,7 +51,7 @@ export function MigrationLoadingCard({
     >
       <Card className="w-full max-w-2xl shadow-elev">
         <CardHeader className="text-center pb-5 border-b border-border">
-          <div className="mx-auto w-14 h-14 bg-gradient-to-br from-brand-gradStart to-brand-gradEnd rounded-xl2 flex items-center justify-center mb-3 shadow-soft">
+          <div className="mx-auto w-14 h-14 bg-gradient-to-br from-brand-gradStart to-brand-gradEnd rounded-2xl flex items-center justify-center mb-3 shadow-soft">
             <Loader2 className="w-7 h-7 text-white animate-spin" />
           </div>
           <CardTitle className="text-foreground text-xl font-semibold">
@@ -69,8 +69,8 @@ export function MigrationLoadingCard({
           {/* Migration Flow Visualization */}
           <div className="flex items-center justify-center space-x-6 p-5 rounded-lg border border-border bg-muted/40">
             <div className="text-center">
-              <div className="w-12 h-12 bg-green-50 border border-green-200 rounded-lg flex items-center justify-center mb-2">
-                <Music className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/25 rounded-lg flex items-center justify-center mb-2">
+                <Music className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div className="text-xs font-medium text-muted-foreground mb-0.5">
                 From
@@ -86,8 +86,8 @@ export function MigrationLoadingCard({
             </div>
 
             <div className="text-center">
-              <div className="w-12 h-12 bg-red-50 border border-red-200 rounded-lg flex items-center justify-center mb-2">
-                <Music className="w-6 h-6 text-red-600" />
+              <div className="w-12 h-12 bg-red-500/10 border border-red-500/25 rounded-lg flex items-center justify-center mb-2">
+                <Music className="w-6 h-6 text-red-600 dark:text-red-400" />
               </div>
               <div className="text-xs font-medium text-muted-foreground mb-0.5">
                 To

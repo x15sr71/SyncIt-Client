@@ -84,7 +84,7 @@ export function PlatformConnect({
 
         {connectionStatus === "connected" && (
           <div className="space-y-5">
-            <div className="flex items-center justify-center space-x-2 text-green-600">
+            <div className="flex items-center justify-center space-x-2 text-emerald-600 dark:text-emerald-400">
               <Check className="w-6 h-6" />
               <span className="text-base font-medium">
                 Successfully connected to {config.name}!
@@ -105,7 +105,7 @@ export function PlatformConnect({
 
         {connectionStatus === "error" && (
           <div className="text-center">
-            <div className="text-red-600 font-medium mb-4">
+            <div className="text-red-600 dark:text-red-400 font-medium mb-4">
               Failed to connect to {config.name}. Please try again.
             </div>
             <Button

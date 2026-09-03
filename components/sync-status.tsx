@@ -19,11 +19,15 @@ export function SyncStatus({
   const getStatusIcon = () => {
     switch (status) {
       case "success":
-        return <CheckCircle className="w-4 h-4 text-green-600" />;
+        return (
+          <CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+        );
       case "in-progress":
-        return <Clock className="w-4 h-4 text-blue-600 animate-spin" />;
+        return (
+          <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400 animate-spin" />
+        );
       case "failed":
-        return <XCircle className="w-4 h-4 text-red-600" />;
+        return <XCircle className="w-4 h-4 text-red-600 dark:text-red-400" />;
     }
   };
 
@@ -33,7 +37,7 @@ export function SyncStatus({
         return (
           <Badge
             variant="outline"
-            className="border-green-200 bg-green-50 text-green-700"
+            className="border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
           >
             Success
           </Badge>
@@ -42,7 +46,7 @@ export function SyncStatus({
         return (
           <Badge
             variant="outline"
-            className="border-blue-200 bg-blue-50 text-blue-700"
+            className="border-blue-500/25 bg-blue-500/10 text-blue-600 dark:text-blue-400"
           >
             In Progress
           </Badge>
@@ -51,7 +55,7 @@ export function SyncStatus({
         return (
           <Badge
             variant="outline"
-            className="border-red-200 bg-red-50 text-red-700"
+            className="border-red-500/25 bg-red-500/10 text-red-600 dark:text-red-400"
           >
             Failed
           </Badge>
@@ -60,22 +64,22 @@ export function SyncStatus({
   };
 
   return (
-    <div className="flex items-center justify-between p-2.5 rounded-lg hover:bg-accent/50 transition-colors">
-      <div className="flex items-center space-x-3 min-w-0">
+    <div className="flex items-start justify-between gap-2 p-2.5 rounded-xl hover:bg-accent/50 transition-colors">
+      <div className="flex items-start gap-2.5 min-w-0">
         {getStatusIcon()}
         <div className="min-w-0">
           <p className="text-sm font-medium text-foreground truncate">
             {playlistName}
           </p>
-          <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-            <Music className="w-3 h-3" />
-            <span>{tracksCount} tracks</span>
-            <span>•</span>
-            <span>{timestamp}</span>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground min-w-0">
+            <Music className="w-3 h-3 shrink-0" />
+            <span className="truncate">
+              {tracksCount} tracks · {timestamp}
+            </span>
           </div>
         </div>
       </div>
-      {getStatusBadge()}
+      <div className="shrink-0">{getStatusBadge()}</div>
     </div>
   );
 }

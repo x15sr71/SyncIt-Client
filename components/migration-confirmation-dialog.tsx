@@ -135,8 +135,8 @@ export function MigrationConfirmationDialog({
           {/* Migration Flow Visualization */}
           <div className="flex items-center justify-center space-x-6 p-5 rounded-lg border border-border bg-muted/40">
             <div className="text-center">
-              <div className="w-12 h-12 bg-green-50 border border-green-200 rounded-lg flex items-center justify-center mb-2">
-                <Music className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/25 rounded-lg flex items-center justify-center mb-2">
+                <Music className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div className="text-xs font-medium text-muted-foreground mb-0.5">
                 From
@@ -150,8 +150,8 @@ export function MigrationConfirmationDialog({
               <span className="sync-dot"></span>
             </div>
             <div className="text-center">
-              <div className="w-12 h-12 bg-red-50 border border-red-200 rounded-lg flex items-center justify-center mb-2">
-                <Music className="w-6 h-6 text-red-600" />
+              <div className="w-12 h-12 bg-red-500/10 border border-red-500/25 rounded-lg flex items-center justify-center mb-2">
+                <Music className="w-6 h-6 text-red-600 dark:text-red-400" />
               </div>
               <div className="text-xs font-medium text-muted-foreground mb-0.5">
                 To
@@ -164,16 +164,16 @@ export function MigrationConfirmationDialog({
 
           {/* YouTube Music API Limitation Warning */}
           {exceedsYouTubeLimit && (
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+            <div className="p-4 bg-amber-500/10 border border-amber-500/25 rounded-lg">
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <AlertTriangle className="w-5 h-5 text-amber-600" />
+                  <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
                   <h4 className="text-amber-800 font-semibold text-sm mb-1">
                     YouTube Music API Limitation
                   </h4>
-                  <p className="text-amber-700 text-sm leading-relaxed">
+                  <p className="text-amber-600 dark:text-amber-400 text-sm leading-relaxed">
                     {selectedPlaylistCount === 1
                       ? `This playlist has ${trackCount} tracks`
                       : `These playlists have a total of ${totalTracks} tracks`}

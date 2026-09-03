@@ -22,7 +22,7 @@ export function HeroSection() {
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
           {/* Left Column */}
           <div className="text-center lg:text-left fade-in-up">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-card border border-border text-[0.78rem] font-medium text-muted-foreground">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-card border border-border text-[0.72rem] sm:text-[0.78rem] font-medium text-muted-foreground max-w-full">
               <Sparkles
                 className="w-3.5 h-3.5 text-brand-500"
                 aria-hidden="true"
@@ -32,7 +32,7 @@ export function HeroSection() {
 
             <h1
               id="hero-heading"
-              className="mt-5 text-[2.75rem] sm:text-6xl lg:text-[4.25rem] font-semibold tracking-[-0.035em] text-foreground leading-[1.02] text-balance"
+              className="mt-5 text-[2.15rem] sm:text-6xl lg:text-[4.25rem] font-semibold tracking-[-0.035em] text-foreground leading-[1.02] text-balance"
             >
               Move your playlists.
               <br />
@@ -70,7 +70,7 @@ export function HeroSection() {
               </Button>
             </div>
 
-            <dl className="mt-14 grid grid-cols-3 gap-8 pt-8 border-t border-border/60 max-w-md mx-auto lg:mx-0">
+            <dl className="mt-14 grid grid-cols-3 gap-4 sm:gap-8 pt-8 border-t border-border/60 max-w-md mx-auto lg:mx-0">
               {stats.map((stat) => (
                 <div key={stat.label} className="text-center lg:text-left">
                   <dt className="sr-only">{stat.label}</dt>

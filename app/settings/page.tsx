@@ -46,7 +46,7 @@ function statusBadge(status?: ConnectionStatus) {
     return (
       <Badge
         variant="outline"
-        className="border-amber-200 bg-amber-50 text-amber-700"
+        className="border-amber-500/25 bg-amber-500/10 text-amber-600 dark:text-amber-400"
       >
         Reconnect needed
       </Badge>
@@ -55,7 +55,7 @@ function statusBadge(status?: ConnectionStatus) {
   return (
     <Badge
       variant="outline"
-      className="border-green-200 bg-green-50 text-green-700"
+      className="border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
     >
       <Check className="w-3 h-3" />
       Connected
@@ -79,9 +79,9 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="min-h-screen gradient-background-subdued">
+    <div className="min-h-screen bg-background">
       <header
-        className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-40"
+        className="border-b border-border/60 bg-background/70 backdrop-blur-xl backdrop-saturate-150 sticky top-0 z-40"
         role="banner"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
@@ -90,6 +90,7 @@ export default function SettingsPage() {
               <Button
                 variant="ghost"
                 size="sm"
+                className="rounded-full text-muted-foreground hover:text-foreground"
                 aria-label="Go back to dashboard"
               >
                 <ArrowLeft className="w-4 h-4" />
@@ -109,7 +110,7 @@ export default function SettingsPage() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {error && (
           <Card>
-            <CardContent className="py-6 text-center text-sm text-red-600">
+            <CardContent className="py-6 text-center text-sm text-red-600 dark:text-red-400">
               {error}
             </CardContent>
           </Card>
@@ -125,7 +126,7 @@ export default function SettingsPage() {
               id="connected-accounts-settings-heading"
               className="text-foreground flex items-center"
             >
-              <Shield className="w-5 h-5 mr-2" />
+              <Shield className="w-4 h-4 mr-2 text-muted-foreground" />
               Connected accounts
             </CardTitle>
           </CardHeader>

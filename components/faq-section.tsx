@@ -79,7 +79,7 @@ export function FAQSection() {
                     {faq.question}
                   </span>
                   <ChevronDown
-                    className={`w-4 h-4 shrink-0 text-muted-foreground transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+                    className={`w-4 h-4 shrink-0 text-muted-foreground transition-transform duration-300 ease-spring motion-reduce:transition-none ${
                       isOpen ? "rotate-180" : ""
                     }`}
                     aria-hidden="true"
@@ -88,7 +88,7 @@ export function FAQSection() {
 
                 <div
                   id={`faq-content-${index}`}
-                  className={`grid transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+                  className={`grid transition-all duration-300 ease-spring motion-reduce:transition-none ${
                     isOpen
                       ? "grid-rows-[1fr] opacity-100"
                       : "grid-rows-[0fr] opacity-0"

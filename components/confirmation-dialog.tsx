@@ -43,13 +43,13 @@ export function ConfirmationDialog({
               <div
                 className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                   confirmVariant === "destructive"
-                    ? "bg-red-50 border border-red-200"
-                    : "bg-amber-50 border border-amber-200"
+                    ? "bg-red-500/10 border border-red-500/25"
+                    : "bg-amber-500/10 border border-amber-500/25"
                 }`}
               >
                 {icon || (
                   <AlertTriangle
-                    className={`w-5 h-5 ${confirmVariant === "destructive" ? "text-red-600" : "text-amber-600"}`}
+                    className={`w-5 h-5 ${confirmVariant === "destructive" ? "text-red-600 dark:text-red-400" : "text-amber-600 dark:text-amber-400"}`}
                   />
                 )}
               </div>

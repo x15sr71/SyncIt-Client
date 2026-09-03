@@ -38,7 +38,7 @@ export function PlaylistSelection({
   if (isProcessing) {
     return (
       <div className="text-center py-12 fade-in-up">
-        <div className="w-16 h-16 bg-gradient-to-br from-brand-gradStart to-brand-gradEnd rounded-xl2 flex items-center justify-center mx-auto mb-5 shadow-soft">
+        <div className="w-16 h-16 bg-gradient-to-br from-brand-gradStart to-brand-gradEnd rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-soft">
           <Loader2 className="w-8 h-8 text-white animate-spin" />
         </div>
         <h2 className="text-2xl font-semibold tracking-tight text-foreground mb-2">
