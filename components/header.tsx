@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Music, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { useState, type MouseEvent, type ReactNode } from "react";
 
 /**
@@ -43,7 +44,7 @@ export function Header() {
 
   return (
     <header
-      className="fixed top-0 left-0 w-full z-50 py-3 border-b border-border bg-background/80 backdrop-blur-md"
+      className="fixed top-0 left-0 w-full z-50 py-3 border-b border-border/60 bg-background/70 backdrop-blur-xl backdrop-saturate-150"
       role="banner"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -63,39 +64,45 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav
-            className="hidden md:flex items-center gap-1"
+            className="hidden md:flex items-center gap-0.5"
             role="navigation"
             aria-label="Main navigation"
           >
             <SectionLink
               targetId="features"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-md px-3 py-1.5 hover:bg-accent"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-full px-3.5 py-1.5 hover:bg-accent/60"
             >
               Features
             </SectionLink>
             <SectionLink
               targetId="how-it-works"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-md px-3 py-1.5 hover:bg-accent"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-full px-3.5 py-1.5 hover:bg-accent/60"
             >
               How it works
             </SectionLink>
             <SectionLink
               targetId="faq"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-md px-3 py-1.5 hover:bg-accent"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-full px-3.5 py-1.5 hover:bg-accent/60"
             >
               FAQ
             </SectionLink>
             <Link
               href="/pricing"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-md px-3 py-1.5 hover:bg-accent"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-full px-3.5 py-1.5 hover:bg-accent/60"
             >
               Pricing
             </Link>
           </nav>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle className="hidden sm:grid" />
+
             <Link href="/dashboard">
-              <Button size="sm" aria-label="Get started with SyncIt">
+              <Button
+                size="sm"
+                className="rounded-full px-5"
+                aria-label="Get started with SyncIt"
+              >
                 Get Started
               </Button>
             </Link>
@@ -130,31 +137,37 @@ export function Header() {
               <SectionLink
                 targetId="features"
                 onNavigate={() => setIsMenuOpen(false)}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md px-3 py-2 hover:bg-accent text-left"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors rounded-xl px-3 py-2.5 hover:bg-accent/60 text-left"
               >
                 Features
               </SectionLink>
               <SectionLink
                 targetId="how-it-works"
                 onNavigate={() => setIsMenuOpen(false)}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md px-3 py-2 hover:bg-accent text-left"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors rounded-xl px-3 py-2.5 hover:bg-accent/60 text-left"
               >
                 How it works
               </SectionLink>
               <SectionLink
                 targetId="faq"
                 onNavigate={() => setIsMenuOpen(false)}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md px-3 py-2 hover:bg-accent text-left"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors rounded-xl px-3 py-2.5 hover:bg-accent/60 text-left"
               >
                 FAQ
               </SectionLink>
               <Link
                 href="/pricing"
                 onClick={() => setIsMenuOpen(false)}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md px-3 py-2 hover:bg-accent text-left"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors rounded-xl px-3 py-2.5 hover:bg-accent/60 text-left"
               >
                 Pricing
               </Link>
+
+              {/* sm:hidden — above that breakpoint the toggle is in the bar. */}
+              <div className="sm:hidden flex items-center justify-between px-3 py-2">
+                <span className="text-sm text-muted-foreground">Theme</span>
+                <ThemeToggle />
+              </div>
             </div>
           </nav>
         )}

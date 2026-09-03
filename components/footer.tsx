@@ -5,10 +5,7 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer
-      className="py-14 border-t border-border bg-background/40"
-      role="contentinfo"
-    >
+    <footer className="py-16 border-t border-border/50" role="contentinfo">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-4 gap-8">
           {/* Brand */}
@@ -25,24 +22,24 @@ export function Footer() {
               The ultimate music synchronization platform. Keep your playlists
               in sync across all your favorite streaming services.
             </p>
-            <div className="flex space-x-3">
+            <div className="flex gap-2">
               <a
                 href="#"
-                className="text-muted-foreground hover:text-foreground transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded p-1.5"
+                className="text-muted-foreground hover:text-foreground transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-full border border-border/50 p-2 hover:bg-accent/60"
                 aria-label="Follow us on Twitter"
               >
                 <Twitter className="w-4 h-4" />
               </a>
               <a
                 href="#"
-                className="text-muted-foreground hover:text-foreground transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded p-1.5"
+                className="text-muted-foreground hover:text-foreground transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-full border border-border/50 p-2 hover:bg-accent/60"
                 aria-label="View our GitHub repository"
               >
                 <Github className="w-4 h-4" />
               </a>
               <a
                 href="#"
-                className="text-muted-foreground hover:text-foreground transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded p-1.5"
+                className="text-muted-foreground hover:text-foreground transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-ring focus-visible:outline-offset-2 rounded-full border border-border/50 p-2 hover:bg-accent/60"
                 aria-label="Contact us via email"
               >
                 <Mail className="w-4 h-4" />

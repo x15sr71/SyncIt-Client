@@ -27,7 +27,7 @@ function statusBadge(status?: ConnectionStatus) {
     return (
       <Badge
         variant="outline"
-        className="border-amber-200 bg-amber-50 text-amber-700"
+        className="border-amber-500/25 bg-amber-500/10 text-amber-600 dark:text-amber-400"
       >
         Reconnect
       </Badge>
@@ -36,7 +36,7 @@ function statusBadge(status?: ConnectionStatus) {
   return (
     <Badge
       variant="outline"
-      className="border-green-200 bg-green-50 text-green-700"
+      className="border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
     >
       Active
     </Badge>

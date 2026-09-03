@@ -19,7 +19,8 @@ const syncOptions = [
     label: "Every hour",
     description: "Keep playlists perfectly in sync",
     badge: "Recommended",
-    badgeColor: "bg-green-50 text-green-700 border-green-200",
+    badgeColor:
+      "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/25",
   },
   {
     id: "3hours",
@@ -147,7 +148,7 @@ export function SyncPreferencesDialog({
           </div>
 
           {/* Additional Info */}
-          <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="p-3 bg-blue-500/10 border border-blue-500/25 rounded-lg">
             <p className="text-blue-700 text-sm">
               <strong>Note:</strong> You can change these settings anytime in
               your dashboard. Sync will automatically pause if API limits are

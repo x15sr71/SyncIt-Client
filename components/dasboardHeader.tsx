@@ -1,35 +1,22 @@
-import {
-  Music,
-  Settings,
-  User,
-  Sun,
-  Moon,
-  Menu,
-  X,
-  LogOut,
-} from "lucide-react";
+import { Music, Settings, User, Menu, X, LogOut } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface DashboardHeaderProps {
-  darkMode: boolean;
-  setDarkMode: (value: boolean) => void;
   isMobileMenuOpen: boolean;
   setIsMobileMenuOpen: (value: boolean) => void;
   onLogout?: () => void;
 }
 
 export default function DashboardHeader({
-  darkMode,
-  setDarkMode,
   isMobileMenuOpen,
   setIsMobileMenuOpen,
   onLogout,
 }: DashboardHeaderProps) {
   return (
     <header
-      className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-40"
+      className="border-b border-border/60 bg-background/70 backdrop-blur-xl backdrop-saturate-150 sticky top-0 z-40"
       role="banner"
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 min-w-0">
@@ -51,21 +38,7 @@ export default function DashboardHeader({
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1 min-w-0">
-            <div className="flex items-center gap-2 mr-2 px-2 py-1 rounded-md border border-border bg-card">
-              <Sun
-                className="w-3.5 h-3.5 text-muted-foreground"
-                aria-hidden="true"
-              />
-              <Switch
-                checked={darkMode}
-                onCheckedChange={setDarkMode}
-                aria-label={`Switch to ${darkMode ? "light" : "dark"} mode`}
-              />
-              <Moon
-                className="w-3.5 h-3.5 text-muted-foreground"
-                aria-hidden="true"
-              />
-            </div>
+            <ThemeToggle className="mr-1" />
 
             <Link href="/settings">
               <Button variant="ghost" size="sm">
@@ -120,21 +93,7 @@ export default function DashboardHeader({
                 <span className="text-sm font-medium text-foreground">
                   Theme
                 </span>
-                <div className="flex items-center gap-2">
-                  <Sun
-                    className="w-3.5 h-3.5 text-muted-foreground"
-                    aria-hidden="true"
-                  />
-                  <Switch
-                    checked={darkMode}
-                    onCheckedChange={setDarkMode}
-                    aria-label={`Switch to ${darkMode ? "light" : "dark"} mode`}
-                  />
-                  <Moon
-                    className="w-3.5 h-3.5 text-muted-foreground"
-                    aria-hidden="true"
-                  />
-                </div>
+                <ThemeToggle />
               </div>
               <Link href="/settings" onClick={() => setIsMobileMenuOpen(false)}>
                 <Button variant="ghost" className="w-full justify-start">

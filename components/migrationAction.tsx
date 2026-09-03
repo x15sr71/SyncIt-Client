@@ -103,8 +103,11 @@ export default function MigrationAction({
     return `Migrate ${source} → ${target}`;
   };
 
+  // Column, not a fragment: the parent is `flex justify-center`, so returning
+  // the button and the error as bare siblings made them share one flex row —
+  // the error's width shifted the button off-centre whenever one was shown.
   return (
-    <>
+    <div className="flex flex-col items-center gap-2">
       <Button
         size="lg"
         onClick={handleStartMigration}
@@ -116,7 +119,11 @@ export default function MigrationAction({
           ? "Migrating..."
           : `${getMigrationText()} (${selectedPlaylistIds.length} selected)`}
       </Button>
-      {error && <p className="text-red-500 text-sm mt-2">Error: {error}</p>}
-    </>
+      {error && (
+        <p className="text-red-600 dark:text-red-400 text-sm text-center">
+          Error: {error}
+        </p>
+      )}
+    </div>
   );
 }

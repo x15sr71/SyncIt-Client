@@ -14,7 +14,8 @@ export type { PaymentProvider } from "./types";
 let instance: PaymentProvider | null = null;
 
 function createProvider(): PaymentProvider {
-  const id = (process.env.NEXT_PUBLIC_PAYMENT_PROVIDER ?? "stripe") as ProviderId;
+  const id = (process.env.NEXT_PUBLIC_PAYMENT_PROVIDER ??
+    "stripe") as ProviderId;
   switch (id) {
     case "razorpay":
       return new RazorpayProvider();

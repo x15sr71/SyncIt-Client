@@ -189,10 +189,8 @@
 .glass-card {
   background: hsl(var(--card));
   border: 1px solid hsl(var(--border));
-  border-radius: 14px;
-  box-shadow:
-    0 1px 2px rgba(15, 14, 23, 0.04),
-    0 4px 16px rgba(15, 14, 23, 0.04);
+  border-radius: 16px;
+  box-shadow: none;
   backdrop-filter: none;
 }
 
@@ -206,10 +204,7 @@
 
 .hover-lift:hover {
   transform: translateY(-1px);
-  box-shadow:
-    0 1px 2px rgba(15, 14, 23, 0.04),
-    0 8px 24px rgba(94, 77, 191, 0.08);
-  border-color: hsl(var(--input));
+  border-color: hsl(var(--border));
 }
 
 /* Text colors — repointed to new ink palette */

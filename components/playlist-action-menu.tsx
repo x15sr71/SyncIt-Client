@@ -13,6 +13,8 @@ interface PlaylistActionMenuProps {
   onDelete: (id: string) => void;
   /** Spotify has no delete-playlist API (backend answers 501) — hide it. */
   canDelete?: boolean;
+  /** Spotify has no bulk playlist-clear endpoint, so the action is hidden. */
+  canEmpty?: boolean;
 }
 
 export function PlaylistActionMenu({
@@ -22,6 +24,7 @@ export function PlaylistActionMenu({
   onEmpty,
   onDelete,
   canDelete = true,
+  canEmpty = true,
 }: PlaylistActionMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -108,21 +111,23 @@ export function PlaylistActionMenu({
                 Rename playlist
               </Button>
 
-              <Button
-                variant="ghost"
-                onClick={() => handleAction(() => onEmpty(playlistId))}
-                className="w-full justify-start text-foreground"
-                role="menuitem"
-              >
-                <FolderX className="w-4 h-4 mr-2" />
-                Empty playlist
-              </Button>
+              {canEmpty && (
+                <Button
+                  variant="ghost"
+                  onClick={() => handleAction(() => onEmpty(playlistId))}
+                  className="w-full justify-start text-foreground"
+                  role="menuitem"
+                >
+                  <FolderX className="w-4 h-4 mr-2" />
+                  Empty playlist
+                </Button>
+              )}
 
               {canDelete && (
                 <Button
                   variant="ghost"
                   onClick={() => handleAction(() => onDelete(playlistId))}
-                  className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700"
+                  className="w-full justify-start text-red-600 dark:text-red-400 hover:bg-red-500/10 hover:text-red-600 dark:text-red-400"
                   role="menuitem"
                 >
                   <Trash2 className="w-4 h-4 mr-2" />

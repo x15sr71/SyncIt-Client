@@ -106,14 +106,14 @@ export function DeletePlaylistDialog({
           {state === "confirm" && (
             <>
               {/* Warning message */}
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+              <div className="p-3 bg-red-500/10 border border-red-500/25 rounded-lg">
                 <div className="flex items-start gap-3">
-                  <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                  <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-red-700 font-medium text-sm mb-1">
+                    <p className="text-red-600 dark:text-red-400 font-medium text-sm mb-1">
                       Do you really want to delete this playlist?
                     </p>
-                    <p className="text-red-600 text-sm">
+                    <p className="text-red-600 dark:text-red-400 text-sm">
                       This will permanently delete "
                       <strong>{playlistName}</strong>" and all its songs. This
                       action cannot be undone.
@@ -140,7 +140,7 @@ export function DeletePlaylistDialog({
 
           {state === "loading" && (
             <div className="text-center py-8">
-              <div className="w-14 h-14 bg-red-500 rounded-xl2 flex items-center justify-center mx-auto mb-5 shadow-soft">
+              <div className="w-14 h-14 bg-red-500 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-soft">
                 <Loader2 className="w-7 h-7 text-white animate-spin" />
               </div>
               <h3 className="text-foreground font-semibold text-base mb-1">
@@ -166,8 +166,8 @@ export function DeletePlaylistDialog({
 
           {state === "success" && (
             <div className="text-center py-8">
-              <div className="w-16 h-16 bg-green-50 border border-green-200 rounded-xl2 flex items-center justify-center mx-auto mb-5">
-                <CheckCircle className="w-9 h-9 text-green-600" />
+              <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/25 rounded-2xl flex items-center justify-center mx-auto mb-5">
+                <CheckCircle className="w-9 h-9 text-emerald-600 dark:text-emerald-400" />
               </div>
               <h3 className="text-foreground font-semibold text-lg mb-2">
                 Deletion Completed Successfully!
@@ -175,7 +175,7 @@ export function DeletePlaylistDialog({
               <p className="text-sm text-muted-foreground mb-2">
                 The playlist has been permanently removed:
               </p>
-              <p className="text-foreground font-medium bg-green-50 px-4 py-2 rounded-lg border border-green-200 inline-block">
+              <p className="text-foreground font-medium bg-emerald-500/10 px-4 py-2 rounded-lg border border-emerald-500/25 inline-block">
                 "{playlistName}"
               </p>
               <p className="text-muted-foreground text-xs mt-4">

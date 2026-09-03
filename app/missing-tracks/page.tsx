@@ -124,8 +124,8 @@ export default function MissingTracksPage() {
   );
 
   return (
-    <div className="min-h-screen gradient-background-subdued">
-      <header className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-40">
+    <div className="min-h-screen bg-background">
+      <header className="border-b border-border/60 bg-background/70 backdrop-blur-xl backdrop-saturate-150 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
           <div className="flex items-center gap-3">
             <Link href="/dashboard">
@@ -144,7 +144,7 @@ export default function MissingTracksPage() {
             </div>
             <Badge
               variant="outline"
-              className="border-amber-200 bg-amber-50 text-amber-700 ml-auto"
+              className="border-amber-500/25 bg-amber-500/10 text-amber-600 dark:text-amber-400 ml-auto"
             >
               {pendingTracks.length} remaining
             </Badge>
@@ -170,7 +170,7 @@ export default function MissingTracksPage() {
         )}
         {loadError && (
           <Card>
-            <CardContent className="py-6 text-center text-sm text-red-600">
+            <CardContent className="py-6 text-center text-sm text-red-600 dark:text-red-400">
               {loadError}
             </CardContent>
           </Card>
@@ -192,7 +192,7 @@ export default function MissingTracksPage() {
                     </div>
                     <Badge
                       variant="outline"
-                      className="border-amber-200 bg-amber-50 text-amber-700"
+                      className="border-amber-500/25 bg-amber-500/10 text-amber-600 dark:text-amber-400"
                     >
                       Missing on{" "}
                       {track.destinationPlatform === "spotify"
@@ -250,8 +250,8 @@ export default function MissingTracksPage() {
           {pendingTracks.length === 0 && (
             <Card>
               <CardContent className="text-center py-10">
-                <div className="w-14 h-14 bg-green-50 border border-green-200 rounded-xl2 flex items-center justify-center mx-auto mb-4">
-                  <Check className="w-7 h-7 text-green-600" />
+                <div className="w-14 h-14 bg-emerald-500/10 border border-emerald-500/25 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Check className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-1">
                   All Done!
@@ -289,7 +289,7 @@ export default function MissingTracksPage() {
                     variant="outline"
                     className={
                       track.status === "found"
-                        ? "border-green-200 bg-green-50 text-green-700"
+                        ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                         : "bg-muted text-muted-foreground"
                     }
                   >

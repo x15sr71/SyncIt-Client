@@ -56,44 +56,43 @@ export default function ConnectPage() {
   const canProceed = connections.spotify && connections.youtube;
 
   return (
-    <div className="min-h-screen gradient-background-subdued relative overflow-hidden">
-      <span
-        className="blob blob-a"
-        style={{ top: "5%", right: "-100px" }}
-        aria-hidden="true"
-      />
-      <span
-        className="blob blob-b"
-        style={{ bottom: "5%", left: "-100px" }}
-        aria-hidden="true"
-      />
-      <main className="flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8 py-16 relative">
+    <div className="min-h-screen bg-background">
+      <main className="flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8 py-16">
         <div className="w-full max-w-md fade-in-up">
-          <div className="mb-4">
+          <div className="mb-6">
             <Link href="/auth">
-              <Button variant="ghost" size="sm" aria-label="Go back to sign in">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="rounded-full -ml-2 text-muted-foreground hover:text-foreground"
+                aria-label="Go back to sign in"
+              >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Sign In
               </Button>
             </Link>
           </div>
 
-          <Card role="main" aria-labelledby="connect-title">
-            <CardHeader className="text-center pb-4">
+          <Card
+            role="main"
+            aria-labelledby="connect-title"
+            className="shadow-none border-border/60"
+          >
+            <CardHeader className="text-center pb-5 pt-8 px-6 sm:px-8">
               <div
                 className="flex items-center justify-center mb-4"
                 aria-hidden="true"
               >
                 <div
                   className="logo-icon"
-                  style={{ width: 56, height: 56, borderRadius: 14 }}
+                  style={{ width: 52, height: 52, borderRadius: 16 }}
                 >
                   <Music className="w-6 h-6 text-white" />
                 </div>
               </div>
               <CardTitle
                 id="connect-title"
-                className="text-2xl font-semibold tracking-tight text-foreground mb-1.5"
+                className="text-2xl sm:text-[1.75rem] font-semibold tracking-[-0.02em] text-foreground mb-2"
               >
                 Connect Your Accounts
               </CardTitle>
@@ -102,10 +101,10 @@ export default function ConnectPage() {
               </p>
             </CardHeader>
 
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-2.5 px-6 sm:px-8 pb-8">
               {/* Spotify Connection */}
               <Card
-                className="hover-lift"
+                className="shadow-none border-border/60 transition-colors hover:border-border"
                 role="region"
                 aria-labelledby="spotify-heading"
               >
@@ -113,7 +112,7 @@ export default function ConnectPage() {
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <div
-                        className="w-11 h-11 rounded-lg flex items-center justify-center shrink-0"
+                        className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
                         style={{ background: "#1db954" }}
                         aria-hidden="true"
                       >
@@ -134,7 +133,7 @@ export default function ConnectPage() {
                     {connections.spotify ? (
                       <Badge
                         variant="outline"
-                        className="border-green-200 bg-green-50 text-green-700"
+                        className="rounded-full border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                         role="status"
                         aria-label="Spotify connected successfully"
                       >
@@ -147,7 +146,7 @@ export default function ConnectPage() {
                         disabled={loading.spotify}
                         variant="outline"
                         size="sm"
-                        className="shrink-0"
+                        className="shrink-0 rounded-full px-4"
                         aria-describedby="spotify-description"
                       >
                         {loading.spotify ? (
@@ -166,7 +165,7 @@ export default function ConnectPage() {
 
               {/* YouTube Music Connection */}
               <Card
-                className="hover-lift"
+                className="shadow-none border-border/60 transition-colors hover:border-border"
                 role="region"
                 aria-labelledby="youtube-heading"
               >
@@ -174,7 +173,7 @@ export default function ConnectPage() {
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <div
-                        className="w-11 h-11 rounded-lg flex items-center justify-center shrink-0"
+                        className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
                         style={{ background: "#ff3b3b" }}
                         aria-hidden="true"
                       >
@@ -195,7 +194,7 @@ export default function ConnectPage() {
                     {connections.youtube ? (
                       <Badge
                         variant="outline"
-                        className="border-green-200 bg-green-50 text-green-700"
+                        className="rounded-full border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                         role="status"
                         aria-label="YouTube Music connected successfully"
                       >
@@ -208,7 +207,7 @@ export default function ConnectPage() {
                         disabled={loading.youtube}
                         variant="outline"
                         size="sm"
-                        className="shrink-0"
+                        className="shrink-0 rounded-full px-4"
                         aria-describedby="youtube-description"
                       >
                         {loading.youtube ? (
@@ -229,7 +228,7 @@ export default function ConnectPage() {
                 <Button
                   onClick={() => router.push("/dashboard")}
                   disabled={!canProceed}
-                  className="w-full py-3"
+                  className="w-full h-12 rounded-full"
                   aria-describedby="continue-description"
                 >
                   Continue to Dashboard

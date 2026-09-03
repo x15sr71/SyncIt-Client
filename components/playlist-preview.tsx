@@ -223,6 +223,7 @@ export function PlaylistPreview({
                 onEmpty={onEmpty}
                 onDelete={onDelete}
                 canDelete={playlist.platform !== "spotify"}
+                canEmpty={playlist.platform !== "spotify"}
               />
             )}
             <Button
@@ -255,7 +256,7 @@ export function PlaylistPreview({
             </h4>
 
             {error && (
-              <div className="text-red-600 text-sm mb-3 p-2 bg-red-50 border border-red-200 rounded-lg">
+              <div className="text-red-600 dark:text-red-400 text-sm mb-3 p-2 bg-red-500/10 border border-red-500/25 rounded-lg">
                 Failed to load playlist content. Showing cached songs.
               </div>
             )}
@@ -272,7 +273,7 @@ export function PlaylistPreview({
                       key={uniqueKey} // 🆕 Use unique key instead of just song.id
                       className={`flex items-center justify-between p-2 rounded-lg hover:bg-accent/50 transition-all duration-300 group ${
                         isRemoving
-                          ? "animate-pulse bg-red-50 border border-red-200 transform"
+                          ? "animate-pulse bg-red-500/10 border border-red-500/25 transform"
                           : ""
                       }`}
                       style={{
@@ -306,7 +307,9 @@ export function PlaylistPreview({
                         <div className="min-w-0">
                           <p
                             className={`text-sm font-medium text-foreground truncate transition-all duration-300 ${
-                              isRemoving ? "text-red-500 line-through" : ""
+                              isRemoving
+                                ? "text-red-600 dark:text-red-400 line-through"
+                                : ""
                             }`}
                           >
                             {song.title}
@@ -338,9 +341,9 @@ export function PlaylistPreview({
                               handleRemoveSong(song.id, song.title);
                             }}
                             disabled={isRemoving}
-                            className={`opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg p-1 transition-all ${
+                            className={`opacity-0 group-hover:opacity-100 text-red-600 dark:text-red-400 hover:text-red-600 dark:text-red-400 hover:bg-red-500/10 rounded-lg p-1 transition-all ${
                               isRemoving
-                                ? "opacity-100 bg-red-50 text-red-400 cursor-not-allowed animate-spin"
+                                ? "opacity-100 bg-red-500/10 text-red-400 cursor-not-allowed animate-spin"
                                 : ""
                             }`}
                             aria-label={`Remove ${song.title} from playlist`}

@@ -18,16 +18,16 @@ const platforms = [
     name: "Spotify",
     icon: Music2,
     color: "text-[#1db954]",
-    bgColor: "bg-green-50",
-    borderColor: "border-green-200",
+    bgColor: "bg-emerald-500/10",
+    borderColor: "border-emerald-500/25",
   },
   {
     id: "youtube" as const,
     name: "YouTube Music",
     icon: Youtube,
     color: "text-[#ff3b3b]",
-    bgColor: "bg-red-50",
-    borderColor: "border-red-200",
+    bgColor: "bg-red-500/10",
+    borderColor: "border-red-500/25",
   },
 ];
 

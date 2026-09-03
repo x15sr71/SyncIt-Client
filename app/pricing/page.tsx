@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen gradient-background">
+    <div className="min-h-screen bg-background">
       <Header />
       {/* Clears the fixed header before the pricing section. */}
       <main className="pt-16">
