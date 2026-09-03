@@ -1,11 +1,17 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Clock, XCircle, Music } from "lucide-react";
+import {
+  CheckCircle,
+  Clock,
+  XCircle,
+  Music,
+  AlertTriangle,
+} from "lucide-react";
 
 interface SyncStatusProps {
   playlistName: string;
-  status: "success" | "in-progress" | "failed";
+  status: "success" | "partial" | "in-progress" | "failed";
   timestamp: string;
   tracksCount: number;
 }
@@ -40,6 +46,15 @@ export function SyncStatus({
             className="border-emerald-500/25 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
           >
             Success
+          </Badge>
+        );
+      case "partial":
+        return (
+          <Badge
+            variant="outline"
+            className="border-amber-500/25 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+          >
+            Partial
           </Badge>
         );
       case "in-progress":

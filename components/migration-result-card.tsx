@@ -51,7 +51,13 @@ export function MigrationResultCard({
 
   const totalTracks = successCount + failedTracks.length;
   const hasFailures = failedTracks.length > 0;
-  const successRate = Math.round((successCount / totalTracks) * 100);
+  // A run that added nothing is a failure, even when no individual track was
+  // recorded as failed — that combination used to render "Migration
+  // Successful!" over a 0/0 division that printed "NaN% success rate".
+  const addedNothing = successCount === 0;
+  const isFullSuccess = !hasFailures && !addedNothing;
+  const successRate =
+    totalTracks === 0 ? 0 : Math.round((successCount / totalTracks) * 100);
 
   const handleRetryTrack = (trackId: string) => {
     setRetryingTrackId(trackId);
@@ -67,7 +73,11 @@ export function MigrationResultCard({
         <CardHeader className="pb-5 border-b border-border">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              {hasFailures ? (
+              {addedNothing ? (
+                <div className="w-12 h-12 bg-red-500/10 border border-red-500/25 rounded-2xl flex items-center justify-center">
+                  <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
+                </div>
+              ) : hasFailures ? (
                 <div className="w-12 h-12 bg-amber-500/10 border border-amber-500/25 rounded-2xl flex items-center justify-center">
                   <AlertTriangle className="w-6 h-6 text-amber-600 dark:text-amber-400" />
                 </div>
@@ -78,11 +88,16 @@ export function MigrationResultCard({
               )}
               <div>
                 <CardTitle className="text-foreground text-xl font-semibold">
-                  Migration {hasFailures ? "Partially Complete" : "Complete"}
+                  {addedNothing
+                    ? "Migration Failed"
+                    : hasFailures
+                      ? "Migration Partially Complete"
+                      : "Migration Complete"}
                 </CardTitle>
                 <p className="text-muted-foreground text-sm mt-0.5">
-                  {successRate}% success rate • {successCount} of {totalTracks}{" "}
-                  tracks migrated
+                  {addedNothing
+                    ? "No tracks were added."
+                    : `${successRate}% success rate • ${successCount} of ${totalTracks} tracks migrated`}
                 </p>
               </div>
             </div>
@@ -101,11 +116,30 @@ export function MigrationResultCard({
         <CardContent className="space-y-5 overflow-y-auto max-h-[65vh] pt-6">
           {/* Summary Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            <div className="text-center p-4 rounded-lg border border-emerald-500/25 bg-emerald-500/10">
-              <div className="text-2xl font-semibold text-emerald-600 dark:text-emerald-400 mb-0.5">
+            {/* A green "0 Migrated" tile reads as a win; stay neutral at zero. */}
+            <div
+              className={`text-center p-4 rounded-lg border ${
+                addedNothing
+                  ? "border-border bg-muted/40"
+                  : "border-emerald-500/25 bg-emerald-500/10"
+              }`}
+            >
+              <div
+                className={`text-2xl font-semibold mb-0.5 ${
+                  addedNothing
+                    ? "text-foreground"
+                    : "text-emerald-600 dark:text-emerald-400"
+                }`}
+              >
                 {successCount}
               </div>
-              <div className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+              <div
+                className={`text-xs font-medium ${
+                  addedNothing
+                    ? "text-muted-foreground"
+                    : "text-emerald-600 dark:text-emerald-400"
+                }`}
+              >
                 Migrated
               </div>
             </div>
@@ -129,8 +163,8 @@ export function MigrationResultCard({
             </div>
           </div>
 
-          {/* Success Message */}
-          {!hasFailures && (
+          {/* Success Message — only when tracks actually moved. */}
+          {isFullSuccess && (
             <div className="text-center p-6 rounded-lg border border-emerald-500/25 bg-emerald-500/10">
               <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/25 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="w-9 h-9 text-emerald-600 dark:text-emerald-400" />
