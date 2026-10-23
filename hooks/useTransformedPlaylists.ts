@@ -20,7 +20,7 @@ export function useTransformedPlaylists(
     return localSpotifyPlaylists.map((p: any) => ({
       id: p.id,
       name: p.name,
-      songCount: p.tracks.total,
+      songCount: p.tracks?.total ?? p.items?.total ?? 0,
       imageUrl: p.images[0]?.url || "/placeholder.svg?height=50&width=50",
       description: p.description || "",
       isPublic: p.public,
