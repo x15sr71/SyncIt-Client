@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Music, ArrowLeft, Search, X, Check, Loader2 } from "lucide-react";
 import Link from "next/link";
 import apiClient from "@/utils/api";
+import { parseDetail } from "./parseDetail";
 
 interface MissingTrack {
   id: string;
@@ -25,26 +26,7 @@ interface NotFoundEntry {
   lastSyncAt: string | null;
 }
 
-/**
- * Failure details are stored as human-readable strings:
- *  - YT→SP: "Title: X\nChannel: Y\nDuration: Z\n"
- *  - SP→YT: "Track N: title" / "Track: title (failed to add ...)"
- */
-function parseDetail(detail: string): { title: string; artist: string } {
-  const titleMatch = detail.match(/^Title:\s*(.+)$/m);
-  const channelMatch = detail.match(/^Channel:\s*(.+)$/m);
-  if (titleMatch) {
-    return {
-      title: titleMatch[1].trim(),
-      artist: channelMatch?.[1]?.trim() ?? "",
-    };
-  }
-  const trackMatch = detail.match(/^Track(?:\s*\d+)?:\s*(.+)$/m);
-  if (trackMatch) {
-    return { title: trackMatch[1].trim(), artist: "" };
-  }
-  return { title: detail.replace(/\s+/g, " ").trim(), artist: "" };
-}
+
 
 export default function MissingTracksPage() {
   const [missingTracks, setMissingTracks] = useState<MissingTrack[]>([]);
