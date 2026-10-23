@@ -1,3 +1,4 @@
+
 /**
  * Plan catalog — display config for the pricing page.
  *
@@ -37,16 +38,11 @@ export interface PlanDisplay {
   cta: PlanCta;
 }
 
-/** Free-tier usage cap — lifetime track transfers. Enforced by the backend. */
-export const FREE_TRANSFER_LIMIT = 300;
-
-/** Shared unlock list for the paid tiers (Monthly and Early-bird are identical). */
+/** Shared features currently available on paid plans. */
 const PAID_FEATURES: string[] = [
   "Everything in Free",
-  "Unlimited track transfers",
-  "Daily automated & scheduled sync",
-  "Bidirectional auto-sync",
-  "Email reports for unsynced songs",
+  "Automated scheduled sync",
+  "Incremental one-way auto-sync",
 ];
 
 export const PLANS: PlanDisplay[] = [
@@ -57,7 +53,6 @@ export const PLANS: PlanDisplay[] = [
     price: "$0",
     features: [
       "Manual sync & migration",
-      `Up to ${FREE_TRANSFER_LIMIT} track transfers`,
       "Spotify ↔ YouTube Music",
     ],
     cta: { label: "Get Started Free", kind: "link", href: "/dashboard" },
