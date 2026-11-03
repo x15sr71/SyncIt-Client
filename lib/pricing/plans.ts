@@ -1,4 +1,3 @@
-
 /**
  * Plan catalog — display config for the pricing page.
  *
@@ -51,10 +50,7 @@ export const PLANS: PlanDisplay[] = [
     name: "Free",
     tagline: "Get started — no card required.",
     price: "$0",
-    features: [
-      "Manual sync & migration",
-      "Spotify ↔ YouTube Music",
-    ],
+    features: ["Manual sync & migration", "Spotify ↔ YouTube Music"],
     cta: { label: "Get Started Free", kind: "link", href: "/dashboard" },
   },
   {
