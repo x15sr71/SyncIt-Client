@@ -2,7 +2,7 @@
 
 SyncIt Client is the Next.js-based frontend for the SyncIt application, designed to provide a seamless user experience for managing and syncing liked songs across multiple music platforms, such as Spotify and YouTube. This frontend is under active development and will integrate closely with the powerful SyncIt backend, which handles authentication, API requests, data processing, and synchronization tasks efficiently.
 
-SyncIt waitlist is live! 🚀🎵 Join now: [https://syncit.org.in/](https://syncit.org.in/) 🔥
+SyncIt waitlist is live! 🚀🎵 Join now: [https://syncit.chandraguptsingh.com/](https://syncit.chandraguptsingh.com/) 🔥
 
 ## 📸 Screenshots
 
