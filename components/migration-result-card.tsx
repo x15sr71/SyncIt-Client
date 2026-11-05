@@ -173,7 +173,7 @@ export function MigrationResultCard({
                 Migration Successful!
               </h3>
               <p className="text-sm text-muted-foreground mb-5 max-w-md mx-auto">
-                All {successCount} tracks from "{playlistName}" have been
+                All {successCount} tracks from &quot;{playlistName}&quot; have been
                 successfully migrated.
               </p>
               <div className="flex justify-center">
@@ -196,7 +196,7 @@ export function MigrationResultCard({
                   <div className="w-7 h-7 bg-amber-500/10 border border-amber-500/25 rounded-lg flex items-center justify-center">
                     <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                   </div>
-                  Tracks That Couldn't Be Migrated
+                  Tracks That Couldn&apos;t Be Migrated
                 </h4>
                 <Badge
                   variant="outline"

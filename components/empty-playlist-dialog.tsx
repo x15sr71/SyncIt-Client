@@ -115,7 +115,7 @@ export function EmptyPlaylistDialog({
                     </p>
                     <p className="text-amber-600 dark:text-amber-400 text-sm">
                       This will remove all <strong>{songCount} songs</strong>{" "}
-                      from "<strong>{playlistName}</strong>". The playlist will
+                      from &quot;<strong>{playlistName}</strong>&quot;. The playlist will
                       remain but will be empty.
                     </p>
                   </div>
@@ -175,7 +175,7 @@ export function EmptyPlaylistDialog({
                 All songs have been removed from:
               </p>
               <p className="text-foreground font-medium bg-emerald-500/10 px-4 py-2 rounded-lg border border-emerald-500/25 inline-block">
-                "{playlistName}"
+                &quot;{playlistName}&rdquo;
               </p>
               <p className="text-muted-foreground text-xs mt-4">
                 This dialog will close automatically...

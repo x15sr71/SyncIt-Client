@@ -87,7 +87,7 @@ export function SyncPreferencesDialog({
           {/* Playlist Info */}
           <div className="text-center p-4 rounded-lg border border-border bg-muted/40">
             <h3 className="text-foreground font-semibold mb-0.5">
-              "{playlistName}"
+              &quot;{playlistName}&quot;
             </h3>
             <p className="text-muted-foreground text-sm">
               will be kept in sync automatically

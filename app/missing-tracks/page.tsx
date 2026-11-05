@@ -158,7 +158,7 @@ export default function MissingTracksPage() {
             Tracks needing review
           </h2>
           <p className="text-muted-foreground">
-            These couldn't be matched automatically. Confirm a suggestion,
+            These couldn&apos;t be matched automatically. Confirm a suggestion,
             search for an alternative, or skip.
           </p>
         </div>

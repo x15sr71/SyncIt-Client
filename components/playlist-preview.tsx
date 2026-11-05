@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -188,9 +189,11 @@ export function PlaylistPreview({
                 aria-label={`Select ${playlist.name} playlist`}
               />
             )}
-            <img
+            <Image
               src={playlist.imageUrl || "/placeholder.svg"}
               alt={`${playlist.name} playlist cover`}
+              width={44}
+              height={44}
               className="w-11 h-11 rounded-lg object-cover border border-border"
             />
             <div className="flex-1 min-w-0">
@@ -284,21 +287,24 @@ export function PlaylistPreview({
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
                         {song.image_url ? (
-                          <img
+                          <Image
                             src={song.image_url}
                             alt={song.title}
+                            width={40}
+                            height={40}
                             className={`w-10 h-10 rounded-md object-cover transition-all duration-300 ${
                               isRemoving ? "grayscale opacity-50" : ""
                             }`}
                             onError={(e) => {
-                              e.currentTarget.onerror = null;
                               e.currentTarget.src = "/placeholder-song.svg";
                             }}
                           />
                         ) : (
-                          <img
+                          <Image
                             src="/placeholder-song.svg"
                             alt="no album art"
+                            width={40}
+                            height={40}
                             className={`w-10 h-10 rounded-md object-cover opacity-50 transition-all duration-300 ${
                               isRemoving ? "grayscale opacity-25" : ""
                             }`}
