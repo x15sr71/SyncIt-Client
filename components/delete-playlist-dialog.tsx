@@ -114,8 +114,8 @@ export function DeletePlaylistDialog({
                       Do you really want to delete this playlist?
                     </p>
                     <p className="text-red-600 dark:text-red-400 text-sm">
-                      This will permanently delete "
-                      <strong>{playlistName}</strong>" and all its songs. This
+                      This will permanently delete &quot;
+                      <strong>{playlistName}</strong>&quot; and all its songs. This
                       action cannot be undone.
                     </p>
                   </div>
@@ -176,7 +176,7 @@ export function DeletePlaylistDialog({
                 The playlist has been permanently removed:
               </p>
               <p className="text-foreground font-medium bg-emerald-500/10 px-4 py-2 rounded-lg border border-emerald-500/25 inline-block">
-                "{playlistName}"
+                &ldquo;{playlistName}&rdquo;
               </p>
               <p className="text-muted-foreground text-xs mt-4">
                 This dialog will close automatically...

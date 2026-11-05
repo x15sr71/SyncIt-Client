@@ -234,7 +234,7 @@ export function RenamePlaylistDialog({
                 Your playlist is now called:
               </p>
               <p className="text-foreground font-medium bg-emerald-500/10 px-4 py-2 rounded-lg border border-emerald-500/25 inline-block">
-                "{newName}"
+                &ldquo;{newName}&rdquo;
               </p>
               <p className="text-muted-foreground text-xs mt-4">
                 This dialog will close automatically...
